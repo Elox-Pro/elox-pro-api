@@ -6,11 +6,11 @@ export class CreateUserDTO {
     @IsEnum(Role)
     readonly role: Role;
 
-    @IsString()
-    readonly username: string;
-
     @IsEmail()
     readonly email: string;
+
+    @IsString()
+    readonly username: string;
 
     @IsString()
     readonly password: string;

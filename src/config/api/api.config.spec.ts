@@ -1,7 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ApiConfig } from "./api.config";
-import { ConfigModule } from '@nestjs/config';
-import { AppModule } from 'src/app.module';
 import { AppConfigModule } from '../app.config.module';
 
 describe('ApiConfig', () => {

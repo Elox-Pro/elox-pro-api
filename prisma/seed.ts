@@ -3,10 +3,10 @@ import { plainToInstance } from 'class-transformer';
 import * as fs from 'fs';
 import { CreateCountryDTO } from '../src/country/dto/create-country.dto';
 import { CreateUserDTO } from '../src/user/dto/create-user.dto';
-import { BcryptService } from '../src/common/hashing/bcrypt-service/bcrypt.service';
+import { BCryptService } from '../src/common/hashing/bcrypt.service/bcrypt.service';
 
 const prisma = new PrismaClient();
-const bcryptService = new BcryptService();
+const bcryptService = new BCryptService();
 
 /**
  * Main function to seed data into the database.
