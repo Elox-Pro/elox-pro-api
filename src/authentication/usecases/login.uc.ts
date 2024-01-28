@@ -5,6 +5,8 @@ import { TokensDto } from "../dtos/tokens.dto";
 import { LoginResponseDTO } from "../dtos/login-response.dto";
 import { PrismaService } from "../../prisma/prisma.service";
 import { HashingService } from "../services/hashing.service";
+import { TfaFactory } from "../factories/tfa.factory";
+import { TfaDTO } from "../dtos/tfa.dto";
 
 @Injectable()
 export class LoginUC implements IUseCase<LoginDTO, LoginResponseDTO> {
@@ -12,6 +14,7 @@ export class LoginUC implements IUseCase<LoginDTO, LoginResponseDTO> {
     constructor(
         private prisma: PrismaService,
         private hashingService: HashingService,
+        private tfaFactory: TfaFactory,
     ) { }
 
     async execute(login: LoginDTO): Promise<LoginResponseDTO> {
@@ -30,6 +33,14 @@ export class LoginUC implements IUseCase<LoginDTO, LoginResponseDTO> {
 
         if (!this.hashingService.compare(login.password, savedUser.password)) {
             throw new UnauthorizedException('Invalid credentials');
+        }
+
+        const tfa = this.tfaFactory.getTfa(savedUser.tfaType);
+        if (tfa) {
+            await tfa.send(new TfaDTO({
+                email: savedUser.email,
+                username: savedUser.username,
+            }));
         }
 
         // Generate tokens
