@@ -19,7 +19,8 @@ enum Gender {
   FEMALE
 }
 
-enum AuthType {
+// Two factor authentication types
+enum TfaType {
   NONE
   EMAIL
   SMS
@@ -167,8 +168,8 @@ model User {
   // Flag indicating phone verification status
   phoneVerified Boolean @default(false) @map("phone_verified")
 
-  // The authentication type
-  authType AuthType @default(NONE) @map("tfa_type")
+  // The TFA authentication type to 
+  tfaType TfaType @default(NONE) @map("tfa_type")
 
   // Last login timestamp
   lastLoginAt DateTime? @map("last_login_at")

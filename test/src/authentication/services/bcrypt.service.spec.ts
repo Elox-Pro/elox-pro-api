@@ -1,4 +1,4 @@
-import { BCryptService } from './bcrypt.service';
+import { BCryptService } from '../../../../src/authentication/services/bcrypt.service';
 
 describe('BcryptService', () => {
   it('should be defined', () => {

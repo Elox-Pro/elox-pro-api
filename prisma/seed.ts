@@ -1,9 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
 import * as fs from 'fs';
-import { CreateCountryDTO } from '../src/country/dto/create-country.dto';
-import { CreateUserDTO } from '../src/user/dto/create-user.dto';
-import { BCryptService } from '../src/common/hashing/bcrypt.service/bcrypt.service';
+import { CreateCountryDTO } from '../src/country/dtos/create-country.dto';
+import { CreateUserDTO } from '../src/user/dtos/create-user.dto';
+import { BCryptService } from '../src/authentication/services/bcrypt.service';
 
 const prisma = new PrismaClient();
 const bcryptService = new BCryptService();

@@ -1,4 +1,4 @@
-import { GenerateTokensUC } from './generate-tokens.uc.js';
+import { GenerateTokensUC } from '../../../../src/authentication/helpers/generate-tokens.helper';
 
 describe('GenerateTokensUc', () => {
   it('should be defined', () => {
