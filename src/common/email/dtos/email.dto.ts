@@ -1,16 +1,13 @@
-import { EmailAddressDTO } from "./email-address.dt";
+import { EmailAddressDTO } from "./email-address.dto";
 
 export class EmailDTO {
 
-    readonly from: EmailAddressDTO;
-    readonly to: EmailAddressDTO;
-    readonly subject: string;
-    readonly text: string;
-    readonly html: string;
-    readonly params: Map<string, string>;
-
-    constructor(data: Partial<EmailDTO>) {
-        Object.assign(this, data);
-    }
+    constructor(
+        readonly from: EmailAddressDTO,
+        readonly to: EmailAddressDTO,
+        readonly subject: string,
+        readonly filePath: string,
+        readonly params: Map<string, string>
+    ) { }
 
 }
