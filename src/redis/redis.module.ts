@@ -6,6 +6,9 @@ import { RedisConfig } from './redis.config';
   providers: [
     RedisService,
     RedisConfig
+  ],
+  exports: [
+    RedisService
   ]
 })
 export class RedisModule { }

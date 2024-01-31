@@ -1,16 +1,16 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { EmailDTO } from "../dtos/email.dto";
+import { EmailDTO as EmailDto } from "../dtos/email.dto";
 import { EmailSender } from "./email.sender";
-import nodemailer, { Transporter } from "nodemailer";
+import * as nodemailer from "nodemailer";
 import { EmailConfig } from "../email.config";
-import Mail from "nodemailer/lib/mailer";
+import Mail, { Address } from "nodemailer/lib/mailer";
 import { EmailRender } from "../renders/email.render";
 
 @Injectable()
 export class NodeMailerSender extends EmailSender {
 
     private readonly logger = new Logger(NodeMailerSender.name);
-    private transporter: Transporter;
+    private transporter: nodemailer.Transporter;
 
     constructor(
         private readonly config: EmailConfig,
@@ -26,33 +26,36 @@ export class NodeMailerSender extends EmailSender {
                 pass: this.config.PASSWORD
             }
         });
+
     }
 
-    public send(data: EmailDTO): Promise<Boolean> {
+    public send(emailDto: EmailDto): Promise<Boolean> {
         return new Promise(async (resolve, reject) => {
-            this.transporter.sendMail(await this.mapper(data), (error) => {
+            const mailOptions = await this.mapper(emailDto);
+            this.transporter.sendMail(mailOptions, (error) => {
                 if (error) {
                     this.logger.error(error.message);
                     return reject(new Error(error.message));
                 }
-                this.logger.log('Email sent', data);
+                this.logger.log(`Email sent to ${emailDto.to.email}, subject: ${emailDto.subject}`);
                 return resolve(true);
             });
         });
     }
 
-    private async mapper(data: EmailDTO): Promise<Mail.Options> {
+    private async mapper(emailDto: EmailDto): Promise<Mail.Options> {
+
         return {
             from: {
-                name: data.from.name || '',
-                address: data.from.email
+                name: emailDto.from.name || '',
+                address: emailDto.from.email
             },
             to: {
-                name: data.to.name || '',
-                address: data.to.email
+                name: emailDto.to.name || '',
+                address: emailDto.to.email
             },
-            subject: data.subject,
-            html: await this.emailRender.render(data.filePath, data.params)
+            subject: emailDto.subject,
+            html: await this.emailRender.render(emailDto.filePath, emailDto.params)
         }
     }
 }

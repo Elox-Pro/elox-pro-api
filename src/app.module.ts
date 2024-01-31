@@ -5,14 +5,16 @@ import { ConfigModule } from '@nestjs/config';
 import { AppConfig } from './app.config';
 import { EmailModule } from './common/email/email.module';
 import { RedisModule } from './redis/redis.module';
+import { PrismaModule } from './prisma/prismal.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    CountryModule,
+    // PrismaModule,
+    // CountryModule,
     AuthenticationModule,
-    EmailModule,
-    RedisModule
+    // EmailModule,
+    // RedisModule
   ],
   providers: [
     AppConfig

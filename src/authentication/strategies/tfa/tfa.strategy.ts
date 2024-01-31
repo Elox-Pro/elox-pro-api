@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { User } from "@prisma/client";
+import { TfaDto } from "src/authentication/dtos/tfa.dto";
 
 @Injectable()
 export abstract class TfaStrategy {
-    abstract generate(user: User): Promise<boolean>;
+    abstract generate(tfaDto: TfaDto): Promise<boolean>;
     abstract verify(id: string, token: string): Promise<boolean>;
 } 

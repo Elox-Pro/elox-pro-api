@@ -1,4 +1,4 @@
-export class EmailAddressDTO {
+export class EmailAddressDto {
 
     constructor(
         readonly email: string,

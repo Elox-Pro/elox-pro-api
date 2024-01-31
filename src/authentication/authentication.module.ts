@@ -1,35 +1,33 @@
 import { Module } from '@nestjs/common';
-import { BCryptStategy } from '../authentication/strategies/hashing/bcrypt.strategy';
-import { HashingStrategy } from '../authentication/strategies/hashing/hashing.strategy';
+import { BCryptStategy } from './strategies/hashing/bcrypt.strategy';
+import { HashingStrategy } from './strategies/hashing/hashing.strategy';
 import { EmailTfaStrategy } from './strategies/tfa/email-tfa.strategy';
 import { TfaFactory } from './factories/tfa.factory';
-import { EmailFactory } from 'src/common/email/factories/email.factory';
 import { AuthenticationController } from './controllers/authentication.controller';
 import { LoginUC } from './usecases/login.uc';
-import { RedisService } from 'src/redis/redis.service';
-import { EmailSender } from 'src/common/email/senders/email.sender';
-import { NodeMailerSender } from 'src/common/email/senders/node-mailer.sender';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { EmailModule } from 'src/common/email/email.module';
+import { RedisModule } from 'src/redis/redis.module';
+import { PrismaModule } from 'src/prisma/prismal.module';
 
 @Module({
+
+    imports: [
+        RedisModule,
+        EmailModule,
+        PrismaModule,
+    ],
     controllers: [
         AuthenticationController
     ],
     providers: [
         EmailTfaStrategy,
         TfaFactory,
-        EmailFactory,
         LoginUC,
-        RedisService,
-        PrismaService,
-        {
-            provide: EmailSender,
-            useClass: NodeMailerSender
-        },
         {
             provide: HashingStrategy,
             useClass: BCryptStategy,
         }
     ]
 })
-export class AuthenticationModule { }
+export class AuthenticationModule {
+}
