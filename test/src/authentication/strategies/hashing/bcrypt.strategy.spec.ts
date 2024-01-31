@@ -1,18 +1,18 @@
-import { BCryptService } from '../../../../src/authentication/services/bcrypt.service';
+import { BCryptStategy } from '../../../../../src/authentication/strategies/hashing/bcrypt.strategy';
 
 describe('BcryptService', () => {
   it('should be defined', () => {
-    expect(new BCryptService()).toBeDefined();
+    expect(new BCryptStategy()).toBeDefined();
   });
 
   it('should hash', async () => {
-    const service = new BCryptService();
+    const service = new BCryptStategy();
     const hashed = await service.hash('test');
     expect(hashed).toBeDefined();
   });
 
   it('should compare', async () => {
-    const service = new BCryptService();
+    const service = new BCryptStategy();
     const hashed = await service.hash('test');
     expect(await service.compare('test', hashed)).toBeTruthy();
   });

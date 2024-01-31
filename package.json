@@ -34,6 +34,7 @@
     "ejs": "^3.1.9",
     "fs": "^0.0.1-security",
     "nodemailer": "^6.9.8",
+    "redis": "^4.6.12",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
   },
@@ -46,6 +47,7 @@
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
     "@types/nodemailer": "^6.4.14",
+    "@types/redis": "^4.0.11",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",

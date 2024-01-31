@@ -4,16 +4,15 @@ import { IUseCase } from "src/common/usecase/usecase.interface";
 import { TokensDto } from "../dtos/tokens.dto";
 import { LoginResponseDTO } from "../dtos/login-response.dto";
 import { PrismaService } from "../../prisma/prisma.service";
-import { HashingService } from "../services/hashing.service";
+import { HashingStrategy } from "../strategies/hashing/hashing.strategy";
 import { TfaFactory } from "../factories/tfa.factory";
-import { TfaDTO } from "../dtos/tfa.dto";
 
 @Injectable()
 export class LoginUC implements IUseCase<LoginDTO, LoginResponseDTO> {
 
     constructor(
         private prisma: PrismaService,
-        private hashingService: HashingService,
+        private hashingService: HashingStrategy,
         private tfaFactory: TfaFactory,
     ) { }
 
@@ -27,25 +26,18 @@ export class LoginUC implements IUseCase<LoginDTO, LoginResponseDTO> {
             throw new UnauthorizedException('Invalid credentials');
         }
 
-        // if (!savedUser.emailVerified) {
-        //     throw new UnauthorizedException('Email not verified');
-        // }
-
         if (!this.hashingService.compare(login.password, savedUser.password)) {
             throw new UnauthorizedException('Invalid credentials');
         }
 
-        const tfa = this.tfaFactory.getTfa(savedUser.tfaType);
-        if (tfa) {
-            await tfa.send(new TfaDTO({
-                email: savedUser.email,
-                username: savedUser.username,
-            }));
+        const tfaStrategy = this.tfaFactory.getTfaStrategy(savedUser.tfaType);
+        if (tfaStrategy) {
+            // TODO: queue this job
+            await tfaStrategy.generate(savedUser);
+            return new LoginResponseDTO(null, true);
         }
 
         // Generate tokens
-        // Generate and send TFA
-
-        return new LoginResponseDTO(new TokensDto('', ''), false);
+        return new LoginResponseDTO(new TokensDto(null, null), false);
     }
 }

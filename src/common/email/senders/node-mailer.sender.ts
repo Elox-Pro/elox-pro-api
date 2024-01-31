@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { EmailDTO } from "../dtos/email.dto";
 import { EmailSender } from "./email.sender";
 import nodemailer, { Transporter } from "nodemailer";
@@ -9,6 +9,7 @@ import { EmailRender } from "../renders/email.render";
 @Injectable()
 export class NodeMailerSender extends EmailSender {
 
+    private readonly logger = new Logger(NodeMailerSender.name);
     private transporter: Transporter;
 
     constructor(
@@ -31,8 +32,10 @@ export class NodeMailerSender extends EmailSender {
         return new Promise(async (resolve, reject) => {
             this.transporter.sendMail(await this.mapper(data), (error) => {
                 if (error) {
+                    this.logger.error(error.message);
                     return reject(new Error(error.message));
                 }
+                this.logger.log('Email sent', data);
                 return resolve(true);
             });
         });
