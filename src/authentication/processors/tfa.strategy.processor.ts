@@ -1,5 +1,5 @@
 import { Process, Processor } from "@nestjs/bull";
-import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
+import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constant";
 import { Logger } from "@nestjs/common";
 import { Job } from "bull";
 import { TfaDto } from "../dtos/tfa.dto";
@@ -28,7 +28,7 @@ export class TfaStrategyProcessor {
             throw new Error('TfaStrategy is required');
         }
 
-        strategy.generate(tfaDto);
+        strategy.execute(tfaDto);
 
         this.logger.log(`TfaStrategyProcessor complete for job: ${job.id}`);
     }

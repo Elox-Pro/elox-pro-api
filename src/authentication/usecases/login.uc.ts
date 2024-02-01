@@ -1,19 +1,18 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { LoginDto } from "src/authentication/dtos/login.dto";
 import { IUseCase } from "src/common/usecase/usecase.interface";
-import { TokensDto } from "../dtos/tokens.dto";
-import { LoginResponseDTO } from "../dtos/login-response.dto";
-import { PrismaService } from "../../prisma/prisma.service";
+import { JwtOutputDto } from "../dtos/jwt-output.dto";
+import { LoginResponseDto } from "../dtos/login-response.dto";
+import { PrismaService } from "src/prisma//prisma.service";
 import { HashingStrategy } from "../strategies/hashing/hashing.strategy";
-import { TfaFactory } from "../factories/tfa.factory";
 import { TfaDto } from "../dtos/tfa.dto";
-import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
+import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constant";
 import { Queue } from "bull";
 import { InjectQueue } from "@nestjs/bull";
 import { TfaType } from "@prisma/client";
 
 @Injectable()
-export class LoginUC implements IUseCase<LoginDto, LoginResponseDTO> {
+export class LoginUC implements IUseCase<LoginDto, LoginResponseDto> {
 
     constructor(
         private prisma: PrismaService,
@@ -22,7 +21,7 @@ export class LoginUC implements IUseCase<LoginDto, LoginResponseDTO> {
         private readonly tfaStrategyQueue: Queue
     ) { }
 
-    async execute(login: LoginDto): Promise<LoginResponseDTO> {
+    async execute(login: LoginDto): Promise<LoginResponseDto> {
 
         const savedUser = await this.prisma.user.findUnique({
             where: { username: login.username }
@@ -38,10 +37,10 @@ export class LoginUC implements IUseCase<LoginDto, LoginResponseDTO> {
 
         if (savedUser.tfaType === TfaType.NONE) {
             // Generate tokens
-            return new LoginResponseDTO(new TokensDto(null, null), false);
+            return new LoginResponseDto(new JwtOutputDto(null, null), false);
         }
 
         await this.tfaStrategyQueue.add(new TfaDto(savedUser, login.ipClient));
-        return new LoginResponseDTO(null, true);
+        return new LoginResponseDto(null, true);
     }
 }

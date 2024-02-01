@@ -1,1 +1,0 @@
-export const TFA_STRATEGY_QUEUE = 'TFA_STRATEGY_QUEUE';

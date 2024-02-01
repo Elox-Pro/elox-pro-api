@@ -1,7 +1,7 @@
-import { GenerateTokensUC } from '../../../../src/authentication/helpers/generate-tokens.helper';
+import { GenerateTokens } from '../../../../src/authentication/helpers/generate-tokens.helper';
 
 describe('GenerateTokensUc', () => {
   it('should be defined', () => {
-    expect(new GenerateTokensUC()).toBeDefined();
+    expect(new GenerateTokens()).toBeDefined();
   });
 });

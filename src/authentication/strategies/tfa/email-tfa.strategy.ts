@@ -6,6 +6,7 @@ import { RedisClientType } from "redis";
 import { EmailFactory } from "src/common/email/factories/email.factory";
 import { EmailType } from "src/common/email/enums/email-type.enum";
 import { EmailAddressDto } from "src/common/email/dtos/email-address.dto";
+import { EMAIL_TFA_STRATEGY_KEY } from "src/authentication/constants/authentication.constants";
 
 @Injectable()
 export class EmailTfaStrategy extends TfaStrategy {
@@ -24,7 +25,7 @@ export class EmailTfaStrategy extends TfaStrategy {
         this.redis = this.redisService.getClient();
     }
 
-    async generate({ user, ipClient }): Promise<boolean> {
+    async execute({ user, ipClient }): Promise<boolean> {
 
         const { email, username, emailVerified } = user;
 
@@ -87,6 +88,6 @@ export class EmailTfaStrategy extends TfaStrategy {
     }
 
     private generateKey(id: string): string {
-        return `elox-pro:email-tfa:${id}`
+        return `${EMAIL_TFA_STRATEGY_KEY}:${id}`
     }
 }
