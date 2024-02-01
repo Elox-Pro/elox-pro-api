@@ -2,6 +2,7 @@ import { Body, Controller, HttpCode, HttpStatus, Post, Request, UseInterceptors 
 import { LoginUC } from "../usecases/login.uc";
 import { LoginDto } from "../dtos/login.dto";
 import { IpClientInterceptor } from "../interceptors/ip-client.interceptor";
+import { LoginResponseDTO } from "../dtos/login-response.dto";
 
 @Controller('authentication')
 @UseInterceptors(IpClientInterceptor)
@@ -11,7 +12,7 @@ export class AuthenticationController {
 
     @HttpCode(HttpStatus.OK)
     @Post('login')
-    login(@Body() loginDto: LoginDto) {
+    login(@Body() loginDto: LoginDto): Promise<LoginResponseDTO> {
         return this.loginUC.execute(loginDto);
     }
 }

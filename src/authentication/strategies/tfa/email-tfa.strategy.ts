@@ -17,7 +17,7 @@ export class EmailTfaStrategy extends TfaStrategy {
     constructor(
         private readonly hashingStrategy: HashingStrategy,
         private readonly redisService: RedisService,
-        private readonly emailFactory: EmailFactory,
+        private readonly emailFactory: EmailFactory
     ) {
 
         super();

@@ -8,6 +8,9 @@ import { LoginUC } from './usecases/login.uc';
 import { EmailModule } from 'src/common/email/email.module';
 import { RedisModule } from 'src/redis/redis.module';
 import { PrismaModule } from 'src/prisma/prismal.module';
+import { BullModule } from '@nestjs/bull';
+import { TFA_STRATEGY_QUEUE } from './constants/authentication.constants';
+import { TfaStrategyProcessor } from './processors/tfa.strategy.processor';
 
 @Module({
 
@@ -15,6 +18,9 @@ import { PrismaModule } from 'src/prisma/prismal.module';
         RedisModule,
         EmailModule,
         PrismaModule,
+        BullModule.registerQueue({
+            name: TFA_STRATEGY_QUEUE
+        })
     ],
     controllers: [
         AuthenticationController
@@ -23,6 +29,7 @@ import { PrismaModule } from 'src/prisma/prismal.module';
         EmailTfaStrategy,
         TfaFactory,
         LoginUC,
+        TfaStrategyProcessor,
         {
             provide: HashingStrategy,
             useClass: BCryptStategy,

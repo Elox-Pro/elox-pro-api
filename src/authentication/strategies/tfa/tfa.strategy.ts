@@ -5,4 +5,8 @@ import { TfaDto } from "src/authentication/dtos/tfa.dto";
 export abstract class TfaStrategy {
     abstract generate(tfaDto: TfaDto): Promise<boolean>;
     abstract verify(id: string, token: string): Promise<boolean>;
+
+    public test() {
+        return 'hello world';
+    }
 } 

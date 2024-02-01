@@ -8,7 +8,8 @@ import { RedisConfig } from './redis.config';
     RedisConfig
   ],
   exports: [
-    RedisService
+    RedisService,
+    RedisConfig
   ]
 })
 export class RedisModule { }

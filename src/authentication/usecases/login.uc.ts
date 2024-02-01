@@ -7,6 +7,10 @@ import { PrismaService } from "../../prisma/prisma.service";
 import { HashingStrategy } from "../strategies/hashing/hashing.strategy";
 import { TfaFactory } from "../factories/tfa.factory";
 import { TfaDto } from "../dtos/tfa.dto";
+import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
+import { Queue } from "bull";
+import { InjectQueue } from "@nestjs/bull";
+import { TfaType } from "@prisma/client";
 
 @Injectable()
 export class LoginUC implements IUseCase<LoginDto, LoginResponseDTO> {
@@ -14,7 +18,8 @@ export class LoginUC implements IUseCase<LoginDto, LoginResponseDTO> {
     constructor(
         private prisma: PrismaService,
         private hashingService: HashingStrategy,
-        private tfaFactory: TfaFactory,
+        @InjectQueue(TFA_STRATEGY_QUEUE)
+        private readonly tfaStrategyQueue: Queue
     ) { }
 
     async execute(login: LoginDto): Promise<LoginResponseDTO> {
@@ -31,14 +36,12 @@ export class LoginUC implements IUseCase<LoginDto, LoginResponseDTO> {
             throw new UnauthorizedException('Invalid credentials');
         }
 
-        const tfaStrategy = this.tfaFactory.getTfaStrategy(savedUser.tfaType);
-        if (tfaStrategy) {
-            // TODO: queue this job
-            await tfaStrategy.generate(new TfaDto(savedUser, login.ipClient));
-            return new LoginResponseDTO(null, true);
+        if (savedUser.tfaType === TfaType.NONE) {
+            // Generate tokens
+            return new LoginResponseDTO(new TokensDto(null, null), false);
         }
 
-        // Generate tokens
-        return new LoginResponseDTO(new TokensDto(null, null), false);
+        await this.tfaStrategyQueue.add(new TfaDto(savedUser, login.ipClient));
+        return new LoginResponseDTO(null, true);
     }
 }
