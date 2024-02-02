@@ -9,11 +9,12 @@ import { EmailModule } from 'src/common/email/email.module';
 import { RedisModule } from 'src/redis/redis.module';
 import { PrismaModule } from 'src/prisma/prismal.module';
 import { BullModule } from '@nestjs/bull';
-import { TFA_STRATEGY_QUEUE } from './constants/authentication.constant';
+import { TFA_STRATEGY_QUEUE } from './constants/authentication.constants';
 import { TfaStrategyProcessor } from './processors/tfa.strategy.processor';
-import { JWTConfig } from './config/jwt.config';
+import { JwtConfig } from './config/jwt.config';
 import { JwtStrategy } from './strategies/jwt/jwt.strategy';
 import { JwtRedisStrategy } from './strategies/jwt/jwt-redis.strategy';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
 
@@ -23,7 +24,8 @@ import { JwtRedisStrategy } from './strategies/jwt/jwt-redis.strategy';
         PrismaModule,
         BullModule.registerQueue({
             name: TFA_STRATEGY_QUEUE
-        })
+        }),
+        JwtModule.register({}),
     ],
     controllers: [
         AuthenticationController
@@ -33,7 +35,7 @@ import { JwtRedisStrategy } from './strategies/jwt/jwt-redis.strategy';
         TfaFactory,
         LoginUC,
         TfaStrategyProcessor,
-        JWTConfig,
+        JwtConfig,
         {
             provide: JwtStrategy,
             useClass: JwtRedisStrategy

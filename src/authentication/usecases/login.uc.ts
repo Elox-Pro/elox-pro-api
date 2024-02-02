@@ -6,19 +6,22 @@ import { LoginResponseDto } from "../dtos/login-response.dto";
 import { PrismaService } from "src/prisma//prisma.service";
 import { HashingStrategy } from "../strategies/hashing/hashing.strategy";
 import { TfaDto } from "../dtos/tfa.dto";
-import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constant";
+import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
 import { Queue } from "bull";
 import { InjectQueue } from "@nestjs/bull";
 import { TfaType } from "@prisma/client";
+import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
+import { JwtInputDto } from "../dtos/jwt-input.dto";
 
 @Injectable()
 export class LoginUC implements IUseCase<LoginDto, LoginResponseDto> {
 
     constructor(
+        @InjectQueue(TFA_STRATEGY_QUEUE)
+        private readonly tfaStrategyQueue: Queue,
         private prisma: PrismaService,
         private hashingService: HashingStrategy,
-        @InjectQueue(TFA_STRATEGY_QUEUE)
-        private readonly tfaStrategyQueue: Queue
+        private jwtStrategy: JwtStrategy
     ) { }
 
     async execute(login: LoginDto): Promise<LoginResponseDto> {
@@ -36,8 +39,13 @@ export class LoginUC implements IUseCase<LoginDto, LoginResponseDto> {
         }
 
         if (savedUser.tfaType === TfaType.NONE) {
-            // Generate tokens
-            return new LoginResponseDto(new JwtOutputDto(null, null), false);
+            const tokens = await this.jwtStrategy.generate(
+                new JwtInputDto(savedUser.id, savedUser.role, savedUser.email)
+            );
+            return new LoginResponseDto(
+                new JwtOutputDto(tokens.accessToken, tokens.refreshToken),
+                false
+            );
         }
 
         await this.tfaStrategyQueue.add(new TfaDto(savedUser, login.ipClient));

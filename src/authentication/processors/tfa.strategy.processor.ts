@@ -1,5 +1,5 @@
 import { Process, Processor } from "@nestjs/bull";
-import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constant";
+import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
 import { Logger } from "@nestjs/common";
 import { Job } from "bull";
 import { TfaDto } from "../dtos/tfa.dto";
