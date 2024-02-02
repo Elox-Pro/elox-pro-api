@@ -32,7 +32,7 @@ async function seedCountries() {
         await prisma.country.createMany({
             data: countries,
         });
-        console.log('Countries seeded successfully.');
+        console.log('✅ Countries seeded successfully.');
     } catch (error) {
         console.error('Error seeding countries:', error);
     }
@@ -48,10 +48,11 @@ async function seedUsers() {
             user.password = await bcryptService.hash(user.password);
             return plainToInstance(CreateUserDTO, user);
         }));
+
         await prisma.user.createMany({
             data: users,
         });
-        console.log('Users seeded successfully.');
+        console.log('✅ Users seeded successfully.');
     } catch (error) {
         console.error('Error seeding users:', error);
     }

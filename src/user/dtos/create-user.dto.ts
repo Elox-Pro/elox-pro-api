@@ -17,4 +17,12 @@ export class CreateUserDTO {
 
     @IsBoolean()
     readonly emailVerified: boolean;
+
+    constructor(role: Role, email: string, username: string, password: string, emailVerified: boolean) {
+        this.role = role;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.emailVerified = emailVerified;
+    }
 }

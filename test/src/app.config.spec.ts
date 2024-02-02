@@ -10,18 +10,16 @@ describe('AppConfig', () => {
     beforeEach(async () => {
 
         const app: TestingModule = await Test.createTestingModule({
-            imports: [ConfigModule.forRoot({ isGlobal: true })],
-            providers: [
-                AppConfig
-            ]
+            imports: [ConfigModule.forRoot({ envFilePath: '.env.test' })],
+            providers: [AppConfig]
         }).compile();
 
         config = app.get<AppConfig>(AppConfig);
     });
 
-
     it('should defined the port variable', () => {
-        expect(config.PORT).toBeDefined();
+        expect(config.ENVIRONMENT).toBeDefined();
+        expect(config.ENVIRONMENT).toBe('testing');
     });
 
 });

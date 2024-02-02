@@ -11,4 +11,10 @@ export class CreateCountryDTO {
     @IsNumber()
     readonly e164: number;
 
+    constructor(name: string, iso2: string, e164: number) {
+        this.name = name;
+        this.iso2 = iso2;
+        this.e164 = e164;
+    }
+
 }
