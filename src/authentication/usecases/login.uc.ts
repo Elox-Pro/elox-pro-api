@@ -34,7 +34,7 @@ export class LoginUC implements IUseCase<LoginDto, LoginResponseDto> {
             throw new UnauthorizedException('Invalid credentials');
         }
 
-        if (!this.hashingService.compare(login.password, savedUser.password)) {
+        if (!await this.hashingService.compare(login.password, savedUser.password)) {
             throw new UnauthorizedException('Invalid credentials');
         }
 
