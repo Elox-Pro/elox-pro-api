@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { TfaStrategy } from "./tfa.strategy";
-import { HashingStrategy } from "src/authentication/strategies/hashing/hashing.strategy";
-import { RedisService } from "src/redis/redis.service";
+import { HashingStrategy } from "authentication/strategies/hashing/hashing.strategy";
+import { RedisService } from "redis/redis.service";
 import { RedisClientType } from "redis";
-import { EmailFactory } from "src/common/email/factories/email.factory";
-import { EmailType } from "src/common/email/enums/email-type.enum";
-import { EmailAddressDto } from "src/common/email/dtos/email-address.dto";
-import { EMAIL_TFA_STRATEGY_KEY } from "src/authentication/constants/authentication.constants";
+import { EmailFactory } from "common/email/factories/email.factory";
+import { EmailType } from "common/email/enums/email-type.enum";
+import { EmailAddressDto } from "common/email/dtos/email-address.dto";
+import { EMAIL_TFA_STRATEGY_KEY } from "authentication/constants/authentication.constants";
 
 @Injectable()
 export class EmailTfaStrategy extends TfaStrategy {

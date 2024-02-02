@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { JwtInputDto } from "src/authentication/dtos/jwt-input.dto";
-import { JwtOutputDto } from "src/authentication/dtos/jwt-output.dto";
+import { JwtInputDto } from "authentication/dtos/jwt-input.dto";
+import { JwtOutputDto } from "authentication/dtos/jwt-output.dto";
 
 @Injectable()
 export abstract class JwtStrategy {

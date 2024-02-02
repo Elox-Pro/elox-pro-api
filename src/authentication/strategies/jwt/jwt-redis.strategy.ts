@@ -1,13 +1,13 @@
-import { JWT_REDIS_STRATEGY_KEY } from "src/authentication/constants/authentication.constants";
+import { JWT_REDIS_STRATEGY_KEY } from "authentication/constants/authentication.constants";
 import { Injectable } from "@nestjs/common";
 import { JwtStrategy } from "./jwt.strategy";
-import { JwtInputDto } from "src/authentication/dtos/jwt-input.dto";
-import { JwtOutputDto } from "src/authentication/dtos/jwt-output.dto";
-import { RedisService } from "src/redis/redis.service";
+import { JwtInputDto } from "authentication/dtos/jwt-input.dto";
+import { JwtOutputDto } from "authentication/dtos/jwt-output.dto";
+import { RedisService } from "redis/redis.service";
 import { RedisClientType } from "redis";
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from "crypto";
-import { JwtConfig } from "src/authentication/config/jwt.config";
+import { JwtConfig } from "authentication/config/jwt.config";
 
 
 @Injectable()

@@ -1,9 +1,9 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { LoginDto } from "src/authentication/dtos/login.dto";
-import { IUseCase } from "src/common/usecase/usecase.interface";
+import { LoginDto } from "authentication/dtos/login.dto";
+import { IUseCase } from "common/usecase/usecase.interface";
 import { JwtOutputDto } from "../dtos/jwt-output.dto";
 import { LoginResponseDto } from "../dtos/login-response.dto";
-import { PrismaService } from "src/prisma//prisma.service";
+import { PrismaService } from "prisma//prisma.service";
 import { HashingStrategy } from "../strategies/hashing/hashing.strategy";
 import { TfaDto } from "../dtos/tfa.dto";
 import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
@@ -39,8 +39,10 @@ export class LoginUC implements IUseCase<LoginDto, LoginResponseDto> {
         }
 
         if (savedUser.tfaType === TfaType.NONE) {
-            const tokens = await this.jwtStrategy.generate(
-                new JwtInputDto(savedUser.id, savedUser.role, savedUser.email)
+            const tokens = await this.jwtStrategy.generate(new JwtInputDto(
+                savedUser.id,
+                savedUser.role,
+                savedUser.username)
             );
             return new LoginResponseDto(
                 new JwtOutputDto(tokens.accessToken, tokens.refreshToken),

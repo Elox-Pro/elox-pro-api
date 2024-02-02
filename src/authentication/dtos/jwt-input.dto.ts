@@ -4,6 +4,6 @@ export class JwtInputDto {
     constructor(
         readonly userId: number,
         readonly role: Role,
-        readonly email: string
+        readonly username: string
     ) { }
 }
