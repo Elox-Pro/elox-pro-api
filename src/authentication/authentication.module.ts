@@ -15,6 +15,8 @@ import { JwtConfig } from './config/jwt.config';
 import { JwtStrategy } from './strategies/jwt/jwt.strategy';
 import { JwtRedisStrategy } from './strategies/jwt/jwt-redis.strategy';
 import { JwtModule } from '@nestjs/jwt';
+import { ValidateTfaUC } from './usecases/validate-tfa.uc';
+import { TfaStrategy } from './strategies/tfa/tfa.strategy';
 
 @Module({
 
@@ -31,9 +33,10 @@ import { JwtModule } from '@nestjs/jwt';
         AuthenticationController
     ],
     providers: [
+        LoginUC,
+        ValidateTfaUC,
         EmailTfaStrategy,
         TfaFactory,
-        LoginUC,
         TfaStrategyProcessor,
         JwtConfig,
         {

@@ -1,8 +1,7 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { TfaStrategy } from "./tfa.strategy";
 import { HashingStrategy } from "authentication/strategies/hashing/hashing.strategy";
 import { RedisService } from "redis/redis.service";
-import { RedisClientType } from "redis";
 import { EmailFactory } from "common/email/factories/email.factory";
 import { EmailType } from "common/email/enums/email-type.enum";
 import { EmailAddressDto } from "common/email/dtos/email-address.dto";
@@ -11,6 +10,7 @@ import { EMAIL_TFA_STRATEGY_KEY } from "authentication/constants/authentication.
 @Injectable()
 export class EmailTfaStrategy extends TfaStrategy {
 
+    private readonly logger = new Logger(EmailTfaStrategy.name);
     private readonly CODE_LENGTH = 6;
     private readonly TTL = 60 * 10; // Expire time in seconds
 
@@ -27,12 +27,37 @@ export class EmailTfaStrategy extends TfaStrategy {
 
         const { email, username, emailVerified } = user;
 
-        this.validate(username, email, emailVerified, ipClient);
+        if (!username) {
+            this.logger.error(`username not found: ${username}`);
+            throw new UnauthorizedException('Invalid credentials');
+        }
+
+        if (!email) {
+            this.logger.error(`email not found: ${email}`);
+            throw new UnauthorizedException('Invalid credentials');
+        }
+
+        if (!emailVerified) {
+            this.logger.error(`email not verified: ${email}`);
+            throw new UnauthorizedException('Invalid credentials');
+        }
+
+        if (!ipClient) {
+            this.logger.error(`ipClient not found: ${ipClient}`);
+            throw new UnauthorizedException('Invalid credentials');
+        }
 
         const code = this.generateCode(this.CODE_LENGTH);
         const hash = await this.hashingStrategy.hash(code.toString());
+        const key = this.generateKey(username);
 
-        await this.redis.getClient().set(this.generateKey(username), hash, {
+        const savedCode = await this.redis.getClient().get(key);
+
+        if (savedCode) {
+            return true;
+        }
+
+        await this.redis.getClient().set(key, hash, {
             EX: this.TTL
         });
 
@@ -47,37 +72,32 @@ export class EmailTfaStrategy extends TfaStrategy {
         return true;
     }
 
-    async verify(id: string, code: string): Promise<boolean> {
-        const key = this.generateKey(id);
+    async verify(username: string, code: string): Promise<boolean> {
+        const key = this.generateKey(username);
         const hash = await this.redis.getClient().get(key);
 
-        if (!code) {
-            return false;
-        }
-
-        await this.redis.getClient().del(key);
-
-        return this.hashingStrategy.compare(code, hash);
-    }
-
-    private validate(
-        username: string, email: string, emailVerified: boolean, ipClient: string): void {
-
         if (!username) {
-            throw new BadRequestException('Username is required');
+            this.logger.error(`username not found: ${username}`);
+            throw new UnauthorizedException('Invalid credentials');
         }
 
-        if (!email) {
-            throw new BadRequestException('Email is required');
+        if (!code) {
+            this.logger.error(`code not found: ${code}`);
+            throw new UnauthorizedException('Invalid credentials');
         }
 
-        if (!emailVerified) {
-            throw new BadRequestException('Email not verified');
+        if (!hash) {
+            this.logger.error(`hash not found: ${hash}`);
+            throw new UnauthorizedException('Invalid credentials');
         }
 
-        if (!ipClient) {
-            throw new BadRequestException('IP is required');
+        const result = await this.hashingStrategy.compare(code, hash);
+
+        if (result) {
+            await this.redis.getClient().del(key);
         }
+
+        return result;
     }
 
     private generateCode(digits: number): number {
@@ -85,7 +105,7 @@ export class EmailTfaStrategy extends TfaStrategy {
         return Math.floor(Math.random() * (9 * value) + value);
     }
 
-    private generateKey(id: string): string {
-        return `${EMAIL_TFA_STRATEGY_KEY}:${id}`
+    private generateKey(username: string): string {
+        return `${EMAIL_TFA_STRATEGY_KEY}:${username}`
     }
 }

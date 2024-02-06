@@ -13,7 +13,7 @@ export class TfaStrategyProcessor {
     constructor(private readonly tfaFactory: TfaFactory) { }
 
     @Process()
-    run(job: Job<TfaDto>) {
+    async run(job: Job<TfaDto>) {
         this.logger.log(`TfaStrategyProcessor for: ${job.id}`);
 
         const tfaDto: TfaDto = job.data;
@@ -28,7 +28,7 @@ export class TfaStrategyProcessor {
             throw new Error('TfaStrategy is required');
         }
 
-        strategy.execute(tfaDto);
+        await strategy.execute(tfaDto);
 
         this.logger.log(`TfaStrategyProcessor complete for job: ${job.id}`);
     }

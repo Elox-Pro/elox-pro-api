@@ -1,4 +1,5 @@
 export class JwtOutputDto {
+
     public readonly accessToken: string;
     public readonly refreshToken: string;
 

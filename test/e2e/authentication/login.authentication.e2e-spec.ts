@@ -3,18 +3,6 @@ import * as request from 'supertest';
 import { bootstrapTest } from '../test.main';
 import { LoginResponseDto } from '@app/authentication/dtos/login-response.dto';
 
-import { Test, TestingModule } from "@nestjs/testing";
-// import { TestModule } from "./test.module";
-import { ValidationPipe } from "@nestjs/common";
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { BullModule } from '@nestjs/bull';
-import { AppConfig } from '@app/app.config';
-import { AuthenticationModule } from '@app/authentication/authentication.module';
-import { RedisModule } from '@app/redis/redis.module';
-import { RedisConfig } from '@app/redis/redis.config';
-
-
 describe('Login - POST: authentication/login', () => {
     let app: INestApplication;
 

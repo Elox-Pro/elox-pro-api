@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { LoginDto } from "authentication/dtos/login.dto";
 import { IUseCase } from "common/usecase/usecase.interface";
 import { JwtOutputDto } from "../dtos/jwt-output.dto";
@@ -16,12 +16,14 @@ import { JwtInputDto } from "../dtos/jwt-input.dto";
 @Injectable()
 export class LoginUC implements IUseCase<LoginDto, LoginResponseDto> {
 
+    private readonly logger = new Logger(LoginUC.name);
+
     constructor(
         @InjectQueue(TFA_STRATEGY_QUEUE)
         private readonly tfaStrategyQueue: Queue,
-        private prisma: PrismaService,
-        private hashingService: HashingStrategy,
-        private jwtStrategy: JwtStrategy
+        private readonly prisma: PrismaService,
+        private readonly hashingStrategy: HashingStrategy,
+        private readonly jwtStrategy: JwtStrategy
     ) { }
 
     async execute(login: LoginDto): Promise<LoginResponseDto> {
@@ -31,23 +33,23 @@ export class LoginUC implements IUseCase<LoginDto, LoginResponseDto> {
         });
 
         if (!savedUser) {
+            this.logger.error(`username not found: ${login.username}`);
             throw new UnauthorizedException('Invalid credentials');
         }
 
-        if (!await this.hashingService.compare(login.password, savedUser.password)) {
+        if (!await this.hashingStrategy.compare(login.password, savedUser.password)) {
+            this.logger.error('Invalid password');
             throw new UnauthorizedException('Invalid credentials');
         }
 
         if (savedUser.tfaType === TfaType.NONE) {
-            const tokens = await this.jwtStrategy.generate(new JwtInputDto(
-                savedUser.id,
-                savedUser.role,
-                savedUser.username)
+            const tokens = await this.jwtStrategy.generate(
+                new JwtInputDto(savedUser.id, savedUser.role, savedUser.username)
             );
-            return new LoginResponseDto(
-                new JwtOutputDto(tokens.accessToken, tokens.refreshToken),
-                false
-            );
+            return new LoginResponseDto(new JwtOutputDto(
+                tokens.accessToken,
+                tokens.refreshToken
+            ), false);
         }
 
         await this.tfaStrategyQueue.add(new TfaDto(savedUser, login.ipClient));
