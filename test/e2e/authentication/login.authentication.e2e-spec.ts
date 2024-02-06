@@ -1,82 +1,97 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
+import { bootstrapTest } from '../test.main';
+import { LoginResponseDto } from '@app/authentication/dtos/login-response.dto';
+
+import { Test, TestingModule } from "@nestjs/testing";
+// import { TestModule } from "./test.module";
+import { ValidationPipe } from "@nestjs/common";
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { BullModule } from '@nestjs/bull';
+import { AppConfig } from '@app/app.config';
+import { AuthenticationModule } from '@app/authentication/authentication.module';
 import { RedisModule } from '@app/redis/redis.module';
 import { RedisConfig } from '@app/redis/redis.config';
-import { AuthenticationModule } from '@app/authentication/authentication.module';
-import { AppConfig } from '@app/app.config';
-import { LoginDto } from '@app/authentication/dtos/login.dto';
-import { AppModule } from '@app/app.module';
 
-//TODO: Update enviroments to localhost
-//TODO: Create a custom module for testing
 
 describe('Login - POST: authentication/login', () => {
     let app: INestApplication;
 
-    const body: LoginDto =
-
-        beforeAll(async () => {
-            const moduleFixture: TestingModule = await Test.createTestingModule({
-                imports: [
-                    ConfigModule.forRoot({
-                        envFilePath: '.env.test'
-                    }),
-                    BullModule.forRootAsync({
-                        imports: [RedisModule],
-                        useFactory: async (config: RedisConfig) => ({
-                            redis: {
-                                port: config.PORT,
-                                host: config.HOST
-                            },
-                        }),
-                        inject: [RedisConfig],
-                    }),
-                    AuthenticationModule
-                ],
-                providers: [
-                    AppConfig
-                ]
-            }).compile();
-
-
-            app = moduleFixture.createNestApplication();
-            app.useGlobalPipes(new ValidationPipe({
-                whitelist: true,
-                forbidNonWhitelisted: true,
-                transform: true,
-                transformOptions: {
-                    enableImplicitConversion: true,
-                },
-            }));
-            await app.init();
-        });
-
     beforeAll(async () => {
+        app = await bootstrapTest();
+    });
+
+    afterAll(async () => {
         await app.close();
     });
 
-    it('should Http status Unauthorized', async () => {
-        return request(app.getHttpServer())
-            .post('/authentication/login')
-            .send({
+    describe('wrong password', () => {
+        it('should HTTP status Unauthorized', async () => {
+            return await request(app.getHttpServer()).post(
+                '/authentication/login'
+            ).send({
                 "username": "yonax73",
-                "password": "1!",
+                "password": "idontknow",
                 "ipClient": "127.0.01"
-            })
-            .expect(HttpStatus.UNAUTHORIZED);
+            }).expect(HttpStatus.UNAUTHORIZED);
+        });
     });
 
-    it('should return Http status OK', () => {
-        return request(app.getHttpServer())
-            .post('/authentication/login')
-            .send({
-                "username": "yonax73",
+    describe('wrong username', () => {
+        it('should HTTP status Unauthorized', async () => {
+            return await request(app.getHttpServer()).post(
+                '/authentication/login'
+            ).send({
+                "username": "idontknow",
                 "password": "098lkj!",
                 "ipClient": "127.0.01"
-            })
-            .expect(HttpStatus.OK);
+            }).expect(HttpStatus.UNAUTHORIZED);
+        });
     });
+
+    describe('tfa - Type: NONE', () => {
+        it('should return HTTP status OK', async () => {
+            const res = await request(app.getHttpServer()).post(
+                '/authentication/login'
+            ).send({
+                "username": "alaska",
+                "password": "098lkj!",
+                "ipClient": "127.0.01"
+            });
+            expect(res.status).toBe(HttpStatus.OK);
+            expect(res.body).toBeDefined();
+
+            const body = res.body as LoginResponseDto;
+
+            expect(body.tokens).toBeDefined();
+
+            const { accessToken, refreshToken } = body.tokens;
+
+            expect(accessToken).toBeDefined();
+            expect(refreshToken).toBeDefined();
+            expect(body.isTFAPending).toBeFalsy();
+        });
+    });
+
+    describe('tfa - Type: EMAIL', () => {
+        it('should return HTTP status OK', async () => {
+            const res = await request(app.getHttpServer()).post(
+                '/authentication/login'
+            ).send({
+                "username": "brazil",
+                "password": "098lkj!",
+                "ipClient": "127.0.01"
+            });
+
+            expect(res.status).toBe(HttpStatus.OK);
+            expect(res.body).toBeDefined();
+
+            const body = res.body as LoginResponseDto;
+
+            expect(body.tokens).toBeNull();
+            expect(body.isTFAPending).toBeTruthy();
+        });
+    });
+
 });

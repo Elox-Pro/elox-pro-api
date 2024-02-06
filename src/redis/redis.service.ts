@@ -1,27 +1,33 @@
-import { Logger } from '@nestjs/common';
+import { Logger, OnApplicationBootstrap, OnApplicationShutdown } from '@nestjs/common';
 import { Injectable, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
 import { createClient, RedisClientType } from "redis";
 import { RedisConfig } from "./redis.config";
 
 @Injectable()
-export class RedisService implements OnModuleDestroy {
+export class RedisService implements OnModuleInit, OnModuleDestroy {
 
     private readonly logger = new Logger(RedisService.name);
     private client: RedisClientType;
 
     constructor(private readonly config: RedisConfig) {
-        this.init();
+    }
+
+    onModuleInit() {
+        this.init().catch((error) => {
+            this.logger.error(`Error trying to connect to the redis client: ${this.config.URL}`);
+            this.logger.error(error);
+        });
+    }
+
+    onModuleDestroy() {
+        this.client.quit();
     }
 
     public getClient(): RedisClientType {
         return this.client;
     }
 
-    async onModuleDestroy() {
-        await this.client.quit();
-    }
-
-    private async init() {
+    private async init(): Promise<void> {
         this.client = createClient({
             url: this.config.URL
         });
@@ -30,6 +36,10 @@ export class RedisService implements OnModuleDestroy {
 
         if (this.client.isReady) {
             this.logger.log(`Redis client is ready`);
+        }
+
+        if (this.client.isOpen) {
+            this.logger.log(`Redis client is open`);
         }
 
         this.client.on('connect', () => {
@@ -47,7 +57,6 @@ export class RedisService implements OnModuleDestroy {
         this.client.on('end', () => {
             this.logger.log('Client disconnected from redis');
         });
-
     }
 
 }

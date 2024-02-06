@@ -1,7 +1,6 @@
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppConfig } from 'app.config';
-import { AppModule } from 'app.module';
 
 describe('AppConfig', () => {
 

@@ -11,18 +11,16 @@ import { EMAIL_TFA_STRATEGY_KEY } from "authentication/constants/authentication.
 @Injectable()
 export class EmailTfaStrategy extends TfaStrategy {
 
-    private redis: RedisClientType;
     private readonly CODE_LENGTH = 6;
     private readonly TTL = 60 * 10; // Expire time in seconds
 
     constructor(
         private readonly hashingStrategy: HashingStrategy,
-        private readonly redisService: RedisService,
+        private readonly redis: RedisService,
         private readonly emailFactory: EmailFactory
     ) {
 
         super();
-        this.redis = this.redisService.getClient();
     }
 
     async execute({ user, ipClient }): Promise<boolean> {
@@ -34,7 +32,7 @@ export class EmailTfaStrategy extends TfaStrategy {
         const code = this.generateCode(this.CODE_LENGTH);
         const hash = await this.hashingStrategy.hash(code.toString());
 
-        await this.redis.set(this.generateKey(username), hash, {
+        await this.redis.getClient().set(this.generateKey(username), hash, {
             EX: this.TTL
         });
 
@@ -51,13 +49,13 @@ export class EmailTfaStrategy extends TfaStrategy {
 
     async verify(id: string, code: string): Promise<boolean> {
         const key = this.generateKey(id);
-        const hash = await this.redis.get(key);
+        const hash = await this.redis.getClient().get(key);
 
         if (!code) {
             return false;
         }
 
-        await this.redis.del(key);
+        await this.redis.getClient().del(key);
 
         return this.hashingStrategy.compare(code, hash);
     }

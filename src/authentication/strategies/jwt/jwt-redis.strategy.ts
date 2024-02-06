@@ -4,7 +4,6 @@ import { JwtStrategy } from "./jwt.strategy";
 import { JwtInputDto } from "authentication/dtos/jwt-input.dto";
 import { JwtOutputDto } from "authentication/dtos/jwt-output.dto";
 import { RedisService } from "redis/redis.service";
-import { RedisClientType } from "redis";
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from "crypto";
 import { JwtConfig } from "authentication/config/jwt.config";
@@ -13,14 +12,12 @@ import { JwtConfig } from "authentication/config/jwt.config";
 @Injectable()
 export class JwtRedisStrategy extends JwtStrategy {
 
-    private redis: RedisClientType;
     constructor(
-        private readonly redisService: RedisService,
+        private readonly redis: RedisService,
         private readonly jwtService: JwtService,
         private readonly config: JwtConfig
     ) {
         super();
-        this.redis = this.redisService.getClient();
     }
 
     async generate(jwtInputDto: JwtInputDto): Promise<JwtOutputDto> {
@@ -62,11 +59,11 @@ export class JwtRedisStrategy extends JwtStrategy {
     }
 
     private async insert(userId: number, tokenId: string): Promise<void> {
-        await this.redis.set(this.getKey(userId), tokenId);
+        await this.redis.getClient().set(this.getKey(userId), tokenId);
     }
 
     private async validate(userId: number, tokenId: string): Promise<Boolean> {
-        const storeId = await this.redis.get(this.getKey(userId));
+        const storeId = await this.redis.getClient().get(this.getKey(userId));
 
         if (storeId !== tokenId) {
             throw new Error('Invalid token');
@@ -76,7 +73,7 @@ export class JwtRedisStrategy extends JwtStrategy {
     }
 
     private async invalidate(userId: number): Promise<void> {
-        await this.redis.del(this.getKey(userId));
+        await this.redis.getClient().del(this.getKey(userId));
     }
 
     private getKey(userId: number): string {
