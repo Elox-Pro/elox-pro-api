@@ -13,8 +13,8 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
     private readonly logger = new Logger(ValidateTfaUC.name);
 
     constructor(
-        private readonly tfaFactory: TFAFactory,
         private readonly prisma: PrismaService,
+        private readonly tfaFactory: TFAFactory,
         private readonly jwtStrategy: JwtStrategy
     ) { }
 

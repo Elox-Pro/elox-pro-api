@@ -7,7 +7,6 @@ import { AuthenticationController } from './controllers/authentication.controlle
 import { LoginUC } from './usecases/login.uc';
 import { EmailModule } from 'common/email/email.module';
 import { RedisModule } from 'redis/redis.module';
-import { PrismaModule } from 'prisma/prismal.module';
 import { BullModule } from '@nestjs/bull';
 import { TFA_STRATEGY_QUEUE } from './constants/authentication.constants';
 import { TfaStrategyProcessor } from './processors/tfa.strategy.processor';
@@ -16,37 +15,40 @@ import { JwtStrategy } from './strategies/jwt/jwt.strategy';
 import { JwtRedisStrategy } from './strategies/jwt/jwt-redis.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ValidateTfaUC } from './usecases/validate-tfa.uc';
+import { RedisConfig } from '@app/redis/redis.config';
 
 @Module({
-
     imports: [
         RedisModule,
         EmailModule,
-        PrismaModule,
+        BullModule.forRootAsync({
+            imports: [RedisModule],
+            useFactory: async (config: RedisConfig) => ({
+                redis: {
+                    port: config.PORT,
+                    host: config.HOST
+                },
+            }),
+            inject: [RedisConfig],
+        }),
         BullModule.registerQueue({
             name: TFA_STRATEGY_QUEUE
         }),
         JwtModule.register({}),
     ],
-    controllers: [
-        AuthenticationController
-    ],
+    controllers: [AuthenticationController],
     providers: [
         LoginUC,
         ValidateTfaUC,
         EmailTfaStrategy,
         TFAFactory,
         TfaStrategyProcessor,
-        JwtConfig,
-        {
+        JwtConfig, {
             provide: JwtStrategy,
             useClass: JwtRedisStrategy
-        },
-        {
+        }, {
             provide: HashingStrategy,
             useClass: BCryptStategy,
-        }
-    ]
+        }]
 })
-export class AuthenticationModule {
-}
+export class AuthenticationModule { }

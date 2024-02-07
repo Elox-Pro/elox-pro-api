@@ -1,4 +1,4 @@
-import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
+import { Inject, Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { LoginRequestDto } from "authentication/dtos/login.request.dto";
 import { IUseCase } from "common/usecase/usecase.interface";
 import { JwtResponseDto } from "../dtos/jwt.response.dto";
