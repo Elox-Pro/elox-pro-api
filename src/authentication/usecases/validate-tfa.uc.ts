@@ -1,24 +1,24 @@
 import { IUseCase } from "@app/common/usecase/usecase.interface";
-import { ValidateTfaDto } from "../dtos/validate-tfa.dto";
-import { ValidateTfaResponseDto } from "../dtos/validate-tfa-response.dto";
+import { ValidateTFARequestDto } from "../dtos/validate-tfa.request.dto";
+import { ValidateTFAResponseDto } from "../dtos/validate-tfa.response.dto";
 import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "@app/prisma/prisma.service";
 import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
-import { TfaFactory } from "../factories/tfa.factory";
-import { JwtInputDto } from "../dtos/jwt-input.dto";
+import { TFAFactory } from "../factories/tfa.factory";
+import { JwtRequestDto } from "../dtos/jwt.request.dto";
 
 @Injectable()
-export class ValidateTfaUC implements IUseCase<ValidateTfaDto, ValidateTfaResponseDto>{
+export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTFAResponseDto>{
 
     private readonly logger = new Logger(ValidateTfaUC.name);
 
     constructor(
-        private readonly tfaFactory: TfaFactory,
+        private readonly tfaFactory: TFAFactory,
         private readonly prisma: PrismaService,
         private readonly jwtStrategy: JwtStrategy
     ) { }
 
-    async execute(data: ValidateTfaDto): Promise<ValidateTfaResponseDto> {
+    async execute(data: ValidateTFARequestDto): Promise<ValidateTFAResponseDto> {
 
         const savedUser = await this.prisma.user.findUnique({
             where: { username: data.username }
@@ -47,10 +47,10 @@ export class ValidateTfaUC implements IUseCase<ValidateTfaDto, ValidateTfaRespon
         }
 
         const tokens = await this.jwtStrategy.generate(
-            new JwtInputDto(savedUser.id, savedUser.role, savedUser.username)
+            new JwtRequestDto(savedUser.id, savedUser.role, savedUser.username)
         );
 
-        return new ValidateTfaResponseDto(tokens.accessToken, tokens.refreshToken);
+        return new ValidateTFAResponseDto(tokens.accessToken, tokens.refreshToken);
     }
 
 }

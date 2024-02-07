@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { JwtInputDto } from "authentication/dtos/jwt-input.dto";
-import { JwtOutputDto } from "authentication/dtos/jwt-output.dto";
+import { JwtRequestDto } from "authentication/dtos/jwt.request.dto";
+import { JwtResponseDto } from "authentication/dtos/jwt.response.dto";
 
 @Injectable()
 export abstract class JwtStrategy {
-    abstract generate(jwtInputDto: JwtInputDto): Promise<JwtOutputDto>;
+    abstract generate(jwtRequest: JwtRequestDto): Promise<JwtResponseDto>;
 
-    abstract verify(token: string): Promise<JwtOutputDto>;
+    abstract verify(token: string): Promise<JwtResponseDto>;
 }

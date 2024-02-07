@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger, UnauthorizedException } from "@nestjs/common";
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { TfaStrategy } from "./tfa.strategy";
 import { HashingStrategy } from "authentication/strategies/hashing/hashing.strategy";
 import { RedisService } from "redis/redis.service";

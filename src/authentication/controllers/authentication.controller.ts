@@ -1,11 +1,11 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, UseInterceptors } from "@nestjs/common";
 import { LoginUC } from "../usecases/login.uc";
-import { LoginDto } from "../dtos/login.dto";
+import { LoginRequestDto } from "../dtos/login.request.dto";
 import { IpClientInterceptor } from "../interceptors/ip-client.interceptor";
-import { LoginResponseDto } from "../dtos/login-response.dto";
+import { LoginResponseDto } from "../dtos/login.response.dto";
 import { ValidateTfaUC } from "../usecases/validate-tfa.uc";
-import { ValidateTfaDto } from "../dtos/validate-tfa.dto";
-import { ValidateTfaResponseDto } from "../dtos/validate-tfa-response.dto";
+import { ValidateTFARequestDto } from "../dtos/validate-tfa.request.dto";
+import { ValidateTFAResponseDto } from "../dtos/validate-tfa.response.dto";
 
 @Controller('authentication')
 export class AuthenticationController {
@@ -18,13 +18,13 @@ export class AuthenticationController {
     @UseInterceptors(IpClientInterceptor)
     @HttpCode(HttpStatus.OK)
     @Post('login')
-    login(@Body() dto: LoginDto): Promise<LoginResponseDto> {
+    login(@Body() dto: LoginRequestDto): Promise<LoginResponseDto> {
         return this.loginUC.execute(dto);
     }
 
     @HttpCode(HttpStatus.OK)
     @Post('validate-tfa')
-    validateTfa(@Body() dto: ValidateTfaDto): Promise<ValidateTfaResponseDto> {
+    validateTfa(@Body() dto: ValidateTFARequestDto): Promise<ValidateTFAResponseDto> {
         return this.validateTfaUC.execute(dto);
     }
 }

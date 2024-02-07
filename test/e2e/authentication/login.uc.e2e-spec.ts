@@ -1,7 +1,7 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { bootstrapTest } from '../test.main';
-import { LoginResponseDto } from '@app/authentication/dtos/login-response.dto';
+import { LoginResponseDto } from '@app/authentication/dtos/login.response.dto';
 
 describe('Login Use Case', () => {
     let app: INestApplication;

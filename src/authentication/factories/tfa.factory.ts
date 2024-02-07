@@ -1,15 +1,15 @@
 import { Injectable } from "@nestjs/common";
-import { EmailTfaStrategy } from "../strategies/tfa/email-tfa.strategy";
+import { EmailTfaStrategy as EmailTFAStrategy } from "../strategies/tfa/email-tfa.strategy";
 import { TfaType } from "@prisma/client"
-import { TfaStrategy } from "../strategies/tfa/tfa.strategy";
+import { TfaStrategy as TFAStrategy } from "../strategies/tfa/tfa.strategy";
 
 @Injectable()
-export class TfaFactory {
+export class TFAFactory {
     constructor(
-        private readonly emailTfa: EmailTfaStrategy,
+        private readonly emailTfa: EmailTFAStrategy,
     ) { }
 
-    getTfaStrategy(type: TfaType): TfaStrategy {
+    getTfaStrategy(type: TfaType): TFAStrategy {
         switch (type) {
             case TfaType.NONE:
                 return null;

@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 
-export class TfaDto {
+export class TFAResponseDto {
     constructor(
         readonly user: User,
         readonly ipClient: string

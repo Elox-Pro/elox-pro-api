@@ -1,8 +1,8 @@
 import { JWT_REDIS_STRATEGY_KEY } from "authentication/constants/authentication.constants";
 import { Injectable } from "@nestjs/common";
 import { JwtStrategy } from "./jwt.strategy";
-import { JwtInputDto } from "authentication/dtos/jwt-input.dto";
-import { JwtOutputDto } from "authentication/dtos/jwt-output.dto";
+import { JwtRequestDto } from "authentication/dtos/jwt.request.dto";
+import { JwtResponseDto } from "authentication/dtos/jwt.response.dto";
 import { RedisService } from "redis/redis.service";
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from "crypto";
@@ -20,24 +20,24 @@ export class JwtRedisStrategy extends JwtStrategy {
         super();
     }
 
-    async generate(jwtInputDto: JwtInputDto): Promise<JwtOutputDto> {
+    async generate(jwtResponse: JwtRequestDto): Promise<JwtResponseDto> {
         const refreshTokenId = randomUUID();
-        const userId = jwtInputDto.userId;
+        const userId = jwtResponse.userId;
 
         const [accessToken, refreshToken] = await Promise.all([
-            this.generateAccessToken(userId, jwtInputDto),
+            this.generateAccessToken(userId, jwtResponse),
             this.generateRefreshToken(userId, refreshTokenId),
         ]);
         await this.insert(userId, refreshTokenId);
 
-        return new JwtOutputDto(accessToken, refreshToken);
+        return new JwtResponseDto(accessToken, refreshToken);
     }
 
-    async verify(token: string): Promise<JwtOutputDto> {
+    async verify(token: string): Promise<JwtResponseDto> {
         throw new Error("Method not implemented.");
     }
 
-    private async generateAccessToken(userId: number, jwtInputDto: JwtInputDto): Promise<string> {
+    private async generateAccessToken(userId: number, jwtInputDto: JwtRequestDto): Promise<string> {
         return await this.signToken(userId, this.config.ACCESS_TOKEN_TTL, jwtInputDto);
     }
 

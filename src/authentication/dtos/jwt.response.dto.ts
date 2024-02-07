@@ -1,4 +1,4 @@
-export class JwtOutputDto {
+export class JwtResponseDto {
 
     public readonly accessToken: string;
     public readonly refreshToken: string;

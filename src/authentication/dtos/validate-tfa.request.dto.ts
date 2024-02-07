@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
-export class ValidateTfaDto {
+export class ValidateTFARequestDto {
 
     @IsNumber()
     @IsNotEmpty()

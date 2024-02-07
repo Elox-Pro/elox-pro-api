@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { TfaDto } from "authentication/dtos/tfa.dto";
+import { TFAResponseDto } from "authentication/dtos/tfa.response.dto";
 
 @Injectable()
 export abstract class TfaStrategy {
-    abstract execute(tfaDto: TfaDto): Promise<boolean>;
+    abstract execute(tfaDto: TFAResponseDto): Promise<boolean>;
     abstract verify(username: string, token: string): Promise<boolean>;
 } 

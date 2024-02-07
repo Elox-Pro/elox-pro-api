@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { BCryptStategy } from './strategies/hashing/bcrypt.strategy';
 import { HashingStrategy } from './strategies/hashing/hashing.strategy';
 import { EmailTfaStrategy } from './strategies/tfa/email-tfa.strategy';
-import { TfaFactory } from './factories/tfa.factory';
+import { TFAFactory } from './factories/tfa.factory';
 import { AuthenticationController } from './controllers/authentication.controller';
 import { LoginUC } from './usecases/login.uc';
 import { EmailModule } from 'common/email/email.module';
@@ -16,7 +16,6 @@ import { JwtStrategy } from './strategies/jwt/jwt.strategy';
 import { JwtRedisStrategy } from './strategies/jwt/jwt-redis.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ValidateTfaUC } from './usecases/validate-tfa.uc';
-import { TfaStrategy } from './strategies/tfa/tfa.strategy';
 
 @Module({
 
@@ -36,7 +35,7 @@ import { TfaStrategy } from './strategies/tfa/tfa.strategy';
         LoginUC,
         ValidateTfaUC,
         EmailTfaStrategy,
-        TfaFactory,
+        TFAFactory,
         TfaStrategyProcessor,
         JwtConfig,
         {
