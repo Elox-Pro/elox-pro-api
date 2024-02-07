@@ -21,7 +21,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./jest-e2e.config.ts --detectOpenHandles",
-    "test:e2e:dotenv": "dotenv -e .env.test npm run test:e2e"
+    "test:e2e:dotenv": "dotenv -e .env.test npm run test:e2e",
+    "test:current": "npx jest test/e2e/authentication/validate-tfa.uc.e2e-spec.ts --config ./jest-e2e.config.ts --detectOpenHandles",
+    "test:current:dotenv": "dotenv -e .env.test npm run test:current"
   },
   "dependencies": {
     "@nestjs/bull": "^10.0.1",

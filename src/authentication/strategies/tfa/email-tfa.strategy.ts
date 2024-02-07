@@ -28,22 +28,22 @@ export class EmailTfaStrategy extends TfaStrategy {
         const { email, username, emailVerified } = user;
 
         if (!username) {
-            this.logger.error(`username not found: ${username}`);
+            this.logger.error(`Username not found: ${username}`);
             throw new UnauthorizedException('Invalid credentials');
         }
 
         if (!email) {
-            this.logger.error(`email not found: ${email}`);
+            this.logger.error(`Email not found: ${email}`);
             throw new UnauthorizedException('Invalid credentials');
         }
 
         if (!emailVerified) {
-            this.logger.error(`email not verified: ${email}`);
+            this.logger.error(`Email not verified: ${email}`);
             throw new UnauthorizedException('Invalid credentials');
         }
 
         if (!ipClient) {
-            this.logger.error(`ipClient not found: ${ipClient}`);
+            this.logger.error(`IpClient not found: ${ipClient}`);
             throw new UnauthorizedException('Invalid credentials');
         }
 
@@ -77,17 +77,17 @@ export class EmailTfaStrategy extends TfaStrategy {
         const hash = await this.redis.getClient().get(key);
 
         if (!username) {
-            this.logger.error(`username not found: ${username}`);
+            this.logger.error(`Username not found: ${username}`);
             throw new UnauthorizedException('Invalid credentials');
         }
 
         if (!code) {
-            this.logger.error(`code not found: ${code}`);
+            this.logger.error(`Code not found: ${code}`);
             throw new UnauthorizedException('Invalid credentials');
         }
 
         if (!hash) {
-            this.logger.error(`hash not found: ${hash}`);
+            this.logger.error(`Hash not found: ${hash}`);
             throw new UnauthorizedException('Invalid credentials');
         }
 

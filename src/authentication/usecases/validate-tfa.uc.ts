@@ -2,7 +2,6 @@ import { IUseCase } from "@app/common/usecase/usecase.interface";
 import { ValidateTfaDto } from "../dtos/validate-tfa.dto";
 import { ValidateTfaResponseDto } from "../dtos/validate-tfa-response.dto";
 import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
-import { TfaStrategy } from "../strategies/tfa/tfa.strategy";
 import { PrismaService } from "@app/prisma/prisma.service";
 import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
 import { TfaFactory } from "../factories/tfa.factory";
@@ -26,14 +25,14 @@ export class ValidateTfaUC implements IUseCase<ValidateTfaDto, ValidateTfaRespon
         });
 
         if (!savedUser) {
-            this.logger.error(`username not found: ${data.username}`);
+            this.logger.error(`Username not found: ${data.username}`);
             throw new UnauthorizedException('Invalid credentials');
         }
 
         const strategy = this.tfaFactory.getTfaStrategy(savedUser.tfaType);
 
         if (!strategy) {
-            this.logger.error('TfaStrategy is required');
+            this.logger.error('Tfa strategy is required');
             throw new UnauthorizedException('Invalid credentials');
         }
 
@@ -52,7 +51,6 @@ export class ValidateTfaUC implements IUseCase<ValidateTfaDto, ValidateTfaRespon
         );
 
         return new ValidateTfaResponseDto(tokens.accessToken, tokens.refreshToken);
-
     }
 
 }
