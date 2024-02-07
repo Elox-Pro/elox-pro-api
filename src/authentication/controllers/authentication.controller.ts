@@ -8,14 +8,18 @@ import { ValidateTFARequestDto } from "../dtos/validate-tfa.request.dto";
 import { ValidateTFAResponseDto } from "../dtos/validate-tfa.response.dto";
 import { Authentication } from "../decorators/authentication.decorator";
 import { AuthenticationType } from "../enums/authentication-type.enum";
+import { RefreshTokenUC } from "../usecases/refresh-token.uc";
+import { RefreshTokenRequestDto } from "../dtos/refresh-token.request.dto";
+import { RefreshTokenResponseDto } from "../dtos/refresh-token.response.dto";
 
 @Controller('authentication')
 @Authentication(AuthenticationType.None)
 export class AuthenticationController {
 
     constructor(
-        private loginUC: LoginUC,
-        private validateTfaUC: ValidateTfaUC,
+        private readonly loginUC: LoginUC,
+        private readonly validateTfaUC: ValidateTfaUC,
+        private readonly refreshTokenUC: RefreshTokenUC
     ) { }
 
     @UseInterceptors(IpClientInterceptor)
@@ -29,5 +33,12 @@ export class AuthenticationController {
     @Post('validate-tfa')
     validateTfa(@Body() dto: ValidateTFARequestDto): Promise<ValidateTFAResponseDto> {
         return this.validateTfaUC.execute(dto);
+    }
+
+    // TODO: Implement refresh token
+    @HttpCode(HttpStatus.OK)
+    @Post('refresh-token')
+    refreshToken(@Body() dto: RefreshTokenRequestDto): Promise<RefreshTokenResponseDto> {
+        return this.refreshTokenUC.execute(dto);
     }
 }

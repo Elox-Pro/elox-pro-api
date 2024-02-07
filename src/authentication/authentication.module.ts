@@ -19,6 +19,7 @@ import { RedisConfig } from '@app/redis/redis.config';
 import { AccessTokenGuard } from './guards/access-token.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthenticationGuard } from './guards/authentication.guard';
+import { RefreshTokenUC } from './usecases/refresh-token.uc';
 
 @Module({
     imports:
@@ -61,6 +62,7 @@ import { AuthenticationGuard } from './guards/authentication.guard';
             },
             LoginUC,
             ValidateTfaUC,
+            RefreshTokenUC,
             EmailTfaStrategy,
             TFAFactory,
             TfaStrategyProcessor,
