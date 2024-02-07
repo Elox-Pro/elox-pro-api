@@ -9,8 +9,8 @@ import { ValidateTFAResponseDto } from "../dtos/validate-tfa.response.dto";
 import { Authentication } from "../decorators/authentication.decorator";
 import { AuthenticationType } from "../enums/authentication-type.enum";
 
-@Authentication(AuthenticationType.None)
 @Controller('authentication')
+@Authentication(AuthenticationType.None)
 export class AuthenticationController {
 
     constructor(
