@@ -4,8 +4,8 @@ import { GetProfileRequestDto } from "../dtos/get-profile.request.dto";
 import { GetProfileResponseDto } from "../dtos/get-profile.response.dto";
 import { Roles } from "@app/authorization/decorators/roles.decorator";
 import { Role } from "@prisma/client";
-import { Authentication } from "@app/authentication/decorators/authentication.decorator";
-import { AuthenticationType } from "@app/authentication/enums/authentication-type.enum";
+import { UserRequest } from "@app/authorization/decorators/user.request.decorator";
+import { UserRequestDto } from "@app/authorization/dto/user.request.dto";
 
 @Controller('user')
 @Roles(Role.SYSTEM_ADMIN)
@@ -17,7 +17,9 @@ export class UserController {
 
     @Get('/profile')
     @HttpCode(HttpStatus.OK)
-    getProfile(@Body() dto: GetProfileRequestDto): Promise<GetProfileResponseDto> {
+    getProfile(@Body() dto: GetProfileRequestDto,
+        @UserRequest() userRequest: UserRequestDto): Promise<GetProfileResponseDto> {
+        console.log(userRequest);
         return this.getProfileUC.execute(dto);
     }
 
