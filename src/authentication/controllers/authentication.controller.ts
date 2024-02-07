@@ -6,7 +6,10 @@ import { LoginResponseDto } from "../dtos/login.response.dto";
 import { ValidateTfaUC } from "../usecases/validate-tfa.uc";
 import { ValidateTFARequestDto } from "../dtos/validate-tfa.request.dto";
 import { ValidateTFAResponseDto } from "../dtos/validate-tfa.response.dto";
+import { Authentication } from "../decorators/authentication.decorator";
+import { AuthenticationType } from "../enums/authentication-type.enum";
 
+@Authentication(AuthenticationType.None)
 @Controller('authentication')
 export class AuthenticationController {
 

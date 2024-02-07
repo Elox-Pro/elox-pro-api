@@ -6,5 +6,5 @@ import { JwtResponseDto } from "authentication/dtos/jwt.response.dto";
 export abstract class JwtStrategy {
     abstract generate(jwtRequest: JwtRequestDto): Promise<JwtResponseDto>;
 
-    abstract verify(token: string): Promise<JwtResponseDto>;
+    abstract verify<T>(token: string): Promise<T>;
 }

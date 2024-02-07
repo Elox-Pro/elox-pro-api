@@ -33,12 +33,17 @@ export class JwtRedisStrategy extends JwtStrategy {
         return new JwtResponseDto(accessToken, refreshToken);
     }
 
-    async verify(token: string): Promise<JwtResponseDto> {
-        throw new Error("Method not implemented.");
+    async verify<T>(token: string): Promise<T> {
+        const payload = await this.jwtService.verifyAsync(token, {
+            audience: this.config.AUDIENCE,
+            issuer: this.config.ISSUER,
+            secret: this.config.SECRET,
+        });
+        return payload as T;
     }
 
-    private async generateAccessToken(userId: number, jwtInputDto: JwtRequestDto): Promise<string> {
-        return await this.signToken(userId, this.config.ACCESS_TOKEN_TTL, jwtInputDto);
+    private async generateAccessToken(userId: number, jwtResponse: JwtRequestDto): Promise<string> {
+        return await this.signToken(userId, this.config.ACCESS_TOKEN_TTL, jwtResponse);
     }
 
     private async generateRefreshToken(userId: number, tokenId: string): Promise<string> {

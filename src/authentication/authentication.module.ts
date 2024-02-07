@@ -16,39 +16,56 @@ import { JwtRedisStrategy } from './strategies/jwt/jwt-redis.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ValidateTfaUC } from './usecases/validate-tfa.uc';
 import { RedisConfig } from '@app/redis/redis.config';
+import { AccessTokenGuard } from './guards/access-token.guard';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthenticationGuard } from './guards/authentication.guard';
 
 @Module({
-    imports: [
-        RedisModule,
-        EmailModule,
-        BullModule.forRootAsync({
-            imports: [RedisModule],
-            useFactory: async (config: RedisConfig) => ({
-                redis: {
-                    port: config.PORT,
-                    host: config.HOST
-                },
+    imports:
+        [
+            RedisModule,
+            EmailModule,
+            BullModule.forRootAsync({
+                imports: [RedisModule],
+                useFactory: async (config: RedisConfig) => ({
+                    redis: {
+                        port: config.PORT,
+                        host: config.HOST
+                    },
+                }),
+                inject: [RedisConfig],
             }),
-            inject: [RedisConfig],
-        }),
-        BullModule.registerQueue({
-            name: TFA_STRATEGY_QUEUE
-        }),
-        JwtModule.register({}),
-    ],
-    controllers: [AuthenticationController],
-    providers: [
-        LoginUC,
-        ValidateTfaUC,
-        EmailTfaStrategy,
-        TFAFactory,
-        TfaStrategyProcessor,
-        JwtConfig, {
-            provide: JwtStrategy,
-            useClass: JwtRedisStrategy
-        }, {
-            provide: HashingStrategy,
-            useClass: BCryptStategy,
-        }]
+            BullModule.registerQueue({
+                name: TFA_STRATEGY_QUEUE
+            }),
+            JwtModule.register({}),
+        ],
+    controllers:
+        [
+            AuthenticationController
+        ],
+    providers:
+        [
+            {
+                provide: JwtStrategy,
+                useClass: JwtRedisStrategy
+            },
+            {
+                provide: HashingStrategy,
+                useClass: BCryptStategy,
+            },
+            {
+
+                provide: APP_GUARD,
+                useClass: AuthenticationGuard,
+            },
+            LoginUC,
+            ValidateTfaUC,
+            EmailTfaStrategy,
+            TFAFactory,
+            TfaStrategyProcessor,
+            AccessTokenGuard,
+            JwtConfig
+        ]
 })
 export class AuthenticationModule { }
