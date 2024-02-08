@@ -1,8 +1,12 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { RefreshTokenRequestDto } from "../dtos/refresh-token.request.dto";
 import { RefreshTokenResponseDto } from "../dtos/refresh-token.response.dto";
 import { IUseCase } from "@app/common/usecase/usecase.interface";
 import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
+import { JwtRefreshPayloadDto } from "../dtos/jwt-refresh-payload.dto";
+import { PrismaService } from "@app/prisma/prisma.service";
+import { JwtAccessPayloadDto } from "../dtos/jwt-access-payload.dto";
+import { InvalidateRefreshTokenError } from "../errors/invalidate-refresh-token.error";
 
 @Injectable()
 export class RefreshTokenUC implements IUseCase<RefreshTokenRequestDto, RefreshTokenResponseDto> {
@@ -11,20 +15,36 @@ export class RefreshTokenUC implements IUseCase<RefreshTokenRequestDto, RefreshT
 
     constructor(
         private readonly jwtStrategy: JwtStrategy,
+        private readonly prisma: PrismaService
     ) { }
 
     async execute(data: RefreshTokenRequestDto): Promise<RefreshTokenResponseDto> {
-        try {
 
-            const payload = await this.jwtStrategy.verify(data.refreshToken);
+        const payload = await this.jwtStrategy.verify<JwtRefreshPayloadDto>(data.refreshToken);
+        const user = await this.prisma.user.findUnique({
+            where: { id: payload.userId }
+        });
 
-            this.logger.debug(`payload: ${JSON.stringify(payload)}`);
-
-            return new RefreshTokenResponseDto();
-
-        } catch (error) {
-
+        if (!user) {
+            throw new Error('Invalid credentials');
         }
 
+        try {
+            await this.jwtStrategy.validateRefreshToken(payload);
+        } catch (error) {
+
+            if (error instanceof InvalidateRefreshTokenError) {
+                // Take action: notify the user that their refresh token  might have been stolen?
+                this.logger.error(`The refresh token  might have been stolen for user: ${user.username}`)
+                throw new UnauthorizedException('Access denied');
+            }
+            throw new UnauthorizedException();
+        }
+
+        const tokens = await this.jwtStrategy.generate(
+            new JwtAccessPayloadDto(user.id, user.role, user.username)
+        );
+
+        return new RefreshTokenResponseDto(tokens);
     }
 }

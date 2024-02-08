@@ -1,3 +1,3 @@
-import { JwtRequestDto } from "@app/authentication/dtos/jwt.request.dto";
+import { JwtAccessPayloadDto } from "@app/authentication/dtos/jwt-access-payload.dto";
 
-export class UserRequestDto extends JwtRequestDto { }
+export class UserRequestDto extends JwtAccessPayloadDto { }

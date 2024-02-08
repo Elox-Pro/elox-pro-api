@@ -1,7 +1,7 @@
-import { Inject, Injectable, Logger, UnauthorizedException } from "@nestjs/common";
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { LoginRequestDto } from "authentication/dtos/login.request.dto";
 import { IUseCase } from "common/usecase/usecase.interface";
-import { JwtResponseDto } from "../dtos/jwt.response.dto";
+import { JwtAccessPayloadDto } from "../dtos/jwt-access-payload.dto";
 import { LoginResponseDto } from "../dtos/login.response.dto";
 import { PrismaService } from "prisma//prisma.service";
 import { HashingStrategy } from "../strategies/hashing/hashing.strategy";
@@ -11,7 +11,7 @@ import { Queue } from "bull";
 import { InjectQueue } from "@nestjs/bull";
 import { TfaType } from "@prisma/client";
 import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
-import { JwtRequestDto } from "../dtos/jwt.request.dto";
+import { JwtTokensDto } from "../dtos/jwt-tokens.dto";
 
 @Injectable()
 export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
@@ -44,15 +44,12 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
 
         if (savedUser.tfaType === TfaType.NONE) {
             const tokens = await this.jwtStrategy.generate(
-                new JwtRequestDto(savedUser.id, savedUser.role, savedUser.username)
+                new JwtAccessPayloadDto(savedUser.id, savedUser.role, savedUser.username)
             );
-            return new LoginResponseDto(new JwtResponseDto(
-                tokens.accessToken,
-                tokens.refreshToken
-            ), false);
+            return new LoginResponseDto(false, tokens);
         }
 
         await this.tfaStrategyQueue.add(new TFAResponseDto(savedUser, login.ipClient));
-        return new LoginResponseDto(null, true);
+        return new LoginResponseDto(true, null);
     }
 }

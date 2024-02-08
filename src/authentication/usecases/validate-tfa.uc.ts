@@ -5,7 +5,7 @@ import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "@app/prisma/prisma.service";
 import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
 import { TFAFactory } from "../factories/tfa.factory";
-import { JwtRequestDto } from "../dtos/jwt.request.dto";
+import { JwtAccessPayloadDto } from "../dtos/jwt-access-payload.dto";
 
 @Injectable()
 export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTFAResponseDto>{
@@ -47,10 +47,10 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
         }
 
         const tokens = await this.jwtStrategy.generate(
-            new JwtRequestDto(savedUser.id, savedUser.role, savedUser.username)
+            new JwtAccessPayloadDto(savedUser.id, savedUser.role, savedUser.username)
         );
 
-        return new ValidateTFAResponseDto(tokens.accessToken, tokens.refreshToken);
+        return new ValidateTFAResponseDto(tokens);
     }
 
 }

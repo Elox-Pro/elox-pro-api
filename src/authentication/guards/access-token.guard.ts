@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, Logger, UnauthorizedExceptio
 import { Request } from 'express';
 import { USER_REQUEST_KEY } from '../constants/authentication.constants';
 import { JwtStrategy } from '../strategies/jwt/jwt.strategy';
-import { JwtRequestDto } from '../dtos/jwt.request.dto';
+import { JwtAccessPayloadDto } from '../dtos/jwt-access-payload.dto';
 
 @Injectable()
 export class AccessTokenGuard implements CanActivate {
@@ -24,7 +24,7 @@ export class AccessTokenGuard implements CanActivate {
         throw new UnauthorizedException();
       }
 
-      request[USER_REQUEST_KEY] = await this.jwtStrategy.verify<JwtRequestDto>(token);
+      request[USER_REQUEST_KEY] = await this.jwtStrategy.verify<JwtAccessPayloadDto>(token);
       return true;
 
     } catch (error) {

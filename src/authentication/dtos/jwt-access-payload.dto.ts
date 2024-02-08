@@ -1,6 +1,6 @@
 import { Role } from "@prisma/client";
 
-export class JwtRequestDto {
+export class JwtAccessPayloadDto {
     constructor(
         readonly userId: number,
         readonly role: Role,

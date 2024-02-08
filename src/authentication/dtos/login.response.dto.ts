@@ -1,11 +1,9 @@
-import { JwtResponseDto } from "./jwt.response.dto";
+import { JwtTokensDto } from "./jwt-tokens.dto";
 
 export class LoginResponseDto {
-    public readonly tokens: JwtResponseDto;
-    public readonly isTFAPending: boolean;
 
-    constructor(tokens: JwtResponseDto, isTFAPending: boolean) {
-        this.tokens = tokens;
-        this.isTFAPending = isTFAPending;
-    }
+    constructor(
+        readonly isTFAPending: boolean,
+        readonly jwtTokens: JwtTokensDto
+    ) { }
 }

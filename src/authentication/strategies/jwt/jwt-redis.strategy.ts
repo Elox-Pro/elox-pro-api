@@ -1,13 +1,14 @@
 import { JWT_REDIS_STRATEGY_KEY } from "authentication/constants/authentication.constants";
 import { Injectable } from "@nestjs/common";
 import { JwtStrategy } from "./jwt.strategy";
-import { JwtRequestDto } from "authentication/dtos/jwt.request.dto";
-import { JwtResponseDto } from "authentication/dtos/jwt.response.dto";
 import { RedisService } from "redis/redis.service";
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from "crypto";
 import { JwtConfig } from "authentication/config/jwt.config";
-
+import { JwtAccessPayloadDto } from "@app/authentication/dtos/jwt-access-payload.dto";
+import { JwtTokensDto } from "@app/authentication/dtos/jwt-tokens.dto";
+import { JwtRefreshPayloadDto } from "@app/authentication/dtos/jwt-refresh-payload.dto";
+import { InvalidateRefreshTokenError } from "@app/authentication/errors/invalidate-refresh-token.error";
 
 @Injectable()
 export class JwtRedisStrategy extends JwtStrategy {
@@ -20,34 +21,48 @@ export class JwtRedisStrategy extends JwtStrategy {
         super();
     }
 
-    async generate(jwtResponse: JwtRequestDto): Promise<JwtResponseDto> {
+    async generate(payload: JwtAccessPayloadDto): Promise<JwtTokensDto> {
         const refreshTokenId = randomUUID();
-        const userId = jwtResponse.userId;
+        const userId = payload.userId;
 
         const [accessToken, refreshToken] = await Promise.all([
-            this.generateAccessToken(userId, jwtResponse),
-            this.generateRefreshToken(userId, refreshTokenId),
+            this.generateAccessToken(userId, payload),
+            this.generateRefreshToken(userId, { refreshTokenId, userId })
         ]);
         await this.insert(userId, refreshTokenId);
 
-        return new JwtResponseDto(accessToken, refreshToken);
+        return new JwtTokensDto(accessToken, refreshToken);
     }
 
-    async verify<T>(token: string): Promise<T> {
-        const payload = await this.jwtService.verifyAsync(token, {
+    async verify<T extends JwtAccessPayloadDto | JwtRefreshPayloadDto>(token: string): Promise<T> {
+        const payload: T = await this.jwtService.verifyAsync(token, {
             audience: this.config.AUDIENCE,
             issuer: this.config.ISSUER,
             secret: this.config.SECRET,
         });
-        return payload as T;
+        return payload;
     }
 
-    private async generateAccessToken(userId: number, jwtResponse: JwtRequestDto): Promise<string> {
-        return await this.signToken(userId, this.config.ACCESS_TOKEN_TTL, jwtResponse);
+    async validateRefreshToken(payload: JwtRefreshPayloadDto): Promise<Boolean> {
+
+        if (!(await this.validate(payload.userId, payload.refreshTokenId))) {
+            throw new Error('Refresh token is not valid');
+        }
+
+        await this.invalidate(payload.userId);
+        return true;
     }
 
-    private async generateRefreshToken(userId: number, tokenId: string): Promise<string> {
-        return await this.signToken(userId, this.config.REFRESH_TOKEN_TTL, { tokenId });
+    private async generateAccessToken(
+        userId: number, payload: JwtAccessPayloadDto
+    ): Promise<string> {
+        return await this.signToken(userId, this.config.ACCESS_TOKEN_TTL, payload);
+    }
+
+    private async generateRefreshToken(
+        userId: number, payload: JwtRefreshPayloadDto
+    ): Promise<string> {
+        return await this.signToken(userId, this.config.REFRESH_TOKEN_TTL, payload);
     }
 
 
@@ -71,7 +86,7 @@ export class JwtRedisStrategy extends JwtStrategy {
         const storeId = await this.redis.getClient().get(this.getKey(userId));
 
         if (storeId !== tokenId) {
-            throw new Error('Invalid token');
+            throw new InvalidateRefreshTokenError();
         }
 
         return true;
