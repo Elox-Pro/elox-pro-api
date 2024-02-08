@@ -26,6 +26,7 @@ export class RefreshTokenUC implements IUseCase<RefreshTokenRequestDto, RefreshT
         });
 
         if (!user) {
+            this.logger.error(`User not found: ${payload.userId}`);
             throw new Error('Invalid credentials');
         }
 
