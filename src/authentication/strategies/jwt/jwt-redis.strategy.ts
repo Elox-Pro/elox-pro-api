@@ -31,7 +31,7 @@ export class JwtRedisStrategy extends JwtStrategy {
         ]);
         await this.insert(userId, refreshTokenId);
 
-        return new JwtTokensDto(accessToken, refreshToken);
+        return new JwtTokensDto(accessToken, refreshToken, this.config.REFRESH_TOKEN_TTL);
     }
 
     async verify<T extends JwtAccessPayloadDto | JwtRefreshPayloadDto>(token: string): Promise<T> {

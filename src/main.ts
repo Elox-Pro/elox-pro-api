@@ -14,6 +14,7 @@ async function bootstrap() {
       enableImplicitConversion: true,
     }
   }));
+  app.enableCors();
   const apiConfig = app.get<AppConfig>(AppConfig);
   await app.listen(apiConfig.PORT);
 

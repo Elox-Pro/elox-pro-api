@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseInterceptors } from "@nestjs/common";
 import { LoginUC } from "../usecases/login.uc";
 import { LoginRequestDto } from "../dtos/login.request.dto";
 import { IpClientInterceptor } from "../interceptors/ip-client.interceptor";
@@ -35,10 +35,15 @@ export class AuthenticationController {
         return this.validateTfaUC.execute(dto);
     }
 
-    // TODO: Implement refresh token
     @HttpCode(HttpStatus.OK)
     @Post('refresh-token')
     refreshToken(@Body() dto: RefreshTokenRequestDto): Promise<RefreshTokenResponseDto> {
         return this.refreshTokenUC.execute(dto);
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @Get('test')
+    test() {
+        return { result: 'test' };
     }
 }

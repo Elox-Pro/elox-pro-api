@@ -11,7 +11,6 @@ import { Queue } from "bull";
 import { InjectQueue } from "@nestjs/bull";
 import { TfaType } from "@prisma/client";
 import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
-import { JwtTokensDto } from "../dtos/jwt-tokens.dto";
 
 @Injectable()
 export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
