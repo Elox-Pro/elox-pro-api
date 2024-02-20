@@ -20,6 +20,8 @@ import { AccessTokenGuard } from './guards/access-token.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthenticationGuard } from './guards/authentication.guard';
 import { RefreshTokenUC } from './usecases/refresh-token.uc';
+import { AppConfig } from '@app/app.config';
+import JWTCookieService from './services/jwt-cookie.service';
 
 @Module({
     imports:
@@ -67,7 +69,9 @@ import { RefreshTokenUC } from './usecases/refresh-token.uc';
             TFAFactory,
             TfaStrategyProcessor,
             AccessTokenGuard,
-            JwtConfig
+            JwtConfig,
+            AppConfig,
+            JWTCookieService
         ]
 })
 export class AuthenticationModule { }

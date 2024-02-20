@@ -6,6 +6,8 @@ import { PrismaService } from "@app/prisma/prisma.service";
 import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
 import { TFAFactory } from "../factories/tfa.factory";
 import { JwtAccessPayloadDto } from "../dtos/jwt-access-payload.dto";
+import JWTCookieService from "../services/jwt-cookie.service";
+import { JwtTokensDto } from "../dtos/jwt-tokens.dto";
 
 @Injectable()
 export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTFAResponseDto>{
@@ -15,7 +17,8 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
     constructor(
         private readonly prisma: PrismaService,
         private readonly tfaFactory: TFAFactory,
-        private readonly jwtStrategy: JwtStrategy
+        private readonly jwtStrategy: JwtStrategy,
+        private readonly jwtCookieService: JWTCookieService
     ) { }
 
     async execute(data: ValidateTFARequestDto): Promise<ValidateTFAResponseDto> {
@@ -50,7 +53,14 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
             new JwtAccessPayloadDto(savedUser.username, savedUser.role)
         );
 
-        return new ValidateTFAResponseDto(tokens);
+        this.jwtCookieService.setTokens(data.getResponse(), tokens);
+
+        return new ValidateTFAResponseDto(new JwtTokensDto(
+            tokens.accessToken,
+            null,
+            0,
+            0
+        ));
     }
 
 }

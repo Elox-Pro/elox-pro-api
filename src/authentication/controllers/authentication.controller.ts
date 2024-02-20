@@ -12,6 +12,9 @@ import { RefreshTokenUC } from "../usecases/refresh-token.uc";
 import { RefreshTokenRequestDto } from "../dtos/refresh-token.request.dto";
 import { RefreshTokenResponseDto } from "../dtos/refresh-token.response.dto";
 import { Request, Response } from "express";
+import { AppConfig } from "@app/app.config";
+import { JwtTokensDto } from "../dtos/jwt-tokens.dto";
+import JWTCookieService from "../services/jwt-cookie.service";
 
 @Controller('authentication')
 @Authentication(AuthenticationType.None)
@@ -26,30 +29,19 @@ export class AuthenticationController {
     @UseInterceptors(IpClientInterceptor)
     @HttpCode(HttpStatus.OK)
     @Post('login')
-    login(@Res({ passthrough: true }) response: Response, @Req() request: Request, @Body() dto: LoginRequestDto): Promise<LoginResponseDto> {
+    async login(
+        @Res({ passthrough: true }) response: Response,
+        @Body() dto: LoginRequestDto
+    ): Promise<LoginResponseDto> {
 
-        // response.cookie('refreshToken', '1111', {
-        //     domain: '.localhost',
-        //     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-        //     httpOnly: true,
-        //     secure: true,
-        //     sameSite: true,
-        //     path: '/'
-        // })
-        // response.cookie('username', dto.username)
-        response.cookie('refreshToken', '1111', {
-            domain: '.eloxpro-dev.com',
-            httpOnly: true,
-        })
-        console.log(request.cookies)
-        console.log(request.cookies)
-        // response.status(HttpStatus.OK).send(this.loginUC.execute(dto));
+        dto.setResponse(response);
         return this.loginUC.execute(dto);
     }
 
     @HttpCode(HttpStatus.OK)
     @Post('validate-tfa')
     validateTfa(@Body() dto: ValidateTFARequestDto): Promise<ValidateTFAResponseDto> {
+        dto.setResponse(dto.getResponse());
         return this.validateTfaUC.execute(dto);
     }
 

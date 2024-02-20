@@ -11,6 +11,8 @@ import { Queue } from "bull";
 import { InjectQueue } from "@nestjs/bull";
 import { TfaType } from "@prisma/client";
 import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
+import JWTCookieService from "../services/jwt-cookie.service";
+import { JwtTokensDto } from "../dtos/jwt-tokens.dto";
 
 @Injectable()
 export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
@@ -22,7 +24,8 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
         private readonly tfaStrategyQueue: Queue,
         private readonly prisma: PrismaService,
         private readonly hashingStrategy: HashingStrategy,
-        private readonly jwtStrategy: JwtStrategy
+        private readonly jwtStrategy: JwtStrategy,
+        private readonly jwtCookieService: JWTCookieService
     ) { }
 
     async execute(login: LoginRequestDto): Promise<LoginResponseDto> {
@@ -45,7 +48,12 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
             const tokens = await this.jwtStrategy.generate(
                 new JwtAccessPayloadDto(savedUser.username, savedUser.role)
             );
-            return new LoginResponseDto(false, tokens);
+            this.jwtCookieService.setTokens(login.getResponse(), tokens);
+
+            return new LoginResponseDto(
+                false,
+                new JwtTokensDto(tokens.accessToken, null, 0, 0)
+            );
         }
 
         await this.tfaStrategyQueue.add(new TFAResponseDto(savedUser, login.ipClient));

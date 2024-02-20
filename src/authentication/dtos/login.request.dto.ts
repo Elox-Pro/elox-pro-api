@@ -1,4 +1,5 @@
 import { IsString } from "class-validator";
+import { Response } from "express";
 
 export class LoginRequestDto {
 
@@ -10,4 +11,16 @@ export class LoginRequestDto {
 
     @IsString()
     readonly ipClient: string;
+
+    private response: Response;
+
+    setResponse(response: Response): void {
+        this.response = response;
+    }
+
+    getResponse(): Response {
+        return this.response;
+    }
+
+
 }

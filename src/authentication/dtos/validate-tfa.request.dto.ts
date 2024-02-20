@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { Response } from "express";
 
 export class ValidateTFARequestDto {
 
@@ -9,4 +10,14 @@ export class ValidateTFARequestDto {
     @IsString()
     @IsNotEmpty()
     public readonly username: string;
+
+    private response: Response;
+
+    setResponse(response: Response): void {
+        this.response = response;
+    }
+
+    getResponse(): Response {
+        return this.response;
+    }
 }
