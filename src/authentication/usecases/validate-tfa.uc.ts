@@ -47,7 +47,7 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
         }
 
         const tokens = await this.jwtStrategy.generate(
-            new JwtAccessPayloadDto(savedUser.id, savedUser.role, savedUser.username)
+            new JwtAccessPayloadDto(savedUser.username, savedUser.role)
         );
 
         return new ValidateTFAResponseDto(tokens);

@@ -43,7 +43,7 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
 
         if (savedUser.tfaType === TfaType.NONE) {
             const tokens = await this.jwtStrategy.generate(
-                new JwtAccessPayloadDto(savedUser.id, savedUser.role, savedUser.username)
+                new JwtAccessPayloadDto(savedUser.username, savedUser.role)
             );
             return new LoginResponseDto(false, tokens);
         }

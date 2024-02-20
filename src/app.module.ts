@@ -4,6 +4,7 @@ import { AppConfig } from './app.config';
 import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthorizationModule } from './authorization/authorization.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { AuthorizationModule } from './authorization/authorization.module';
     AuthenticationModule,
     AuthorizationModule,
     UserModule,
+    HealthModule
   ],
   providers: [AppConfig]
 })

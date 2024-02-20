@@ -1,6 +1,10 @@
 export class JwtRefreshPayloadDto {
     constructor(
-        readonly userId: number,
+        /**
+         * The sub is the username
+         */
+        readonly sub: string,
+
         readonly refreshTokenId: string
     ) { }
 }

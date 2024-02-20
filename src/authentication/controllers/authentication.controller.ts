@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseInterceptors } from "@nestjs/common";
 import { LoginUC } from "../usecases/login.uc";
 import { LoginRequestDto } from "../dtos/login.request.dto";
 import { IpClientInterceptor } from "../interceptors/ip-client.interceptor";
@@ -11,6 +11,7 @@ import { AuthenticationType } from "../enums/authentication-type.enum";
 import { RefreshTokenUC } from "../usecases/refresh-token.uc";
 import { RefreshTokenRequestDto } from "../dtos/refresh-token.request.dto";
 import { RefreshTokenResponseDto } from "../dtos/refresh-token.response.dto";
+import { Request, Response } from "express";
 
 @Controller('authentication')
 @Authentication(AuthenticationType.None)
@@ -25,7 +26,24 @@ export class AuthenticationController {
     @UseInterceptors(IpClientInterceptor)
     @HttpCode(HttpStatus.OK)
     @Post('login')
-    login(@Body() dto: LoginRequestDto): Promise<LoginResponseDto> {
+    login(@Res({ passthrough: true }) response: Response, @Req() request: Request, @Body() dto: LoginRequestDto): Promise<LoginResponseDto> {
+
+        // response.cookie('refreshToken', '1111', {
+        //     domain: '.localhost',
+        //     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+        //     httpOnly: true,
+        //     secure: true,
+        //     sameSite: true,
+        //     path: '/'
+        // })
+        // response.cookie('username', dto.username)
+        response.cookie('refreshToken', '1111', {
+            domain: '.eloxpro-dev.com',
+            httpOnly: true,
+        })
+        console.log(request.cookies)
+        console.log(request.cookies)
+        // response.status(HttpStatus.OK).send(this.loginUC.execute(dto));
         return this.loginUC.execute(dto);
     }
 
@@ -39,11 +57,5 @@ export class AuthenticationController {
     @Post('refresh-token')
     refreshToken(@Body() dto: RefreshTokenRequestDto): Promise<RefreshTokenResponseDto> {
         return this.refreshTokenUC.execute(dto);
-    }
-
-    @HttpCode(HttpStatus.OK)
-    @Get('test')
-    test() {
-        return { result: 'test' };
     }
 }

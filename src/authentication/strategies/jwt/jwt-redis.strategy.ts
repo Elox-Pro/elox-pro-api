@@ -23,13 +23,13 @@ export class JwtRedisStrategy extends JwtStrategy {
 
     async generate(payload: JwtAccessPayloadDto): Promise<JwtTokensDto> {
         const refreshTokenId = randomUUID();
-        const userId = payload.userId;
+        const sub = payload.sub;
 
         const [accessToken, refreshToken] = await Promise.all([
-            this.generateAccessToken(userId, payload),
-            this.generateRefreshToken(userId, { refreshTokenId, userId })
+            this.generateAccessToken(sub, payload),
+            this.generateRefreshToken(sub, { refreshTokenId, sub })
         ]);
-        await this.insert(userId, refreshTokenId);
+        await this.insert(sub, refreshTokenId);
 
         return new JwtTokensDto(accessToken, refreshToken, this.config.REFRESH_TOKEN_TTL);
     }
@@ -45,30 +45,30 @@ export class JwtRedisStrategy extends JwtStrategy {
 
     async validateRefreshToken(payload: JwtRefreshPayloadDto): Promise<Boolean> {
 
-        if (!(await this.validate(payload.userId, payload.refreshTokenId))) {
+        if (!(await this.validate(payload.sub, payload.refreshTokenId))) {
             throw new Error('Refresh token is not valid');
         }
 
-        await this.invalidate(payload.userId);
+        await this.invalidate(payload.sub);
         return true;
     }
 
     private async generateAccessToken(
-        userId: number, payload: JwtAccessPayloadDto
+        sub: string, payload: JwtAccessPayloadDto
     ): Promise<string> {
-        return await this.signToken(userId, this.config.ACCESS_TOKEN_TTL, payload);
+        return await this.signToken(sub, this.config.ACCESS_TOKEN_TTL, payload);
     }
 
     private async generateRefreshToken(
-        userId: number, payload: JwtRefreshPayloadDto
+        sub: string, payload: JwtRefreshPayloadDto
     ): Promise<string> {
-        return await this.signToken(userId, this.config.REFRESH_TOKEN_TTL, payload);
+        return await this.signToken(sub, this.config.REFRESH_TOKEN_TTL, payload);
     }
 
 
-    private async signToken<T>(userId: number, expiresIn: number, payload: T): Promise<string> {
+    private async signToken<T>(sub: string, expiresIn: number, payload: T): Promise<string> {
         return await this.jwtService.signAsync({
-            sub: userId,
+            sub: sub,
             ...payload
         }, {
             audience: this.config.AUDIENCE,
@@ -78,12 +78,12 @@ export class JwtRedisStrategy extends JwtStrategy {
         });
     }
 
-    private async insert(userId: number, tokenId: string): Promise<void> {
-        await this.redis.getClient().set(this.getKey(userId), tokenId);
+    private async insert(sub: string, tokenId: string): Promise<void> {
+        await this.redis.getClient().set(this.getKey(sub), tokenId);
     }
 
-    private async validate(userId: number, tokenId: string): Promise<Boolean> {
-        const storeId = await this.redis.getClient().get(this.getKey(userId));
+    private async validate(sub: string, tokenId: string): Promise<Boolean> {
+        const storeId = await this.redis.getClient().get(this.getKey(sub));
 
         if (storeId !== tokenId) {
             throw new InvalidateRefreshTokenError();
@@ -92,12 +92,12 @@ export class JwtRedisStrategy extends JwtStrategy {
         return true;
     }
 
-    private async invalidate(userId: number): Promise<void> {
-        await this.redis.getClient().del(this.getKey(userId));
+    private async invalidate(sub: string): Promise<void> {
+        await this.redis.getClient().del(this.getKey(sub));
     }
 
-    private getKey(userId: number): string {
-        return `${JWT_REDIS_STRATEGY_KEY}${userId}`;
+    private getKey(sub: string): string {
+        return `${JWT_REDIS_STRATEGY_KEY}${sub}`;
     }
 
 }
