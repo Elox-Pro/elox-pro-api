@@ -22,6 +22,7 @@ import { AuthenticationGuard } from './guards/authentication.guard';
 import { RefreshTokenUC } from './usecases/refresh-token.uc';
 import { AppConfig } from '@app/app.config';
 import JWTCookieService from './services/jwt-cookie.service';
+import { JWTCookiesGuard } from './guards/jwt-cookies.guard';
 
 @Module({
     imports:
@@ -69,6 +70,7 @@ import JWTCookieService from './services/jwt-cookie.service';
             TFAFactory,
             TfaStrategyProcessor,
             AccessTokenGuard,
+            JWTCookiesGuard,
             JwtConfig,
             AppConfig,
             JWTCookieService

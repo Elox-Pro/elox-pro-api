@@ -11,10 +11,7 @@ import { AuthenticationType } from "../enums/authentication-type.enum";
 import { RefreshTokenUC } from "../usecases/refresh-token.uc";
 import { RefreshTokenRequestDto } from "../dtos/refresh-token.request.dto";
 import { RefreshTokenResponseDto } from "../dtos/refresh-token.response.dto";
-import { Request, Response } from "express";
-import { AppConfig } from "@app/app.config";
-import { JwtTokensDto } from "../dtos/jwt-tokens.dto";
-import JWTCookieService from "../services/jwt-cookie.service";
+import { Response } from "express";
 
 @Controller('authentication')
 @Authentication(AuthenticationType.None)
@@ -41,12 +38,15 @@ export class AuthenticationController {
     @HttpCode(HttpStatus.OK)
     @Post('validate-tfa')
     validateTfa(@Body() dto: ValidateTFARequestDto): Promise<ValidateTFAResponseDto> {
+
         dto.setResponse(dto.getResponse());
         return this.validateTfaUC.execute(dto);
     }
 
+    // This endpoint is currently disabled due to the cookie server side with http only 
+    // flag implementation
     @HttpCode(HttpStatus.OK)
-    @Post('refresh-token')
+    // @Post('refresh-token')
     refreshToken(@Body() dto: RefreshTokenRequestDto): Promise<RefreshTokenResponseDto> {
         return this.refreshTokenUC.execute(dto);
     }

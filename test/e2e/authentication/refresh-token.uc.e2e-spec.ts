@@ -5,7 +5,9 @@ import { LoginResponseDto } from "@app/authentication/dtos/login.response.dto";
 import { JwtTokensDto } from "@app/authentication/dtos/jwt-tokens.dto";
 import { RefreshTokenResponseDto } from "@app/authentication/dtos/refresh-token.response.dto";
 
-describe('Refresh Token Use Case', () => {
+// This endpoint is currently disabled due to the cookie server side with http only 
+// flag implementation
+describe.skip('Refresh Token Use Case', () => {
     let app: INestApplication;
 
     beforeAll(async () => {
@@ -34,6 +36,8 @@ describe('Refresh Token Use Case', () => {
             const body = res.body as LoginResponseDto;
             tokens = body.tokens;
             expect(tokens).toBeDefined();
+            expect(tokens.accessToken).toBeDefined();
+            expect(tokens.refreshToken).toBeUndefined();
             expect(body.isTFAPending).toBeFalsy();
         });
 

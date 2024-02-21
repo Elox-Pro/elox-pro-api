@@ -1,5 +1,6 @@
 export enum AuthenticationType {
     Bearer,
     ApiKey,
-    None
+    None,
+    JwtCookies
 }

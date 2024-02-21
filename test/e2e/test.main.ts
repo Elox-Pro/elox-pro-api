@@ -1,6 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { TestModule } from "./test.module";
 import { ValidationPipe } from "@nestjs/common";
+import * as cookieParser from 'cookie-parser';
 
 export async function bootstrapTest() {
 
@@ -19,7 +20,13 @@ export async function bootstrapTest() {
         },
     }));
 
+    app.enableCors({
+        origin: "*",
+    });
+    app.use(cookieParser());
+
     await app.init();
+
     return app;
 }
 
