@@ -1,3 +1,5 @@
+import { Role } from "@prisma/client";
+
 export class JwtRefreshPayloadDto {
     constructor(
         /**
@@ -6,5 +8,6 @@ export class JwtRefreshPayloadDto {
         readonly sub: string,
 
         readonly refreshTokenId: string
-    ) { }
+    ) {
+    }
 }

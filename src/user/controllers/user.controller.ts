@@ -1,4 +1,4 @@
-import { Controller, HttpStatus, HttpCode, Body, Get, Param } from "@nestjs/common";
+import { Controller, HttpStatus, HttpCode, Body, Get, Param, UnauthorizedException, Logger } from "@nestjs/common";
 import { GetProfileUC } from "../usecases/get-profile.uc";
 import { GetProfileRequestDto } from "../dtos/get-profile.request.dto";
 import { GetProfileResponseDto } from "../dtos/get-profile.response.dto";
@@ -11,6 +11,7 @@ import { UserRequestDto } from "@app/authorization/dto/user.request.dto";
 @Roles(Role.SYSTEM_ADMIN)
 export class UserController {
 
+    private readonly logger = new Logger(UserController.name);
     constructor(
         private getProfileUC: GetProfileUC,
     ) { }
@@ -18,13 +19,18 @@ export class UserController {
     @Get('/:username/profile')
     @HttpCode(HttpStatus.OK)
     getProfile(
-        // @Body() dto: GetProfileRequestDto,
         @Param('username') username: string,
         @UserRequest() userRequest: UserRequestDto
     ): Promise<GetProfileResponseDto> {
 
-        console.log(username, userRequest);
-        return this.getProfileUC.execute(new GetProfileRequestDto(username));
+        if (username !== userRequest.sub) {
+            this.logger.error(
+                `${userRequest.sub} is not authorized to access data of: ${username}`
+            );
+            throw new UnauthorizedException();
+        }
+
+        return this.getProfileUC.execute(new GetProfileRequestDto(userRequest.sub));
 
     }
 
