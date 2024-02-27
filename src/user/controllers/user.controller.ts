@@ -5,7 +5,7 @@ import { GetProfileResponseDto } from "../dtos/get-profile.response.dto";
 import { Roles } from "@app/authorization/decorators/roles.decorator";
 import { Role } from "@prisma/client";
 import { UserRequest } from "@app/authorization/decorators/user.request.decorator";
-import { UserRequestDto } from "@app/authorization/dto/user.request.dto";
+import { ActiveUserDto } from "@app/authorization/dto/active-userdto";
 
 @Controller('users')
 @Roles(Role.SYSTEM_ADMIN)
@@ -20,7 +20,7 @@ export class UserController {
     @HttpCode(HttpStatus.OK)
     getProfile(
         @Param('username') username: string,
-        @UserRequest() userRequest: UserRequestDto
+        @UserRequest() userRequest: ActiveUserDto
     ): Promise<GetProfileResponseDto> {
 
         if (username !== userRequest.sub) {

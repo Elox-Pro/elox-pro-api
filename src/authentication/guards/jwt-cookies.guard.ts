@@ -5,7 +5,13 @@ import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
 import { JwtAccessPayloadDto } from "../dtos/jwt-access-payload.dto";
 import { RefreshTokenUC } from "../usecases/refresh-token.uc";
 import { RefreshTokenRequestDto } from "../dtos/refresh-token.request.dto";
+import { JwtConfig } from "../config/jwt.config";
 
+/**
+ * Guard to check JWT cookies for authentication and refresh tokens for token renewal.
+ * @author yonax73@gmail.com
+ * @date 2024-02-07
+ */
 @Injectable()
 export class JWTCookiesGuard implements CanActivate {
 
@@ -15,57 +21,51 @@ export class JWTCookiesGuard implements CanActivate {
         private readonly jwtCookieService: JWTCookieService,
         private readonly jwtStrategy: JwtStrategy,
         private readonly refreshTokenUC: RefreshTokenUC,
+        private readonly jwtConfig: JwtConfig,
     ) { }
 
+    /**
+     * Checks if the request has valid JWT tokens in cookies and refreshes them if necessary.
+     * @param context The execution context.
+     * @returns A boolean indicating whether the request is allowed.
+     * @throws UnauthorizedException if authentication fails.
+     */
     async canActivate(context: ExecutionContext): Promise<boolean> {
         try {
             const request = context.switchToHttp().getRequest();
             const response = context.switchToHttp().getResponse();
-            let accessToken = this.jwtCookieService.getAccessToken(
-                request
-            );
-            console.log(1, 'accessToken', accessToken);
+            const accessToken = this.jwtCookieService.getAccessToken(request);
+
             if (!accessToken) {
+                this.logger.error('Access token not found');
+                throw new UnauthorizedException();
+            }
 
-                const refreshToken = this.jwtCookieService.getRefreshToken(
-                    request
-                );
+            let payload = await this.jwtStrategy.verify<JwtAccessPayloadDto>(accessToken);
 
-                console.log(2, 'refreshToken', refreshToken);
+            const bufferTime = this.jwtConfig.BUFFER_TIME * 1000;
+
+            if ((payload.exp * 1000) <= Date.now() + bufferTime) {
+
+                const refreshToken = this.jwtCookieService.getRefreshToken(request);
 
                 if (!refreshToken) {
                     this.logger.error('Refresh token not found');
                     throw new UnauthorizedException();
                 }
 
-                const refreshTokenResponse = await this.refreshTokenUC.execute(
-                    new RefreshTokenRequestDto(refreshToken)
-                )
+                const { tokens } = await this.refreshTokenUC.execute(new RefreshTokenRequestDto(refreshToken));
 
-                console.log(3, 'refreshTokenResponse', refreshTokenResponse);
+                payload = await this.jwtStrategy.verify<JwtAccessPayloadDto>(tokens.accessToken);
 
-                this.jwtCookieService.setTokens(
-                    response,
-                    refreshTokenResponse.tokens
-                );
-
-                console.log(4, 'jwtCookieService.setTokens');
-
-                accessToken = refreshTokenResponse.tokens.accessToken;
-
-                console.log(5, 'accessToken', accessToken);
+                this.jwtCookieService.hydratateSession(response, tokens, payload);
             }
 
-            request[USER_REQUEST_KEY] = await this.jwtStrategy.verify<JwtAccessPayloadDto>(
-                accessToken
-            );
-
-            console.log(6, 'USER_REQUEST_KEY', request[USER_REQUEST_KEY]);
+            request[USER_REQUEST_KEY] = payload;
 
             return true;
 
         } catch (error) {
-            console.log(7, 'error', error);
             this.logger.error('Invalid token');
             throw new UnauthorizedException();
         }

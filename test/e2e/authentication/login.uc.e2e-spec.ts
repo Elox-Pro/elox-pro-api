@@ -48,12 +48,7 @@ describe('Login Use Case', () => {
 
                 const body = res.body as LoginResponseDto;
 
-                expect(body.tokens).toBeDefined();
-
-                const { accessToken, refreshToken } = body.tokens;
-
-                expect(accessToken).toBeDefined();
-                expect(refreshToken).toBeDefined();
+                expect(body.tokens).toBeNull();
                 expect(body.isTFAPending).toBeFalsy();
             });
         });

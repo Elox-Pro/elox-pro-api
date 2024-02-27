@@ -12,8 +12,14 @@ import { InjectQueue } from "@nestjs/bull";
 import { TfaType } from "@prisma/client";
 import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
 import JWTCookieService from "../services/jwt-cookie.service";
-import { JwtTokensDto } from "../dtos/jwt-tokens.dto";
 
+/**
+ * Use case for handling user login.
+ * It verifies credentials, generates JWT tokens, and manages session cookies.
+ * If TFA is enabled, it adds a job to the TFA strategy queue.
+ * @author yonax73@gmail.com
+ * @date 2024-02-07
+ */
 @Injectable()
 export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
 
@@ -28,6 +34,14 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
         private readonly jwtCookieService: JWTCookieService
     ) { }
 
+    /**
+     * Executes the login use case.
+     * Verifies user credentials, generates JWT tokens, and manages session cookies.
+     * If TFA is enabled, adds a job to the TFA strategy queue.
+     * @param login The login request data.
+     * @returns A promise resolving to a LoginResponseDto.
+     * @throws UnauthorizedException if login credentials are invalid.
+     */
     async execute(login: LoginRequestDto): Promise<LoginResponseDto> {
 
         const savedUser = await this.prisma.user.findUnique({
@@ -45,15 +59,10 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
         }
 
         if (savedUser.tfaType === TfaType.NONE) {
-            const tokens = await this.jwtStrategy.generate(
-                new JwtAccessPayloadDto(savedUser.username, savedUser.role)
-            );
-            this.jwtCookieService.setTokens(login.getResponse(), tokens);
-
-            return new LoginResponseDto(
-                false,
-                new JwtTokensDto(tokens.accessToken, null, 0, 0)
-            );
+            const payload = new JwtAccessPayloadDto(savedUser.username, savedUser.role)
+            const tokens = await this.jwtStrategy.generate(payload);
+            this.jwtCookieService.createSession(login.getResponse(), tokens, payload);
+            return new LoginResponseDto(false, null);
         }
 
         await this.tfaStrategyQueue.add(new TFAResponseDto(savedUser, login.ipClient));

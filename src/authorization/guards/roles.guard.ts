@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, Logger, UnauthorizedExceptio
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { Role } from '@prisma/client';
-import { UserRequestDto } from '../dto/user.request.dto';
+import { ActiveUserDto } from '../dto/active-userdto';
 import { USER_REQUEST_KEY } from '@app/authentication/constants/authentication.constants';
 
 @Injectable()
@@ -25,7 +25,7 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    const user: UserRequestDto = context.switchToHttp().getRequest()[USER_REQUEST_KEY];
+    const user: ActiveUserDto = context.switchToHttp().getRequest()[USER_REQUEST_KEY];
 
     if (!user) {
       this.logger.error('User not found');

@@ -49,18 +49,11 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
             throw new UnauthorizedException('Invalid credentials');
         }
 
-        const tokens = await this.jwtStrategy.generate(
-            new JwtAccessPayloadDto(savedUser.username, savedUser.role)
-        );
+        const payload = new JwtAccessPayloadDto(savedUser.username, savedUser.role)
+        const tokens = await this.jwtStrategy.generate(payload);
+        this.jwtCookieService.createSession(data.getResponse(), tokens, payload);
 
-        this.jwtCookieService.setTokens(data.getResponse(), tokens);
-
-        return new ValidateTFAResponseDto(new JwtTokensDto(
-            tokens.accessToken,
-            null,
-            0,
-            0
-        ));
+        return new ValidateTFAResponseDto(null);
     }
 
 }
