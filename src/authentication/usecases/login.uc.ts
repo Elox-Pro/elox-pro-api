@@ -50,12 +50,12 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
 
         if (!savedUser) {
             this.logger.error(`username not found: ${login.username}`);
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException('error.invalid-credentials');
         }
 
         if (!await this.hashingStrategy.compare(login.password, savedUser.password)) {
             this.logger.error('Invalid password');
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException('error.invalid-credentials');
         }
 
         if (savedUser.tfaType === TfaType.NONE) {

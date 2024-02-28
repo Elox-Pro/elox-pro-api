@@ -1,0 +1,5 @@
+{
+    "internal-server": "Internal server error",
+    "invalid-credentials": "Invalid credentials",
+    "access-denied": "Access denied"
+}

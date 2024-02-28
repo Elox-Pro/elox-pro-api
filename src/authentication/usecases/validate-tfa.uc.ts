@@ -29,14 +29,14 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
 
         if (!savedUser) {
             this.logger.error(`Username not found: ${data.username}`);
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException('error.invalid-credentials');
         }
 
         const strategy = this.tfaFactory.getTfaStrategy(savedUser.tfaType);
 
         if (!strategy) {
             this.logger.error('Tfa strategy is required');
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException('error.invalid-credentials');
         }
 
         const result = await strategy.verify(
@@ -46,7 +46,7 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
 
         if (!result) {
             this.logger.error('Invalid code');
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException('error.invalid-credentials');
         }
 
         const payload = new JwtAccessPayloadDto(savedUser.username, savedUser.role)

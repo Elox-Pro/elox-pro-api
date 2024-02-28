@@ -27,7 +27,7 @@ export class RefreshTokenUC implements IUseCase<RefreshTokenRequestDto, RefreshT
 
         if (!user) {
             this.logger.error(`User not found: ${payload.sub}`);
-            throw new Error('Invalid credentials');
+            throw new UnauthorizedException('error.invalid-credentials');
         }
 
         try {
@@ -37,9 +37,9 @@ export class RefreshTokenUC implements IUseCase<RefreshTokenRequestDto, RefreshT
             if (error instanceof InvalidateRefreshTokenError) {
                 // Take action: notify the user that their refresh token  might have been stolen?
                 this.logger.error(`The refresh token  might have been stolen for user: ${user.username}`)
-                throw new UnauthorizedException('Access denied');
+                throw new UnauthorizedException('error.access-denied');
             }
-            throw new UnauthorizedException();
+            throw new UnauthorizedException('error.invalid-credentials');
         }
 
         const tokens = await this.jwtStrategy.generate(
