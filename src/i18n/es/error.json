@@ -1,5 +1,6 @@
 {
     "internal-server": "Error interno del servidor",
     "invalid-credentials": "Credenciales no válidas",
-    "access-denied": "Accesso denegado"
+    "access-denied": "Accesso denegado",
+    "Unauthorized": "No autorizado"
 }
