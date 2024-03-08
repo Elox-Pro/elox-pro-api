@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { USER_REQUEST_KEY } from '@app/authentication/constants/authentication.constants';
-import { ActiveUserDto } from '../dto/active-userdto';
+import { ActiveUserDto } from '../dto/active-user.dto';
 
 export const UserRequest = createParamDecorator(
     (field: keyof ActiveUserDto, ctx: ExecutionContext) => {

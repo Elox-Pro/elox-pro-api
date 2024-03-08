@@ -5,7 +5,7 @@ import { GetProfileResponseDto } from "../dtos/get-profile.response.dto";
 import { Roles } from "@app/authorization/decorators/roles.decorator";
 import { Role } from "@prisma/client";
 import { UserRequest } from "@app/authorization/decorators/user.request.decorator";
-import { ActiveUserDto } from "@app/authorization/dto/active-userdto";
+import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 
 @Controller('users')
 @Roles(Role.SYSTEM_ADMIN)

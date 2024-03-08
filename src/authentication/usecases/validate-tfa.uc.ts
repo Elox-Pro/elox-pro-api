@@ -8,6 +8,7 @@ import { TFAFactory } from "../factories/tfa.factory";
 import { JwtAccessPayloadDto } from "../dtos/jwt-access-payload.dto";
 import JWTCookieService from "../services/jwt-cookie.service";
 import { JwtTokensDto } from "../dtos/jwt-tokens.dto";
+import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 
 @Injectable()
 export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTFAResponseDto>{
@@ -50,8 +51,9 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
         }
 
         const payload = new JwtAccessPayloadDto(savedUser.username, savedUser.role)
+        const activeUser = new ActiveUserDto(payload.sub, payload.role, true);
         const tokens = await this.jwtStrategy.generate(payload);
-        this.jwtCookieService.createSession(data.getResponse(), tokens, payload);
+        this.jwtCookieService.createSession(data.getResponse(), tokens, activeUser);
 
         return new ValidateTFAResponseDto(null);
     }

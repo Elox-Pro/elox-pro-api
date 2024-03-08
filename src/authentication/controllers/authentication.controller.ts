@@ -12,6 +12,7 @@ import { RefreshTokenUC } from "../usecases/refresh-token.uc";
 import { RefreshTokenRequestDto } from "../dtos/refresh-token.request.dto";
 import { RefreshTokenResponseDto } from "../dtos/refresh-token.response.dto";
 import { Response } from "express";
+import { LogoutUC } from "../usecases/logout.uc";
 
 @Controller('authentication')
 @Authentication(AuthenticationType.None)
@@ -20,7 +21,8 @@ export class AuthenticationController {
     constructor(
         private readonly loginUC: LoginUC,
         private readonly validateTfaUC: ValidateTfaUC,
-        private readonly refreshTokenUC: RefreshTokenUC
+        private readonly refreshTokenUC: RefreshTokenUC,
+        private readonly logoutUC: LogoutUC
     ) { }
 
     @UseInterceptors(IpClientInterceptor)
@@ -38,9 +40,15 @@ export class AuthenticationController {
     @HttpCode(HttpStatus.OK)
     @Post('validate-tfa')
     validateTfa(@Body() dto: ValidateTFARequestDto): Promise<ValidateTFAResponseDto> {
-
         dto.setResponse(dto.getResponse());
         return this.validateTfaUC.execute(dto);
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @Authentication(AuthenticationType.JwtCookies)
+    @Post('logout')
+    logout(@Res({ passthrough: true }) response: Response): void {
+        this.logoutUC.execute(response);
     }
 
     // This endpoint is currently disabled due to the cookie server side with http only 

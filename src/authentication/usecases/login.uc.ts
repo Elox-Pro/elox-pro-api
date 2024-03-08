@@ -12,6 +12,7 @@ import { InjectQueue } from "@nestjs/bull";
 import { TfaType } from "@prisma/client";
 import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
 import JWTCookieService from "../services/jwt-cookie.service";
+import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 
 /**
  * Use case for handling user login.
@@ -61,7 +62,8 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
         if (savedUser.tfaType === TfaType.NONE) {
             const payload = new JwtAccessPayloadDto(savedUser.username, savedUser.role)
             const tokens = await this.jwtStrategy.generate(payload);
-            this.jwtCookieService.createSession(login.getResponse(), tokens, payload);
+            const activeUser = new ActiveUserDto(payload.sub, payload.role, true);
+            this.jwtCookieService.createSession(login.getResponse(), tokens, activeUser);
             return new LoginResponseDto(false, null);
         }
 

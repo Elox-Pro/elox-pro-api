@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, Logger, UnauthorizedExceptio
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { Role } from '@prisma/client';
-import { ActiveUserDto } from '../dto/active-userdto';
+import { ActiveUserDto } from '../dto/active-user.dto';
 import { USER_REQUEST_KEY } from '@app/authentication/constants/authentication.constants';
 
 @Injectable()

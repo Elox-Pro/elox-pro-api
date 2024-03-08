@@ -2,7 +2,7 @@ import { AppConfig } from "@app/app.config";
 import { Injectable } from "@nestjs/common";
 import { CookieOptions, Response, Request } from "express";
 import { JwtTokensDto } from "../dtos/jwt-tokens.dto";
-import { ActiveUserDto } from "@app/authorization/dto/active-userdto";
+import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 
 /**
  * Service to handle JWT tokens and active user data in cookies for session management.
@@ -80,6 +80,12 @@ export default class JWTCookieService {
         this.setActiveUser(response, activeUser, tokens.accessTokenTTL);
     }
 
+    deleteSession(response: Response): void {
+        this.deleteCookie(response, this.ACCESS_TOKEN_COOKIE_KEY);
+        this.deleteCookie(response, this.REFRESH_TOKEN_COOKIE_KEY);
+        this.deleteCookie(response, this.ACTIVE_USER_KEY);
+    }
+
     /**
      * Rehydrates a session with tokens and an active user in cookies.
      * @param response The HTTP response object.
@@ -134,6 +140,12 @@ export default class JWTCookieService {
             expires: new Date(Date.now() + ttl * 1000),
             domain: this.appConfig.DOMAIN
         };
+    }
+
+    private deleteCookie(response: Response, key: string): void {
+        response.clearCookie(key, {
+            domain: this.appConfig.DOMAIN
+        });
     }
 
 }

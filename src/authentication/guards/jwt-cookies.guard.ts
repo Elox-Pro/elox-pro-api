@@ -6,6 +6,7 @@ import { JwtAccessPayloadDto } from "../dtos/jwt-access-payload.dto";
 import { RefreshTokenUC } from "../usecases/refresh-token.uc";
 import { RefreshTokenRequestDto } from "../dtos/refresh-token.request.dto";
 import { JwtConfig } from "../config/jwt.config";
+import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 
 /**
  * Guard to check JWT cookies for authentication and refresh tokens for token renewal.
@@ -58,7 +59,11 @@ export class JWTCookiesGuard implements CanActivate {
 
                 payload = await this.jwtStrategy.verify<JwtAccessPayloadDto>(tokens.accessToken);
 
-                this.jwtCookieService.hydratateSession(response, tokens, payload);
+                this.jwtCookieService.hydratateSession(
+                    response,
+                    tokens,
+                    new ActiveUserDto(payload.sub, payload.role, true)
+                );
             }
 
             request[USER_REQUEST_KEY] = payload;
