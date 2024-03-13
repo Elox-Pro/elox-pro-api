@@ -12,6 +12,9 @@ export class LoginRequestDto {
     @IsString()
     readonly ipClient: string;
 
+    @IsString()
+    readonly grecaptchaToken: string
+
     private response: Response;
 
     setResponse(response: Response): void {
@@ -21,6 +24,5 @@ export class LoginRequestDto {
     getResponse(): Response {
         return this.response;
     }
-
 
 }

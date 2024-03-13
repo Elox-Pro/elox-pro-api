@@ -13,6 +13,7 @@ import { RefreshTokenRequestDto } from "../dtos/refresh-token.request.dto";
 import { RefreshTokenResponseDto } from "../dtos/refresh-token.response.dto";
 import { Response } from "express";
 import { LogoutUC } from "../usecases/logout.uc";
+import { Recaptcha } from "@nestlab/google-recaptcha";
 
 @Controller('authentication')
 @Authentication(AuthenticationType.None)
@@ -27,6 +28,7 @@ export class AuthenticationController {
 
     @UseInterceptors(IpClientInterceptor)
     @HttpCode(HttpStatus.OK)
+    @Recaptcha()
     @Post('login')
     async login(
         @Res({ passthrough: true }) response: Response,
@@ -39,8 +41,10 @@ export class AuthenticationController {
 
     @HttpCode(HttpStatus.OK)
     @Post('validate-tfa')
-    validateTfa(@Body() dto: ValidateTFARequestDto): Promise<ValidateTFAResponseDto> {
-        dto.setResponse(dto.getResponse());
+    validateTfa(
+        @Res({ passthrough: true }) response: Response,
+        @Body() dto: ValidateTFARequestDto): Promise<ValidateTFAResponseDto> {
+        dto.setResponse(response);
         return this.validateTfaUC.execute(dto);
     }
 

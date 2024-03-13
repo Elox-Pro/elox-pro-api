@@ -6,6 +6,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthorizationModule } from './authorization/authorization.module';
 import { HealthModule } from './health/health.module';
 import { I18nImplModule } from './common/i18n-impl/i18n-impl.module';
+import { GRecaptchaModule } from './common/grecaptcha/grecaptcha.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { I18nImplModule } from './common/i18n-impl/i18n-impl.module';
     AuthenticationModule,
     AuthorizationModule,
     UserModule,
-    HealthModule
+    HealthModule,
+    GRecaptchaModule
   ],
   providers: [AppConfig]
 })
