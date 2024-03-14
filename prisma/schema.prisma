@@ -130,6 +130,11 @@ enum AuditTrailAction {
   DELETE
 }
 
+enum UserLang {
+  EN
+  ES
+}
+
 // This model store the information about the company and their relations with users and loan settings
 model Company {
   id        Int      @id @default(autoincrement())
@@ -173,6 +178,9 @@ model User {
 
   // Last login timestamp
   lastLoginAt DateTime? @map("last_login_at")
+
+  // The user language
+  lang UserLang @default(EN)
 
   // Information related with the customer ranks
   customerRank UserRank?

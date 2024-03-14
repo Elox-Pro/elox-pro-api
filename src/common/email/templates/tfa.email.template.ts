@@ -1,3 +1,4 @@
+import { UserLang } from "@prisma/client";
 import { EmailAddressDto } from "../dtos/email-address.dto";
 import { EmailDTO } from "../dtos/email.dto";
 import { EmailSender } from "../senders/email.sender";
@@ -5,8 +6,15 @@ import { EmailTemplate } from "./email.template";
 
 export class TfaEmailTemplate extends EmailTemplate {
 
-    private readonly filePath = `tfa/tfa.template.en.ejs`;
-    private readonly subject = 'Second Factor Authentication';
+    private readonly subjects = new Map<UserLang, string>([
+        [UserLang.EN, 'Second Factor Authentication'],
+        [UserLang.ES, 'Segundo factor de autenticación'],
+    ]);
+
+    private readonly filePaths = new Map<UserLang, string>([
+        [UserLang.EN, 'tfa/tfa.template.en.ejs'],
+        [UserLang.ES, 'tfa/tfa.template.es.ejs']
+    ]);
 
     constructor(readonly sender: EmailSender) {
         super(sender);
@@ -18,11 +26,13 @@ export class TfaEmailTemplate extends EmailTemplate {
             throw new Error("Code not found in params");
         }
 
+        const lang = params.get("lang") as UserLang || UserLang.EN;
+
         return await this.sender.send(new EmailDTO(
             this.noReply,
             to,
-            this.subject,
-            this.buildPath(this.filePath),
+            this.subjects.get(lang),
+            this.buildPath(this.filePaths.get(lang)),
             new Map<string, string>([...params, ...this.defaultParams])
         ));
 

@@ -5,9 +5,14 @@
   </head>
 
   <body
-    style="margin: 0; background-color: #e6e9eb; color: #060f1d; padding: 0"
+    style="
+      margin: 0;
+      background-color: <%= themePrimaryBackground %>;
+      color: <%= themeText %>;
+      padding: 0;
+    "
   >
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <table cellpadding="0" cellspacing="0" width="100%" style="border: 0">
       <tbody>
         <!-- HEADER ROW -->
         <tr>
@@ -15,36 +20,38 @@
             style="
               width: 10%;
               padding: 25px 0px 32px 0px;
-              background-color: #060f1d;
+              background-color: <%= themeHeaderBackground %>;
             "
           ></td>
           <td
             style="
               width: 50%;
               padding: 25px 0px 32px 0px;
-              background-color: #060f1d;
+              background-color: <%= themeHeaderBackground %>;
               vertical-align: middle;
               font-size: 20px;
               font-weight: bold;
-              color: #ffffff;
+              color: <%= themeHeaderText %>;
               text-align: left;
               font-family: Helvetica, Arial, sans-serif;
             "
           >
             <img src="<%= logo %>" width="20" alt="Logo" />
             <span style="position: relative; top: -2px; font-size: 20px"
-              ><span style="color: #ffffff"><%= companyName %></span></span
+              ><span style="color: <%= themeHeaderText %>"
+                ><%= companyName %></span
+              ></span
             >
           </td>
           <td
             style="
               width: 30%;
               padding: 20px 0px 25px 0px;
-              background-color: #060f1d;
+              background-color: <%= themeHeaderBackground %>;
               vertical-align: middle;
               font-size: 14px;
               font-weight: bold;
-              color: #ffffff;
+              color: <%= themeHeaderText %>;
               text-align: right;
               font-family: Helvetica, Arial, sans-serif;
             "
@@ -52,22 +59,21 @@
             <a
               href="<%= site %>"
               style="
-                background: #00ff7f;
+                background: <%= themeButtonBackground %>;
                 padding: 16px;
-                color: #ffffff;
+                color: <%= themeButtonText %>;
                 text-decoration: none;
                 border-radius: 4px;
               "
               target="_blank"
+              >Log In</a
             >
-              Iniciar sesión
-            </a>
           </td>
           <td
             style="
               width: 10%;
               padding: 25px 0px 32px 0px;
-              background-color: #060f1d;
+              background-color: <%= themeHeaderBackground %>;
             "
           ></td>
         </tr>
@@ -77,38 +83,44 @@
             style="
               width: 200px;
               padding: 0px 0px 10px 0px;
-              background-color: #e6e9eb;
+              background-color: <%= themePrimaryBackground %>;
               vertical-align: top;
             "
           >
-            <div style="background-color: #060f1d; height: 235px"></div>
+            <div
+              style="
+                background-color: <%= themeHeaderBackground %>;
+                height: 235px;
+              "
+            ></div>
           </td>
           <!-- MAIN CONTENT -->
           <td
             style="
               width: 500px;
               padding: 0;
-              background-color: #ffffff;
+              background-color: <%= themeContentBackground %>;
               vertical-align: middle;
               font-size: 18px;
               font-weight: 400;
-              color: #616366;
+              color: <%= themeContentText %>;
               font-family: Helvetica, Arial, sans-serif;
             "
             colspan="2"
           >
             <table style="border-collapse: collapse; width: 100%">
               <tbody>
+                <!-- Main content first section -->
                 <tr>
                   <td
                     style="
                       width: 580px;
                       padding: 50px 0px 30px 0px;
-                      background-color: #ffffff;
+                      background-color: <%= themeContentBackground %>;
                       vertical-align: middle;
                       font-size: 22px;
                       font-weight: bold;
-                      color: #616366;
+                      color: <%= themeContentText %>;
                       text-align: center;
                       font-family: Helvetica, Arial, sans-serif;
                     "
@@ -117,7 +129,7 @@
                     <img
                       src="https://i.imgur.com/zahjEWM.png"
                       width="64"
-                      alt="Seguro"
+                      alt="Safe"
                       style="outline: none"
                     />
                   </td>
@@ -127,17 +139,17 @@
                     style="
                       width: 500px;
                       padding: 0px 40px 17px 40px;
-                      background-color: #ffffff;
+                      background-color: <%= themeContentBackground %>;
                       vertical-align: middle;
                       font-size: 22px;
                       font-weight: 700;
-                      color: #2d363d;
+                      color: <%= themeSecondaryText %>;
                       text-align: center;
                       font-family: Helvetica, Arial, sans-serif;
                     "
                     colspan="2"
                   >
-                    CÓDIGO DE 2FA
+                    TFA CODE
                   </td>
                 </tr>
                 <tr>
@@ -145,11 +157,11 @@
                     style="
                       width: 500px;
                       padding: 0px 40px 0px 40px;
-                      background-color: #ffffff;
+                      background-color: <%= themeContentBackground %>;
                       vertical-align: middle;
                       font-size: 14px;
                       font-weight: 400;
-                      color: #2d363d;
+                      color: <%= themeSecondaryText %>;
                       line-height: 150%;
                       font-family: Helvetica, Arial, sans-serif;
                     "
@@ -159,7 +171,7 @@
                       style="
                         padding: 10px;
                         margin: 30px 0px;
-                        color: #616366;
+                        color: <%= themeText %>;
                         font-family: Helvetica, Arial, sans-serif;
                         font-size: 14px;
                         font-weight: 400;
@@ -171,10 +183,10 @@
                           padding: 10px;
                           margin: 30px 0px;
                           font-size: 48px;
-                          border: 1px solid #40c778;
+                          border: 1px solid <%= themeAccent %>;
                           border-radius: 3px;
                           font-weight: 700;
-                          color: #2d363d;
+                          color: <%= themeSecondaryText %>;
                         "
                         ><%=code%></span
                       >
@@ -186,11 +198,11 @@
                     style="
                       width: 500px;
                       padding: 0px 40px 40px 40px;
-                      background-color: #ffffff;
+                      background-color: <%= themeContentBackground %>;
                       vertical-align: middle;
                       font-size: 14px;
                       font-weight: 400;
-                      color: #616366;
+                      color: <%= themeSecondaryText %>;
                       line-height: 150%;
                       font-family: Helvetica, Arial, sans-serif;
                       text-align: center;
@@ -198,10 +210,10 @@
                     colspan="2"
                   >
                     <span style="color: inherit"
-                      >Hola <%=username%> Este correo electrónico contiene tu
-                      código de autenticación de dos factores para completar tu
-                      solicitud en <%= companyName %>.
-                    </span>
+                      >Hello <%=username%> This email contains your 2-factor
+                      authentication code to complete your request at <%=
+                      companyName %>.</span
+                    >
                   </td>
                 </tr>
                 <tr>
@@ -209,44 +221,44 @@
                     style="
                       width: 580px;
                       padding: 0px 0px 20px 0px;
-                      background-color: #e6e9eb;
+                      background-color: <%= themeDivider %>;
                     "
                     colspan="2"
                   ></td>
                 </tr>
+                <!-- / Main content first section -->
+                <!-- Main content second section -->
                 <tr>
                   <td
                     style="
                       width: 500px;
                       padding: 40px 40px 0px 40px;
-                      background-color: #ffffff;
+                      background-color: <%= themeContentBackground %>;
                       vertical-align: middle;
                       font-size: 14px;
                       font-weight: 400;
-                      color: #616366;
+                      color: <%= themeSecondaryText %>;
                       line-height: 150%;
                       font-family: Helvetica, Arial, sans-serif;
                     "
                     colspan="2"
                   >
                     <span style="color: inherit; display: block"
-                      >Este código sigue siendo válido por 5 minutos.
-                      <br /><br />
-                    </span>
-                    <span style="color: inherit; display: block">
-                      No lo divulgues a nadie (incluido el personal de <%=
-                      companyName %>).
-                      <br /><br />
-                    </span>
+                      >This code remains valid for 5 minutes. <br /><br
+                    /></span>
                     <span style="color: inherit; display: block"
-                      >El intento autenticación se realizó desde la IP:
+                      >Do not disclose it to anyone (including <%= companyName
+                      %> staff).<br /><br
+                    /></span>
+                    <span style="color: inherit; display: block"
+                      >The authentication attempt was made from IP:
                       <%=ipClient%> <br /><br
                     /></span>
                     <span style="color: inherit; display: block"
-                      >Si no realizaste este intento autenticación, debes
-                      cambiar tu contraseña para <%= companyName %>
-                      inmediatamente, ya que quien hizo esta solicitud tiene tu
-                      contraseña actual.<br /><br
+                      >If you did not make this authentication attempt, you
+                      should change your password for <%= companyName %>
+                      immediately, as whoever made this request has your current
+                      password.<br /><br
                     /></span>
                   </td>
                 </tr>
@@ -255,22 +267,20 @@
                     style="
                       width: 500px;
                       padding: 10px 40px 0px 40px;
-                      background-color: #ffffff;
+                      background-color: <%= themeContentBackground %>;
                       vertical-align: middle;
                       font-size: 14px;
                       font-weight: 400;
-                      color: #616366;
+                      color: <%= themeSecondaryText %>;
                       line-height: 150%;
                       font-family: Helvetica, Arial, sans-serif;
                     "
                     colspan="2"
                   >
-                    Este correo electrónico contiene información privada sobre
-                    tu cuenta. Por favor, no lo reenvíes. ¿Tienes alguna
-                    pregunta sobre cómo usar nuestro servicio? Escríbenos a
-                    nuestro soporte. Recuerda que nuestro equipo de atención al
-                    cliente también puede ayudarte en inglés.
-                    <br /><br />
+                    This email contains private information about your account.
+                    Please don't resend it. Do you have any questions about how
+                    to use our service? Write to our support. Remember that our
+                    customer service team can also assist you in English.<br /><br />
                   </td>
                 </tr>
                 <tr>
@@ -278,11 +288,11 @@
                     style="
                       width: 500px;
                       padding: 40px 40px 0px 40px;
-                      background-color: #ffffff;
+                      background-color: <%= themeContentBackground %>;
                       vertical-align: middle;
                       font-size: 14px;
                       font-weight: bold;
-                      color: #616366;
+                      color: <%= themeSecondaryText %>;
                       text-align: center;
                       font-family: Helvetica, Arial, sans-serif;
                     "
@@ -291,16 +301,16 @@
                     <a
                       href="<%= site %>"
                       style="
-                        background: #00ff7f;
+                        background: <%= themeButtonBackground %>;
                         padding: 16px;
-                        color: #ffffff;
+                        color: <%= themeButtonText %>;
                         text-decoration: none;
                         border-radius: 4px;
+                        border-color: <%= themeButtonText %>;
                       "
                       target="_blank"
+                      >Log In To Your Account</a
                     >
-                      Iniciar sesión en tu cuenta
-                    </a>
                   </td>
                 </tr>
                 <tr>
@@ -308,11 +318,12 @@
                     style="
                       width: 500px;
                       padding: 0px 0px 34px 0px;
-                      background-color: #ffffff;
+                      background-color: <%= themeContentBackground %>;
                     "
                     colspan="2"
                   ></td>
                 </tr>
+                <!-- /Main content second section -->
               </tbody>
             </table>
           </td>
@@ -320,27 +331,33 @@
             style="
               width: 200px;
               padding: 0px 0px 10px 0px;
-              background-color: #e6e9eb;
+              background-color: <%= themePrimaryBackground %>;
               vertical-align: top;
             "
           >
-            <div style="background-color: #060f1d; height: 235px"></div>
+            <div
+              style="
+                background-color: <%= themeHeaderBackground %>;
+                height: 235px;
+              "
+            ></div>
           </td>
         </tr>
+        <!-- Footer section -->
         <tr>
           <td
             style="
               width: 200px;
               padding: 0px 0px 10px 0px;
-              background-color: #e6e9eb;
+              background-color: <%= themePrimaryBackground %>;
             "
           ></td>
           <td
             style="
               width: 500px;
               padding: 0px 0px 10px 0px;
-              background-color: #ffffff;
-              border-bottom: 1px solid #e6e9eb;
+              background-color: <%= themeContentBackground %>;
+              border-bottom: 1px solid <%= themePrimaryBackground %>;
             "
             colspan="2"
           ></td>
@@ -348,7 +365,7 @@
             style="
               width: 200px;
               padding: 0px 0px 10px 0px;
-              background-color: #e6e9eb;
+              background-color: <%= themePrimaryBackground %>;
             "
           ></td>
         </tr>
@@ -357,28 +374,28 @@
             style="
               width: 200px;
               padding: 40px 0px 50px 0px;
-              background-color: #e6e9eb;
+              background-color: <%= themePrimaryBackground %>;
             "
           ></td>
           <td
             style="
               width: 500px;
               padding: 40px 40px 50px 40px;
-              background-color: #ffffff;
+              background-color: <%= themeContentBackground %>;
               vertical-align: middle;
               font-size: 16px;
               font-weight: 700;
-              color: #2d363d;
+              color: <%= themeSecondaryText %>;
               text-align: center;
               font-family: Helvetica, Arial, sans-serif;
             "
             colspan="2"
           >
-            Gracias por elegir
+            Thank you for choosing
             <a
               href="<%= site %>"
               style="
-                color: #00ff7f;
+                color: <%= themeButtonBackground %>;
                 font-family: Helvetica, Arial, sans-serif;
                 font-size: 16px;
                 font-weight: 700;
@@ -392,7 +409,7 @@
             style="
               width: 200px;
               padding: 40px 0px 50px 0px;
-              background-color: #e6e9eb;
+              background-color: <%= themePrimaryBackground %>;
             "
           ></td>
         </tr>
@@ -401,34 +418,33 @@
             style="
               width: 200px;
               padding: 28px 0px 40px 0px;
-              background-color: #e6e9eb;
+              background-color: <%= themePrimaryBackground %>;
             "
           ></td>
           <td
             style="
               width: 428px;
               padding: 28px 0px 40px 12px;
-              background-color: #e6e9eb;
+              background-color: <%= themePrimaryBackground %>;
               vertical-align: middle;
               font-size: 14px;
               font-weight: normal;
-              color: #949da8;
+              color: <%= themeFooterText %>;
               text-align: left;
               font-family: Helvetica, Arial, sans-serif;
             "
           >
-            Derechos de autor © <%= companyName %>. Todos los derechos
-            reservados.
+            Copyright © <%= companyName %>. All rights reserved.
           </td>
           <td
             style="
               width: 140px;
               padding: 28px 0px 40px 0px;
-              background-color: #e6e9eb;
+              background-color: <%= themePrimaryBackground %>;
               vertical-align: middle;
               font-size: 14px;
               font-weight: normal;
-              color: #949da8;
+              color: <%= themeFooterText %>;
               text-align: right;
               font-family: Helvetica, Arial, sans-serif;
             "
@@ -437,12 +453,12 @@
             style="
               width: 200px;
               padding: 28px 0px 40px 0px;
-              background-color: #e6e9eb;
+              background-color: <%= themePrimaryBackground %>;
             "
           ></td>
         </tr>
+        <!-- ./Footer section  -->
       </tbody>
     </table>
   </body>
 </html>
-```

@@ -25,7 +25,7 @@ export class EmailTfaStrategy extends TfaStrategy {
 
     async execute({ user, ipClient }): Promise<boolean> {
 
-        const { email, username, emailVerified } = user;
+        const { email, username, emailVerified, lang } = user;
 
         if (!username) {
             this.logger.error(`Username not found: ${username}`);
@@ -64,6 +64,7 @@ export class EmailTfaStrategy extends TfaStrategy {
         const emailTemplate = this.emailFactory.getEmail(EmailType.TFA);
 
         await emailTemplate.send(new EmailAddressDto(email, username), new Map<string, string>([
+            ['lang', lang],
             ['code', code],
             ['username', username],
             ['ipClient', ipClient]])
@@ -78,17 +79,17 @@ export class EmailTfaStrategy extends TfaStrategy {
 
         if (!username) {
             this.logger.error(`Username not found: ${username}`);
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException('error.invalid-credentials');
         }
 
         if (!code) {
             this.logger.error(`Code not found: ${code}`);
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException('error.invalid-credentials');
         }
 
         if (!hash) {
             this.logger.error(`Hash not found: ${hash}`);
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException('error.invalid-credentials');
         }
 
         const result = await this.hashingStrategy.compare(code, hash);

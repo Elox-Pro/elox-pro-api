@@ -1,4 +1,5 @@
 {
     "material-icon-theme.activeIconPack": "nest",
-    "workbench.colorTheme": "Visual Studio Dark"
+    "workbench.colorTheme": "Visual Studio Dark",
+    "html.validate.styles": false
 }

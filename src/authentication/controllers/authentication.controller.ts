@@ -14,6 +14,7 @@ import { RefreshTokenResponseDto } from "../dtos/refresh-token.response.dto";
 import { Response } from "express";
 import { LogoutUC } from "../usecases/logout.uc";
 import { Recaptcha } from "@nestlab/google-recaptcha";
+import { LangClientInterceptor } from "../interceptors/lang-client.interceptor";
 
 @Controller('authentication')
 @Authentication(AuthenticationType.None)
@@ -26,10 +27,10 @@ export class AuthenticationController {
         private readonly logoutUC: LogoutUC
     ) { }
 
-    @UseInterceptors(IpClientInterceptor)
-    @HttpCode(HttpStatus.OK)
-    @Recaptcha()
     @Post('login')
+    @UseInterceptors(IpClientInterceptor, LangClientInterceptor)
+    @Recaptcha()
+    @HttpCode(HttpStatus.OK)
     async login(
         @Res({ passthrough: true }) response: Response,
         @Body() dto: LoginRequestDto

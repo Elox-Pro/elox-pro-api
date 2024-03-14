@@ -67,6 +67,9 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
             return new LoginResponseDto(false, null);
         }
 
+        // Overwrite the users language with the one from the login request.
+        savedUser.lang = login.lang;
+
         await this.tfaStrategyQueue.add(new TFAResponseDto(savedUser, login.ipClient));
         return new LoginResponseDto(true, null);
     }
