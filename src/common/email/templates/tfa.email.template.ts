@@ -12,8 +12,8 @@ export class TfaEmailTemplate extends EmailTemplate {
     ]);
 
     private readonly filePaths = new Map<UserLang, string>([
-        [UserLang.EN, 'tfa/tfa.template.en.ejs'],
-        [UserLang.ES, 'tfa/tfa.template.es.ejs']
+        [UserLang.EN, 'tfa/en/tfa.template.ejs'],
+        [UserLang.ES, 'tfa/es/tfa.template.ejs']
     ]);
 
     constructor(readonly sender: EmailSender) {
