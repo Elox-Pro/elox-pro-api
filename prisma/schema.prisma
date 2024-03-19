@@ -131,6 +131,7 @@ enum AuditTrailAction {
 }
 
 enum UserLang {
+  DEFAULT
   EN
   ES
 }

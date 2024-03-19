@@ -9,7 +9,7 @@ import { TFAResponseDto } from "../dtos/tfa.response.dto";
 import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
 import { Queue } from "bull";
 import { InjectQueue } from "@nestjs/bull";
-import { TfaType } from "@prisma/client";
+import { TfaType, UserLang } from "@prisma/client";
 import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
 import JWTCookieService from "../services/jwt-cookie.service";
 import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
@@ -67,8 +67,8 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
             return new LoginResponseDto(false, null);
         }
 
-        // Overwrite the users language with the one from the login request.
-        savedUser.lang = login.lang;
+        // If language is not set, use the default language from the request.
+        savedUser.lang = savedUser.lang === UserLang.DEFAULT ? login.lang : savedUser.lang;
 
         await this.tfaStrategyQueue.add(new TFAResponseDto(savedUser, login.ipClient));
         return new LoginResponseDto(true, null);
