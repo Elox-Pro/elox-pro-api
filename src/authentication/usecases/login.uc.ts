@@ -1,4 +1,4 @@
-import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { LoginRequestDto } from "authentication/dtos/login/login.request.dto";
 import { IUseCase } from "common/usecase/usecase.interface";
 import { JwtAccessPayloadDto } from "../dtos/jwt/jwt-access-payload.dto";
@@ -9,7 +9,7 @@ import { TFAResponseDto } from "../dtos/tfa/tfa.response.dto";
 import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
 import { Queue } from "bull";
 import { InjectQueue } from "@nestjs/bull";
-import { TfaType, UserLang } from "@prisma/client";
+import { TfaType } from "@prisma/client";
 import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
 import JWTCookieService from "../services/jwt-cookie.service";
 import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
@@ -42,7 +42,7 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
      * If TFA is enabled, adds a job to the TFA strategy queue.
      * @param data The login request data.
      * @returns A promise resolving to a LoginResponseDto.
-     * @throws UnauthorizedException if login credentials are invalid.
+     * @throws BadRequestException if login credentials are invalid.
      */
     async execute(data: LoginRequestDto): Promise<LoginResponseDto> {
 
@@ -52,12 +52,12 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
 
         if (!savedUser) {
             this.logger.error(`username not found: ${data.username}`);
-            throw new UnauthorizedException('error.invalid-credentials');
+            throw new BadRequestException('error.invalid-credentials');
         }
 
         if (!await this.hashingStrategy.compare(data.password, savedUser.password)) {
             this.logger.error('Invalid password');
-            throw new UnauthorizedException('error.invalid-credentials');
+            throw new BadRequestException('error.invalid-credentials');
         }
 
         if (savedUser.tfaType === TfaType.NONE) {

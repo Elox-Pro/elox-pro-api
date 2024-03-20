@@ -17,6 +17,7 @@ import { Recaptcha } from "@nestlab/google-recaptcha";
 import { LangClientInterceptor } from "../interceptors/lang-client.interceptor";
 import { SignupRequestDto } from "../dtos/signup/signup.request.dto";
 import { SignupUC } from "../usecases/signup.uc";
+import { SignupResponseDto } from "../dtos/signup/signup.response.dto";
 
 @Controller('authentication')
 @Authentication(AuthenticationType.None)
@@ -34,7 +35,7 @@ export class AuthenticationController {
     @UseInterceptors(IpClientInterceptor, LangClientInterceptor)
     @Recaptcha()
     @HttpCode(HttpStatus.CREATED)
-    async signup(@Body() dto: SignupRequestDto) {
+    async signup(@Body() dto: SignupRequestDto): Promise<SignupResponseDto> {
         return await this.signupUC.execute(dto);
     }
 

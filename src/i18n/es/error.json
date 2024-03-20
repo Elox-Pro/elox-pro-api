@@ -1,6 +1,4 @@
 {
-    "Unauthorized": "No autorizado",
-    "Bad Request Exception": "Excepción de solicitud incorrecta",
     "internal-server": "Error interno del servidor",
     "invalid-credentials": "Credenciales no válidas",
     "access-denied": "Accesso denegado",

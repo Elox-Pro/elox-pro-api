@@ -11,21 +11,34 @@ export class I18nExceptionFilter implements ExceptionFilter {
     async catch(exception: HttpException, host: ArgumentsHost) {
 
         this.logger.error(JSON.stringify(exception));
-
         const ctx = host.switchToHttp();
         const response = ctx.getResponse();
         const status = exception.getStatus();
-        let messageKey = exception.message || 'error.internal-server';
-        if (!messageKey.startsWith('error.')) {
-            messageKey = `error.${messageKey}`;
+
+        if (exception.message.startsWith('error.')) {
+
+            const translatedMessage = await this.i18n.t(exception.message, {
+                lang: I18nContext.current().lang
+            });
+
+            return response.status(status).json({
+                statusCode: status,
+                message: translatedMessage,
+            });
         }
-        const translatedMessage = await this.i18n.t(messageKey, {
-            lang: I18nContext.current().lang
+
+        const errorResponse = exception.getResponse() as {
+            statusCode: number;
+            message: string;
+            error: string;
+        }
+
+        return response.status(status).json({
+            statusCode: errorResponse.statusCode || status,
+            message: errorResponse.message || exception.message,
         });
 
-        response.status(status).json({
-            statusCode: status,
-            message: translatedMessage,
-        });
     }
 }
+
+

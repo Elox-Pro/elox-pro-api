@@ -38,8 +38,7 @@ export class EmailTfaStrategy extends TfaStrategy {
         }
 
         if (!emailVerified) {
-            this.logger.error(`Email not verified: ${email}`);
-            throw new UnauthorizedException('Invalid credentials');
+            this.logger.warn(`Email not verified: ${email}`);
         }
 
         if (!ipClient) {

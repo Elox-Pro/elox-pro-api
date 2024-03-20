@@ -17,22 +17,22 @@ describe('Login Use Case', () => {
     describe('POST: authentication/login', () => {
         const url = '/authentication/login';
         describe('wrong password', () => {
-            it('should return HTTP status Unauthorized', async () => {
+            it('should return HTTP status bad request', async () => {
                 return await request(app.getHttpServer()).post(url).send({
                     "username": "yonax73",
                     "password": "idontknow",
                     "ipClient": "127.0.01"
-                }).expect(HttpStatus.UNAUTHORIZED);
+                }).expect(HttpStatus.BAD_REQUEST);
             });
         });
 
         describe('wrong username', () => {
-            it('should return HTTP status Unauthorized', async () => {
+            it('should return HTTP status bad request', async () => {
                 return await request(app.getHttpServer()).post(url).send({
                     "username": "idontknow",
                     "password": "098lkj!",
                     "ipClient": "127.0.01"
-                }).expect(HttpStatus.UNAUTHORIZED);
+                }).expect(HttpStatus.BAD_REQUEST);
             });
         });
 
