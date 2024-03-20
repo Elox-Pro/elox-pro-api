@@ -1,7 +1,10 @@
 {
+    "Unauthorized": "No autorizado",
+    "Bad Request Exception": "Excepción de solicitud incorrecta",
     "internal-server": "Error interno del servidor",
     "invalid-credentials": "Credenciales no válidas",
     "access-denied": "Accesso denegado",
-    "Unauthorized": "No autorizado",
-    "Bad Request Exception": "Excepción de solicitud incorrecta"
+    "username-already-exists": "El nombre de usuario ya existe",
+    "email-already-exists": "El correo electrónico ya existe",
+    "passwords-do-not-match": "Las contraseñas no coinciden"
 }

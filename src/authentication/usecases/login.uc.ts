@@ -1,11 +1,11 @@
 import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
-import { LoginRequestDto } from "authentication/dtos/login.request.dto";
+import { LoginRequestDto } from "authentication/dtos/login/login.request.dto";
 import { IUseCase } from "common/usecase/usecase.interface";
-import { JwtAccessPayloadDto } from "../dtos/jwt-access-payload.dto";
-import { LoginResponseDto } from "../dtos/login.response.dto";
+import { JwtAccessPayloadDto } from "../dtos/jwt/jwt-access-payload.dto";
+import { LoginResponseDto } from "../dtos/login/login.response.dto";
 import { PrismaService } from "prisma//prisma.service";
 import { HashingStrategy } from "../strategies/hashing/hashing.strategy";
-import { TFAResponseDto } from "../dtos/tfa.response.dto";
+import { TFAResponseDto } from "../dtos/tfa/tfa.response.dto";
 import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
 import { Queue } from "bull";
 import { InjectQueue } from "@nestjs/bull";
@@ -13,6 +13,7 @@ import { TfaType, UserLang } from "@prisma/client";
 import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
 import JWTCookieService from "../services/jwt-cookie.service";
 import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
+import getUserLang from "@app/common/helpers/get-user-lang.helper";
 
 /**
  * Use case for handling user login.
@@ -39,22 +40,22 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
      * Executes the login use case.
      * Verifies user credentials, generates JWT tokens, and manages session cookies.
      * If TFA is enabled, adds a job to the TFA strategy queue.
-     * @param login The login request data.
+     * @param data The login request data.
      * @returns A promise resolving to a LoginResponseDto.
      * @throws UnauthorizedException if login credentials are invalid.
      */
-    async execute(login: LoginRequestDto): Promise<LoginResponseDto> {
+    async execute(data: LoginRequestDto): Promise<LoginResponseDto> {
 
         const savedUser = await this.prisma.user.findUnique({
-            where: { username: login.username }
+            where: { username: data.username }
         });
 
         if (!savedUser) {
-            this.logger.error(`username not found: ${login.username}`);
+            this.logger.error(`username not found: ${data.username}`);
             throw new UnauthorizedException('error.invalid-credentials');
         }
 
-        if (!await this.hashingStrategy.compare(login.password, savedUser.password)) {
+        if (!await this.hashingStrategy.compare(data.password, savedUser.password)) {
             this.logger.error('Invalid password');
             throw new UnauthorizedException('error.invalid-credentials');
         }
@@ -63,14 +64,13 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
             const payload = new JwtAccessPayloadDto(savedUser.username, savedUser.role)
             const tokens = await this.jwtStrategy.generate(payload);
             const activeUser = new ActiveUserDto(payload.sub, payload.role, true);
-            this.jwtCookieService.createSession(login.getResponse(), tokens, activeUser);
+            this.jwtCookieService.createSession(data.getResponse(), tokens, activeUser);
             return new LoginResponseDto(false, null);
         }
 
-        // If language is not set, use the default language from the request.
-        savedUser.lang = savedUser.lang === UserLang.DEFAULT ? login.lang : savedUser.lang;
+        savedUser.lang = getUserLang(savedUser.lang, data.lang);
 
-        await this.tfaStrategyQueue.add(new TFAResponseDto(savedUser, login.ipClient));
+        await this.tfaStrategyQueue.add(new TFAResponseDto(savedUser, data.ipClient));
         return new LoginResponseDto(true, null);
     }
 }

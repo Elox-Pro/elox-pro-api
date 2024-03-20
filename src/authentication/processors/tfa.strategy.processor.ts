@@ -2,7 +2,7 @@ import { Process, Processor } from "@nestjs/bull";
 import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
 import { Logger } from "@nestjs/common";
 import { Job } from "bull";
-import { TFAResponseDto } from "../dtos/tfa.response.dto";
+import { TFAResponseDto } from "../dtos/tfa/tfa.response.dto";
 import { TFAFactory } from "../factories/tfa.factory";
 
 @Processor(TFA_STRATEGY_QUEUE)

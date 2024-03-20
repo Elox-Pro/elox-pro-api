@@ -1,7 +1,10 @@
 {
+    "Unauthorized": "Unauthorized",
+    "Bad Request Exception": "Bad Request Exception",
     "internal-server": "Internal server error",
     "invalid-credentials": "Invalid credentials",
     "access-denied": "Access denied",
-    "Unauthorized": "Unauthorized",
-    "Bad Request Exception": "Bad Request Exception"
+    "username-already-exists": "Username already exists",
+    "email-already-exists": "Email already exists",
+    "passwords-do-not-match": "Passwords do not match"
 }

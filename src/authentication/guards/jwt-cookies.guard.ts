@@ -2,9 +2,9 @@ import { CanActivate, ExecutionContext, Injectable, Logger, UnauthorizedExceptio
 import JWTCookieService from "../services/jwt-cookie.service";
 import { USER_REQUEST_KEY } from "../constants/authentication.constants";
 import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
-import { JwtAccessPayloadDto } from "../dtos/jwt-access-payload.dto";
+import { JwtAccessPayloadDto } from "../dtos/jwt/jwt-access-payload.dto";
 import { RefreshTokenUC } from "../usecases/refresh-token.uc";
-import { RefreshTokenRequestDto } from "../dtos/refresh-token.request.dto";
+import { RefreshTokenRequestDto } from "../dtos/refresh-token/refresh-token.request.dto";
 import { JwtConfig } from "../config/jwt.config";
 import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 

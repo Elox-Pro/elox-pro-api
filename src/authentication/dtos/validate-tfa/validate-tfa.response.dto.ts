@@ -1,4 +1,4 @@
-import { JwtTokensDto } from "./jwt-tokens.dto";
+import { JwtTokensDto } from "../jwt/jwt-tokens.dto";
 
 export class ValidateTFAResponseDto {
     constructor(readonly tokens: JwtTokensDto) { }

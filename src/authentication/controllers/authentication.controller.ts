@@ -1,31 +1,42 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseInterceptors } from "@nestjs/common";
 import { LoginUC } from "../usecases/login.uc";
-import { LoginRequestDto } from "../dtos/login.request.dto";
+import { LoginRequestDto } from "../dtos/login/login.request.dto";
 import { IpClientInterceptor } from "../interceptors/ip-client.interceptor";
-import { LoginResponseDto } from "../dtos/login.response.dto";
+import { LoginResponseDto } from "../dtos/login/login.response.dto";
 import { ValidateTfaUC } from "../usecases/validate-tfa.uc";
-import { ValidateTFARequestDto } from "../dtos/validate-tfa.request.dto";
-import { ValidateTFAResponseDto } from "../dtos/validate-tfa.response.dto";
+import { ValidateTFARequestDto } from "../dtos/validate-tfa/validate-tfa.request.dto";
+import { ValidateTFAResponseDto } from "../dtos/validate-tfa/validate-tfa.response.dto";
 import { Authentication } from "../decorators/authentication.decorator";
 import { AuthenticationType } from "../enums/authentication-type.enum";
 import { RefreshTokenUC } from "../usecases/refresh-token.uc";
-import { RefreshTokenRequestDto } from "../dtos/refresh-token.request.dto";
-import { RefreshTokenResponseDto } from "../dtos/refresh-token.response.dto";
+import { RefreshTokenRequestDto } from "../dtos/refresh-token/refresh-token.request.dto";
+import { RefreshTokenResponseDto } from "../dtos/refresh-token/refresh-token.response.dto";
 import { Response } from "express";
 import { LogoutUC } from "../usecases/logout.uc";
 import { Recaptcha } from "@nestlab/google-recaptcha";
 import { LangClientInterceptor } from "../interceptors/lang-client.interceptor";
+import { SignupRequestDto } from "../dtos/signup/signup.request.dto";
+import { SignupUC } from "../usecases/signup.uc";
 
 @Controller('authentication')
 @Authentication(AuthenticationType.None)
 export class AuthenticationController {
 
     constructor(
+        private readonly signupUC: SignupUC,
         private readonly loginUC: LoginUC,
         private readonly validateTfaUC: ValidateTfaUC,
         private readonly refreshTokenUC: RefreshTokenUC,
         private readonly logoutUC: LogoutUC
     ) { }
+
+    @Post("signup")
+    @UseInterceptors(IpClientInterceptor, LangClientInterceptor)
+    @Recaptcha()
+    @HttpCode(HttpStatus.CREATED)
+    async signup(@Body() dto: SignupRequestDto) {
+        return await this.signupUC.execute(dto);
+    }
 
     @Post('login')
     @UseInterceptors(IpClientInterceptor, LangClientInterceptor)

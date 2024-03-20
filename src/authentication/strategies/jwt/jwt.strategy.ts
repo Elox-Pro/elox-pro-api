@@ -1,6 +1,6 @@
-import { JwtAccessPayloadDto } from "@app/authentication/dtos/jwt-access-payload.dto";
-import { JwtRefreshPayloadDto } from "@app/authentication/dtos/jwt-refresh-payload.dto";
-import { JwtTokensDto } from "@app/authentication/dtos/jwt-tokens.dto";
+import { JwtAccessPayloadDto } from "@app/authentication/dtos/jwt/jwt-access-payload.dto";
+import { JwtRefreshPayloadDto } from "@app/authentication/dtos/jwt/jwt-refresh-payload.dto";
+import { JwtTokensDto } from "@app/authentication/dtos/jwt/jwt-tokens.dto";
 import { Injectable } from "@nestjs/common";
 
 

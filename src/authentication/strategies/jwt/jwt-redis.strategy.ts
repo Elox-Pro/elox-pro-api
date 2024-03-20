@@ -5,9 +5,9 @@ import { RedisService } from "redis/redis.service";
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from "crypto";
 import { JwtConfig } from "authentication/config/jwt.config";
-import { JwtAccessPayloadDto } from "@app/authentication/dtos/jwt-access-payload.dto";
-import { JwtTokensDto } from "@app/authentication/dtos/jwt-tokens.dto";
-import { JwtRefreshPayloadDto } from "@app/authentication/dtos/jwt-refresh-payload.dto";
+import { JwtAccessPayloadDto } from "@app/authentication/dtos/jwt/jwt-access-payload.dto";
+import { JwtTokensDto } from "@app/authentication/dtos/jwt/jwt-tokens.dto";
+import { JwtRefreshPayloadDto } from "@app/authentication/dtos/jwt/jwt-refresh-payload.dto";
 import { InvalidateRefreshTokenError } from "@app/authentication/errors/invalidate-refresh-token.error";
 
 @Injectable()

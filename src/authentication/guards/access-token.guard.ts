@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, Logger, UnauthorizedExceptio
 import { Request } from 'express';
 import { USER_REQUEST_KEY } from '../constants/authentication.constants';
 import { JwtStrategy } from '../strategies/jwt/jwt.strategy';
-import { JwtAccessPayloadDto } from '../dtos/jwt-access-payload.dto';
+import { JwtAccessPayloadDto } from '../dtos/jwt/jwt-access-payload.dto';
 
 @Injectable()
 export class AccessTokenGuard implements CanActivate {

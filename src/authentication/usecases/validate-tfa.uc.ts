@@ -1,13 +1,13 @@
 import { IUseCase } from "@app/common/usecase/usecase.interface";
-import { ValidateTFARequestDto } from "../dtos/validate-tfa.request.dto";
-import { ValidateTFAResponseDto } from "../dtos/validate-tfa.response.dto";
+import { ValidateTFARequestDto } from "../dtos/validate-tfa/validate-tfa.request.dto";
+import { ValidateTFAResponseDto } from "../dtos/validate-tfa/validate-tfa.response.dto";
 import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "@app/prisma/prisma.service";
 import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
 import { TFAFactory } from "../factories/tfa.factory";
-import { JwtAccessPayloadDto } from "../dtos/jwt-access-payload.dto";
+import { JwtAccessPayloadDto } from "../dtos/jwt/jwt-access-payload.dto";
 import JWTCookieService from "../services/jwt-cookie.service";
-import { JwtTokensDto } from "../dtos/jwt-tokens.dto";
+import { JwtTokensDto } from "../dtos/jwt/jwt-tokens.dto";
 import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 
 @Injectable()

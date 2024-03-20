@@ -1,7 +1,7 @@
 import { AppConfig } from "@app/app.config";
 import { Injectable } from "@nestjs/common";
 import { CookieOptions, Response, Request } from "express";
-import { JwtTokensDto } from "../dtos/jwt-tokens.dto";
+import { JwtTokensDto } from "../dtos/jwt/jwt-tokens.dto";
 import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 
 /**

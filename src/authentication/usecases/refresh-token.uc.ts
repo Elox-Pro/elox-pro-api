@@ -1,11 +1,11 @@
 import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
-import { RefreshTokenRequestDto } from "../dtos/refresh-token.request.dto";
-import { RefreshTokenResponseDto } from "../dtos/refresh-token.response.dto";
+import { RefreshTokenRequestDto } from "../dtos/refresh-token/refresh-token.request.dto";
+import { RefreshTokenResponseDto } from "../dtos/refresh-token/refresh-token.response.dto";
 import { IUseCase } from "@app/common/usecase/usecase.interface";
 import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
-import { JwtRefreshPayloadDto } from "../dtos/jwt-refresh-payload.dto";
+import { JwtRefreshPayloadDto } from "../dtos/jwt/jwt-refresh-payload.dto";
 import { PrismaService } from "@app/prisma/prisma.service";
-import { JwtAccessPayloadDto } from "../dtos/jwt-access-payload.dto";
+import { JwtAccessPayloadDto } from "../dtos/jwt/jwt-access-payload.dto";
 import { InvalidateRefreshTokenError } from "../errors/invalidate-refresh-token.error";
 
 @Injectable()

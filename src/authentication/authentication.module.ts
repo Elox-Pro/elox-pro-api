@@ -24,6 +24,7 @@ import { AppConfig } from '@app/app.config';
 import JWTCookieService from './services/jwt-cookie.service';
 import { JWTCookiesGuard } from './guards/jwt-cookies.guard';
 import { LogoutUC } from './usecases/logout.uc';
+import { SignupUC } from './usecases/signup.uc';
 
 @Module({
     imports:
@@ -64,6 +65,7 @@ import { LogoutUC } from './usecases/logout.uc';
                 provide: APP_GUARD,
                 useClass: AuthenticationGuard,
             },
+            SignupUC,
             LoginUC,
             ValidateTfaUC,
             RefreshTokenUC,
