@@ -1,8 +1,10 @@
 import { TfaAction } from "@app/authentication/enums/tfa-action.enum";
+import { User } from "@prisma/client";
 
-export class TFAResponseDto {
+export class TFARequestDto {
     constructor(
-        readonly result: boolean,
+        readonly user: User,
+        readonly ipClient: string,
         readonly action: TfaAction
     ) { }
 }

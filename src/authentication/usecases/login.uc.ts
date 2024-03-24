@@ -5,7 +5,7 @@ import { JwtAccessPayloadDto } from "../dtos/jwt/jwt-access-payload.dto";
 import { LoginResponseDto } from "../dtos/login/login.response.dto";
 import { PrismaService } from "prisma//prisma.service";
 import { HashingStrategy } from "../strategies/hashing/hashing.strategy";
-import { TFAResponseDto } from "../dtos/tfa/tfa.response.dto";
+import { TFARequestDto } from "../dtos/tfa/tfa.request.dto";
 import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
 import { Queue } from "bull";
 import { InjectQueue } from "@nestjs/bull";
@@ -14,6 +14,7 @@ import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
 import JWTCookieService from "../services/jwt-cookie.service";
 import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 import getUserLang from "@app/common/helpers/get-user-lang.helper";
+import { TfaAction } from "../enums/tfa-action.enum";
 
 /**
  * Use case for handling user login.
@@ -70,7 +71,10 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
 
         savedUser.lang = getUserLang(savedUser.lang, data.lang);
 
-        await this.tfaStrategyQueue.add(new TFAResponseDto(savedUser, data.ipClient));
+        await this.tfaStrategyQueue.add(new TFARequestDto(
+            savedUser, data.ipClient, TfaAction.SIGN_IN
+        ));
+
         return new LoginResponseDto(true, null);
     }
 }

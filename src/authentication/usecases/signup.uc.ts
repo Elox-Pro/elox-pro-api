@@ -8,8 +8,9 @@ import { Queue } from "bull";
 import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
 import { InjectQueue } from "@nestjs/bull";
 import getUserLang from "@app/common/helpers/get-user-lang.helper";
-import { TFAResponseDto } from "../dtos/tfa/tfa.response.dto";
+import { TFARequestDto } from "../dtos/tfa/tfa.request.dto";
 import { TfaType } from "@prisma/client";
+import { TfaAction } from "../enums/tfa-action.enum";
 
 @Injectable()
 export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto>{
@@ -44,18 +45,19 @@ export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto>{
 
         const hashedPassword = await this.hashingStrategy.hash(data.password1);
 
-        // By default the tfa type is EMAIL
         const savedUser = await this.prisma.user.create({
             data: {
                 username: data.username,
                 email: data.email,
                 password: hashedPassword,
-                tfaType: TfaType.EMAIL,
+                tfaType: TfaType.EMAIL, // By default the tfa type is EMAIL
             }
         });
 
         savedUser.lang = getUserLang(savedUser.lang, data.lang);
-        await this.tfaStrategyQueue.add(new TFAResponseDto(savedUser, data.ipClient));
+        await this.tfaStrategyQueue.add(new TFARequestDto(
+            savedUser, data.ipClient, TfaAction.SIGN_UP
+        ));
 
         return new SignupResponseDto(true);
 

@@ -1,8 +1,8 @@
 import { TfaAction } from "@app/authentication/enums/tfa-action.enum";
 
-export class TFAResponseDto {
+export class TFADto {
     constructor(
-        readonly result: boolean,
+        readonly hash: string,
         readonly action: TfaAction
     ) { }
 }

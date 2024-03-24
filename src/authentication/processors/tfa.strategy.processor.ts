@@ -2,7 +2,7 @@ import { Process, Processor } from "@nestjs/bull";
 import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
 import { Logger } from "@nestjs/common";
 import { Job } from "bull";
-import { TFAResponseDto } from "../dtos/tfa/tfa.response.dto";
+import { TFARequestDto } from "../dtos/tfa/tfa.request.dto";
 import { TFAFactory } from "../factories/tfa.factory";
 
 @Processor(TFA_STRATEGY_QUEUE)
@@ -13,10 +13,10 @@ export class TfaStrategyProcessor {
     constructor(private readonly tfaFactory: TFAFactory) { }
 
     @Process()
-    async run(job: Job<TFAResponseDto>) {
+    async run(job: Job<TFARequestDto>) {
         this.logger.log(`TfaStrategyProcessor for: ${job.id}`);
 
-        const tfaDto: TFAResponseDto = job.data;
+        const tfaDto: TFARequestDto = job.data;
         if (!tfaDto) {
             this.logger.error('TfaDto is required');
             throw new Error('TfaDto is required');
@@ -28,7 +28,12 @@ export class TfaStrategyProcessor {
             throw new Error('TfaStrategy is required');
         }
 
-        await strategy.execute(tfaDto);
+        try {
+            await strategy.execute(tfaDto);
+        } catch (error) {
+            this.logger.error(`TfaStrategyProcessor for: ${job.id} failed`);
+            throw new Error(error.message);
+        }
 
         this.logger.log(`TfaStrategyProcessor complete for job: ${job.id}`);
     }

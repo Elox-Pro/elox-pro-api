@@ -6,6 +6,10 @@ import { EmailFactory } from "common/email/factories/email.factory";
 import { EmailType } from "common/email/enums/email-type.enum";
 import { EmailAddressDto } from "common/email/dtos/email-address.dto";
 import { EMAIL_TFA_STRATEGY_KEY } from "authentication/constants/authentication.constants";
+import { TFARequestDto } from "@app/authentication/dtos/tfa/tfa.request.dto";
+import { TfaAction } from "@app/authentication/enums/tfa-action.enum";
+import { TFADto } from "@app/authentication/dtos/tfa/tfa.dto";
+import { TFAResponseDto } from "@app/authentication/dtos/tfa/tfa.response.dto";
 
 @Injectable()
 export class EmailTfaStrategy extends TfaStrategy {
@@ -19,31 +23,31 @@ export class EmailTfaStrategy extends TfaStrategy {
         private readonly redis: RedisService,
         private readonly emailFactory: EmailFactory
     ) {
-
         super();
     }
 
-    async execute({ user, ipClient }): Promise<boolean> {
+    async execute({ user, ipClient, action }: TFARequestDto): Promise<boolean> {
 
         const { email, username, emailVerified, lang } = user;
 
         if (!username) {
             this.logger.error(`Username not found: ${username}`);
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException('error.invalid-credentials');
         }
 
         if (!email) {
             this.logger.error(`Email not found: ${email}`);
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException('error.invalid-credentials');
         }
 
-        if (!emailVerified) {
-            this.logger.warn(`Email not verified: ${email}`);
+        if (action !== TfaAction.SIGN_UP && !emailVerified) {
+            this.logger.error(`Email not verified: ${email}`);
+            throw new UnauthorizedException('error.email-not-verified');
         }
 
         if (!ipClient) {
             this.logger.error(`IpClient not found: ${ipClient}`);
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException('error.invalid-credentials');
         }
 
         const code = this.generateCode(this.CODE_LENGTH);
@@ -60,11 +64,13 @@ export class EmailTfaStrategy extends TfaStrategy {
             EX: this.TTL
         });
 
+        await this.redis.getClient().set(key, JSON.stringify(new TFADto(hash, action)));
+
         const emailTemplate = this.emailFactory.getEmail(EmailType.TFA);
 
         await emailTemplate.send(new EmailAddressDto(email, username), new Map<string, string>([
             ['lang', lang],
-            ['code', code],
+            ['code', code.toString()],
             ['username', username],
             ['ipClient', ipClient]])
         );
@@ -72,9 +78,11 @@ export class EmailTfaStrategy extends TfaStrategy {
         return true;
     }
 
-    async verify(username: string, code: string): Promise<boolean> {
+    async verify(username: string, code: string): Promise<TFAResponseDto> {
         const key = this.generateKey(username);
-        const hash = await this.redis.getClient().get(key);
+        const serializedTFA = await this.redis.getClient().get(key);
+        const tfa = JSON.parse(serializedTFA);
+        const { hash, action } = tfa;
 
         if (!username) {
             this.logger.error(`Username not found: ${username}`);
@@ -97,7 +105,7 @@ export class EmailTfaStrategy extends TfaStrategy {
             await this.redis.getClient().del(key);
         }
 
-        return result;
+        return new TFAResponseDto(result, action);
     }
 
     private generateCode(digits: number): number {

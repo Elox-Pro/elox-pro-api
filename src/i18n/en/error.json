@@ -4,5 +4,6 @@
     "access-denied": "Access denied",
     "username-already-exists": "Username already exists",
     "email-already-exists": "Email already exists",
-    "passwords-do-not-match": "Passwords do not match"
+    "passwords-do-not-match": "Passwords do not match",
+    "email-not-verified": "Email not verified"
 }
