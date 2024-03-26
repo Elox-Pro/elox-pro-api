@@ -4,6 +4,6 @@ export class LoginResponseDto {
 
     constructor(
         readonly isTFAPending: boolean,
-        readonly tokens: JwtTokensDto
+        readonly tokens?: JwtTokensDto
     ) { }
 }

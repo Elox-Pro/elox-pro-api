@@ -47,34 +47,56 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
      */
     async execute(data: LoginRequestDto): Promise<LoginResponseDto> {
 
+        // 1. Find the user by username
         const savedUser = await this.prisma.user.findUnique({
-            where: { username: data.username }
+            where: { username: data.username },
         });
 
+        // 2. Check if user exists
         if (!savedUser) {
             this.logger.error(`username not found: ${data.username}`);
             throw new BadRequestException('error.invalid-credentials');
         }
 
+        // 3. Validate password
         if (!await this.hashingStrategy.compare(data.password, savedUser.password)) {
             this.logger.error('Invalid password');
             throw new BadRequestException('error.invalid-credentials');
         }
 
+        // 4. Check if Two-Factor Authentication (TFA) is required for this user
         if (savedUser.tfaType === TfaType.NONE) {
-            const payload = new JwtAccessPayloadDto(savedUser.username, savedUser.role)
+            // 4.1 No TFA required, generate access tokens and set session cookie
+            const payload = new JwtAccessPayloadDto(savedUser.username, savedUser.role);
             const tokens = await this.jwtStrategy.generate(payload);
             const activeUser = new ActiveUserDto(payload.sub, payload.role, true);
             this.jwtCookieService.createSession(data.getResponse(), tokens, activeUser);
-            return new LoginResponseDto(false, null);
+            return new LoginResponseDto(false); // Indicates no further action needed
         }
 
+        // 5. Update user language (optional, based on logic in getUserLang)
         savedUser.lang = getUserLang(savedUser.lang, data.lang);
 
+        // 6. User requires TFA but hasn't verified email (applicable for EMAIL or SMS TFA)
+        if (!savedUser.emailVerified &&
+            [TfaType.EMAIL, TfaType.SMS].findIndex(tfaType => tfaType === savedUser.tfaType) > -1) {
+
+            this.logger.warn(`Account not verified: ${savedUser.username}`);
+
+            await this.tfaStrategyQueue.add(new TFARequestDto(
+                savedUser, data.ipClient, TfaAction.SIGN_UP // Treat login like a sign-up for verification
+            ));
+
+            return new LoginResponseDto(true); // Indicates verification required
+        }
+
+        // 7. Queue a TFA request for sign-in verification (assuming TFA is enabled)
         await this.tfaStrategyQueue.add(new TFARequestDto(
             savedUser, data.ipClient, TfaAction.SIGN_IN
         ));
 
-        return new LoginResponseDto(true, null);
+        // 8. Login successful, TFA verification will be handled separately
+        return new LoginResponseDto(true); // Indicates TFA verification required
     }
+
 }

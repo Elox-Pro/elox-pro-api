@@ -5,5 +5,7 @@
     "username-already-exists": "Username already exists",
     "email-already-exists": "Email already exists",
     "passwords-do-not-match": "Passwords do not match",
-    "email-not-verified": "Email not verified"
+    "email-not-verified": "Email not verified",
+    "phone-not-verified": "Phone not verified",
+    "account-not-verified": "Account not verified"
 }

@@ -5,5 +5,7 @@
     "username-already-exists": "El nombre de usuario ya existe",
     "email-already-exists": "El correo electrónico ya existe",
     "passwords-do-not-match": "Las contraseñas no coinciden",
-    "email-not-verified": "Correo electrónico no verificado"
+    "email-not-verified": "Correo electrónico no verificado",
+    "phone-not-verified": "Número de teléfono no verificado",
+    "account-not-verified": "Cuenta no verificada"
 }

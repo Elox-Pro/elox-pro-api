@@ -16,7 +16,8 @@ export class EmailTfaStrategy extends TfaStrategy {
 
     private readonly logger = new Logger(EmailTfaStrategy.name);
     private readonly CODE_LENGTH = 6;
-    private readonly TTL = 60 * 10; // Expire time in seconds
+    private readonly DEFAUT_TTL = 60 * 10; // Expire time in seconds (10 minutes)
+    private readonly SIGNUP_TTL = 60 * 60 * 24 * 2; // Expire time in seconds (2 days)
 
     constructor(
         private readonly hashingStrategy: HashingStrategy,
@@ -60,11 +61,11 @@ export class EmailTfaStrategy extends TfaStrategy {
             return true;
         }
 
-        await this.redis.getClient().set(key, hash, {
-            EX: this.TTL
-        });
+        const ttl = action !== TfaAction.SIGN_UP ? this.DEFAUT_TTL : this.SIGNUP_TTL;
 
-        await this.redis.getClient().set(key, JSON.stringify(new TFADto(hash, action)));
+        await this.redis.getClient().set(key, JSON.stringify(new TFADto(hash, action)), {
+            EX: ttl
+        });
 
         const emailTemplate = this.emailFactory.getEmail(EmailType.TFA);
 
@@ -72,8 +73,9 @@ export class EmailTfaStrategy extends TfaStrategy {
             ['lang', lang],
             ['code', code.toString()],
             ['username', username],
-            ['ipClient', ipClient]])
-        );
+            ['ipClient', ipClient],
+            ['ttl', ttl.toString()]
+        ]));
 
         return true;
     }
@@ -81,6 +83,12 @@ export class EmailTfaStrategy extends TfaStrategy {
     async verify(username: string, code: string): Promise<TFAResponseDto> {
         const key = this.generateKey(username);
         const serializedTFA = await this.redis.getClient().get(key);
+
+        if (!serializedTFA) {
+            this.logger.error(`Code not found: ${username}`);
+            throw new UnauthorizedException('error.invalid-credentials');
+        }
+
         const tfa = JSON.parse(serializedTFA);
         const { hash, action } = tfa;
 

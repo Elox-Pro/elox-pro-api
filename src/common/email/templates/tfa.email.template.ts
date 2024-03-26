@@ -3,6 +3,7 @@ import { EmailAddressDto } from "../dtos/email-address.dto";
 import { EmailDTO } from "../dtos/email.dto";
 import { EmailSender } from "../senders/email.sender";
 import { EmailTemplate } from "./email.template";
+import formatTTL from "@app/common/helpers/format-ttl.helper";
 
 export class TfaEmailTemplate extends EmailTemplate {
 
@@ -27,6 +28,7 @@ export class TfaEmailTemplate extends EmailTemplate {
         }
 
         const lang = params.get("lang") as UserLang || UserLang.EN;
+        params.set("ttlFormatted", formatTTL(parseInt(params.get("ttl")), lang));
 
         return await this.sender.send(new EmailDTO(
             this.noReply,
