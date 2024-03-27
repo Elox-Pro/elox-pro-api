@@ -7,7 +7,6 @@ import { HashingStrategy } from "../strategies/hashing/hashing.strategy";
 import { Queue } from "bull";
 import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
 import { InjectQueue } from "@nestjs/bull";
-import getUserLang from "@app/common/helpers/get-user-lang.helper";
 import { TFARequestDto } from "../dtos/tfa/tfa.request.dto";
 import { TfaType } from "@prisma/client";
 import { TfaAction } from "../enums/tfa-action.enum";
@@ -54,9 +53,8 @@ export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto>{
             }
         });
 
-        savedUser.lang = getUserLang(savedUser.lang, data.lang);
         await this.tfaStrategyQueue.add(new TFARequestDto(
-            savedUser, data.ipClient, TfaAction.SIGN_UP
+            savedUser, data.ipClient, TfaAction.SIGN_UP, data.lang
         ));
 
         return new SignupResponseDto(true);

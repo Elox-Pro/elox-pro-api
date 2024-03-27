@@ -5,7 +5,7 @@ import { Job } from "bull";
 import { EmailFactory } from "../factories/email.factory";
 import { EmailProcessorRequestDto } from "../dtos/email-processor/email-processor.request.dto";
 import { EmailAddressDto } from "../dtos/email-address.dto";
-import { UserLang } from "@prisma/client";
+import getUserLang from "@app/common/helpers/get-user-lang.helper";
 
 @Processor(EMAIL_QUEUE)
 export class EmailProcessor {
@@ -30,12 +30,9 @@ export class EmailProcessor {
             throw new Error('Template is required');
         }
 
-        const { email, username, lang } = data.user;
-
-        if (lang === UserLang.DEFAULT) {
-            this.logger.error('user lang DEFAULT is not valid for emails');
-            throw new Error('user lang DEFAULT is not valid for emails');
-        }
+        const { email, username } = data.user;
+        // Update user language(optional, based on logic in getUserLang)
+        const lang = getUserLang(data.user.lang, data.lang);
 
         try {
             await template.send(new EmailAddressDto(email, username), new Map<string, string>([

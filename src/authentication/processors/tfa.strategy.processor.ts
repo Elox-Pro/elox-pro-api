@@ -16,20 +16,20 @@ export class TfaStrategyProcessor {
     async run(job: Job<TFARequestDto>) {
         this.logger.log(`TfaStrategyProcessor for: ${job.id}`);
 
-        const tfaDto: TFARequestDto = job.data;
-        if (!tfaDto) {
-            this.logger.error('TfaDto is required');
-            throw new Error('TfaDto is required');
+        const data: TFARequestDto = job.data;
+        if (!data) {
+            this.logger.error('data is required');
+            throw new Error('data is required');
         }
 
-        const strategy = this.tfaFactory.getTfaStrategy(tfaDto.user.tfaType);
+        const strategy = this.tfaFactory.getTfaStrategy(data.user.tfaType);
         if (!strategy) {
             this.logger.error('TfaStrategy is required');
             throw new Error('TfaStrategy is required');
         }
 
         try {
-            await strategy.execute(tfaDto);
+            await strategy.execute(data);
         } catch (error) {
             this.logger.error(`TfaStrategyProcessor for: ${job.id} failed`);
             throw new Error(error.message);

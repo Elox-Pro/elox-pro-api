@@ -73,11 +73,10 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
                 }
             });
 
-            savedUser.lang = getUserLang(savedUser.lang, data.lang);
-
             await this.emailQueue.add(new EmailProcessorRequestDto(
                 EmailType.WELCOME,
-                savedUser
+                savedUser,
+                data.lang
             ));
 
             return new ValidateTFAResponseDto(type, action);

@@ -74,28 +74,25 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
             return new LoginResponseDto(false); // Indicates no further action needed
         }
 
-        // 5. Update user language (optional, based on logic in getUserLang)
-        savedUser.lang = getUserLang(savedUser.lang, data.lang);
-
-        // 6. User requires TFA but hasn't verified email (applicable for EMAIL or SMS TFA)
+        // 5. User requires TFA but hasn't verified email (applicable for EMAIL or SMS TFA)
         if (!savedUser.emailVerified &&
             [TfaType.EMAIL, TfaType.SMS].findIndex(tfaType => tfaType === savedUser.tfaType) > -1) {
 
             this.logger.warn(`Account not verified: ${savedUser.username}`);
 
             await this.tfaStrategyQueue.add(new TFARequestDto(
-                savedUser, data.ipClient, TfaAction.SIGN_UP // Treat login like a sign-up for verification
+                savedUser, data.ipClient, TfaAction.SIGN_UP, data.lang // Treat login like a sign-up for verification
             ));
 
             return new LoginResponseDto(true); // Indicates verification required
         }
 
-        // 7. Queue a TFA request for sign-in verification (assuming TFA is enabled)
+        // 6. Queue a TFA request for sign-in verification (assuming TFA is enabled)
         await this.tfaStrategyQueue.add(new TFARequestDto(
-            savedUser, data.ipClient, TfaAction.SIGN_IN
+            savedUser, data.ipClient, TfaAction.SIGN_IN, data.lang
         ));
 
-        // 8. Login successful, TFA verification will be handled separately
+        // 7. Login successful, TFA verification will be handled separately
         return new LoginResponseDto(true); // Indicates TFA verification required
     }
 

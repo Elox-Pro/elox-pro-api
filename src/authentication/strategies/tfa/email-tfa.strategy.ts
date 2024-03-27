@@ -10,6 +10,7 @@ import { TFARequestDto } from "@app/authentication/dtos/tfa/tfa.request.dto";
 import { TfaAction } from "@app/authentication/enums/tfa-action.enum";
 import { TFADto } from "@app/authentication/dtos/tfa/tfa.dto";
 import { TFAResponseDto } from "@app/authentication/dtos/tfa/tfa.response.dto";
+import getUserLang from "@app/common/helpers/get-user-lang.helper";
 
 @Injectable()
 export class EmailTfaStrategy extends TfaStrategy {
@@ -27,9 +28,11 @@ export class EmailTfaStrategy extends TfaStrategy {
         super();
     }
 
-    async execute({ user, ipClient, action }: TFARequestDto): Promise<boolean> {
+    async execute({ user, ipClient, action, lang }: TFARequestDto): Promise<boolean> {
 
-        const { email, username, emailVerified, lang } = user;
+        const { email, username, emailVerified } = user;
+        // Update user language(optional, based on logic in getUserLang)
+        const userLang = getUserLang(user.lang, lang);
 
         if (!username) {
             this.logger.error(`Username not found: ${username}`);
@@ -70,7 +73,7 @@ export class EmailTfaStrategy extends TfaStrategy {
         const emailTemplate = this.emailFactory.getEmail(EmailType.TFA);
 
         await emailTemplate.send(new EmailAddressDto(email, username), new Map<string, string>([
-            ['lang', lang],
+            ['lang', userLang],
             ['code', code.toString()],
             ['username', username],
             ['ipClient', ipClient],
