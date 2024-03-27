@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { UserLang } from "@prisma/client";
+import { IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { Response } from "express";
 
 export class ValidateTFARequestDto {
@@ -10,6 +11,9 @@ export class ValidateTFARequestDto {
     @IsString()
     @IsNotEmpty()
     public readonly username: string;
+
+    @IsEnum(UserLang)
+    readonly lang: UserLang;
 
     private response: Response;
 

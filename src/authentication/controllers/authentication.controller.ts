@@ -54,6 +54,7 @@ export class AuthenticationController {
 
     @HttpCode(HttpStatus.OK)
     @Post('validate-tfa')
+    @UseInterceptors(LangClientInterceptor)
     validateTfa(
         @Res({ passthrough: true }) response: Response,
         @Body() dto: ValidateTFARequestDto): Promise<ValidateTFAResponseDto> {

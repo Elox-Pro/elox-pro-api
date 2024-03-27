@@ -8,7 +8,7 @@ import { LoginUC } from './usecases/login.uc';
 import { EmailModule } from 'common/email/email.module';
 import { RedisModule } from 'redis/redis.module';
 import { BullModule } from '@nestjs/bull';
-import { TFA_STRATEGY_QUEUE } from './constants/authentication.constants';
+import { EMAIL_QUEUE, TFA_STRATEGY_QUEUE } from './constants/authentication.constants';
 import { TfaStrategyProcessor } from './processors/tfa.strategy.processor';
 import { JwtConfig } from './config/jwt.config';
 import { JwtStrategy } from './strategies/jwt/jwt.strategy';
@@ -25,6 +25,7 @@ import JWTCookieService from './services/jwt-cookie.service';
 import { JWTCookiesGuard } from './guards/jwt-cookies.guard';
 import { LogoutUC } from './usecases/logout.uc';
 import { SignupUC } from './usecases/signup.uc';
+import { EmailProcessor } from '@app/common/email/processors/email.processor';
 
 @Module({
     imports:
@@ -43,6 +44,9 @@ import { SignupUC } from './usecases/signup.uc';
             }),
             BullModule.registerQueue({
                 name: TFA_STRATEGY_QUEUE
+            }),
+            BullModule.registerQueue({
+                name: EMAIL_QUEUE
             }),
             JwtModule.register({}),
         ],
@@ -73,6 +77,7 @@ import { SignupUC } from './usecases/signup.uc';
             EmailTfaStrategy,
             TFAFactory,
             TfaStrategyProcessor,
+            EmailProcessor,
             AccessTokenGuard,
             JWTCookiesGuard,
             JwtConfig,

@@ -11,6 +11,13 @@ import { JwtTokensDto } from "../dtos/jwt/jwt-tokens.dto";
 import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 import { TfaAction } from "../enums/tfa-action.enum";
 import { TfaType } from "@prisma/client";
+import { EMAIL_QUEUE } from "../constants/authentication.constants";
+import { Queue } from "bull";
+import { InjectQueue } from "@nestjs/bull";
+import { EmailProcessor } from "@app/common/email/processors/email.processor";
+import { EmailProcessorRequestDto } from "@app/common/email/dtos/email-processor/email-processor.request.dto";
+import { EmailType } from "@app/common/email/enums/email-type.enum";
+import getUserLang from "@app/common/helpers/get-user-lang.helper";
 
 @Injectable()
 export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTFAResponseDto>{
@@ -18,6 +25,8 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
     private readonly logger = new Logger(ValidateTfaUC.name);
 
     constructor(
+        @InjectQueue(EMAIL_QUEUE)
+        private readonly emailQueue: Queue,
         private readonly prisma: PrismaService,
         private readonly tfaFactory: TFAFactory,
         private readonly jwtStrategy: JwtStrategy,
@@ -63,6 +72,13 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
                     phoneVerified: type === TfaType.SMS,
                 }
             });
+
+            savedUser.lang = getUserLang(savedUser.lang, data.lang);
+
+            await this.emailQueue.add(new EmailProcessorRequestDto(
+                EmailType.WELCOME,
+                savedUser
+            ));
 
             return new ValidateTFAResponseDto(type, action);
         }

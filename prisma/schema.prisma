@@ -131,7 +131,7 @@ enum AuditTrailAction {
 }
 
 enum UserLang {
-  DEFAULT
+  DEFAULT // The user request lang
   EN
   ES
 }
@@ -181,7 +181,7 @@ model User {
   lastLoginAt DateTime? @map("last_login_at")
 
   // The user language
-  lang UserLang @default(EN)
+  lang UserLang @default(DEFAULT)
 
   // Information related with the customer ranks
   customerRank UserRank?
