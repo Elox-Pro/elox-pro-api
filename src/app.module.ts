@@ -1,23 +1,33 @@
 import { Module } from '@nestjs/common';
 import { AuthenticationModule } from './authentication/authentication.module';
-import { AppConfig } from './app.config';
 import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthorizationModule } from './authorization/authorization.module';
 import { HealthModule } from './health/health.module';
-import { I18nImplModule } from './common/i18n-impl/i18n-impl.module';
-import { GRecaptchaModule } from './common/grecaptcha/grecaptcha.module';
+import { I18nAppModule } from './i18n-app/i18n-app.module';
+import { GRecaptchaModule } from './grecaptcha/grecaptcha.module';
+import { RecoverPasswordModule } from './recover-password/recover-password.module';
+import { EmailModule } from './email/email.module';
+import { RedisModule } from './redis/redis.module';
+import { BullAppModule } from './bull-app/bull-app.module';
+import { TfaModule } from './tfa/tfa.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
-    I18nImplModule,
-    PrismaModule,
     AuthenticationModule,
     AuthorizationModule,
-    UserModule,
+    BullAppModule,
+    CommonModule,
+    EmailModule,
+    GRecaptchaModule,
     HealthModule,
-    GRecaptchaModule
-  ],
-  providers: [AppConfig]
+    I18nAppModule,
+    PrismaModule,
+    RedisModule,
+    RecoverPasswordModule,
+    TfaModule,
+    UserModule,
+  ]
 })
 export class AppModule { }

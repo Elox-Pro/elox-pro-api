@@ -1,0 +1,1 @@
+export const JWT_REDIS_STRATEGY_KEY = 'elox-pro:jwt-redis-strategy:';

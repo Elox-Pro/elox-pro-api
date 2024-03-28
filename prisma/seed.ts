@@ -3,7 +3,7 @@ import { plainToInstance } from 'class-transformer';
 import * as fs from 'fs';
 import { CreateCountryDTO } from '../src/country/dtos/create-country.dto';
 import { CreateUserDTO } from '../src/user/dtos/create-user.dto';
-import { BCryptStategy } from '../src/authentication/strategies/hashing/bcrypt.strategy';
+import { BCryptStategy } from '../src/common/strategies/hashing/bcrypt.strategy';
 import * as dotenv from 'dotenv';
 dotenv.config();
 

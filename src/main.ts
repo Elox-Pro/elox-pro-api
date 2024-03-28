@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { AppConfig } from './app.config';
+import { CommonConfig } from './common/config/common.config';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 
@@ -17,7 +17,7 @@ async function bootstrap() {
     }
   }));
 
-  const apiConfig = app.get<AppConfig>(AppConfig);
+  const apiConfig = app.get<CommonConfig>(CommonConfig);
 
   app.enableCors({
     origin: apiConfig.WEB_CLIENT_ORIGIN,

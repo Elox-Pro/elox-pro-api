@@ -1,20 +1,20 @@
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { LoginRequestDto } from "authentication/dtos/login/login.request.dto";
 import { IUseCase } from "common/usecase/usecase.interface";
-import { JwtAccessPayloadDto } from "../dtos/jwt/jwt-access-payload.dto";
+import { JwtAccessPayloadDto } from "../../jwt-app/dtos/jwt/jwt-access-payload.dto";
 import { LoginResponseDto } from "../dtos/login/login.response.dto";
 import { PrismaService } from "prisma//prisma.service";
-import { HashingStrategy } from "../strategies/hashing/hashing.strategy";
-import { TFARequestDto } from "../dtos/tfa/tfa.request.dto";
-import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
+import { HashingStrategy } from "../../common/strategies/hashing/hashing.strategy";
+import { TfaRequestDto } from "../../tfa/dtos/tfa/tfa.request.dto";
+import { TFA_STRATEGY_QUEUE } from "@app/tfa/constants/tfa.constants";
 import { Queue } from "bull";
 import { InjectQueue } from "@nestjs/bull";
 import { TfaType } from "@prisma/client";
-import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
-import JWTCookieService from "../services/jwt-cookie.service";
+import { JwtStrategy } from "../../jwt-app/strategies/jwt.strategy";
+import { JwtCookieService } from "@app/jwt-app/services/jwt-cookie.service";
 import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
-import getUserLang from "@app/common/helpers/get-user-lang.helper";
-import { TfaAction } from "../enums/tfa-action.enum";
+import { TfaAction } from "../../tfa/enums/tfa-action.enum";
+import { isVerifiedUser } from "../../common/helpers/is-verified-user";
 
 /**
  * Use case for handling user login.
@@ -34,7 +34,7 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
         private readonly prisma: PrismaService,
         private readonly hashingStrategy: HashingStrategy,
         private readonly jwtStrategy: JwtStrategy,
-        private readonly jwtCookieService: JWTCookieService
+        private readonly jwtCookieService: JwtCookieService
     ) { }
 
     /**
@@ -74,13 +74,12 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
             return new LoginResponseDto(false); // Indicates no further action needed
         }
 
-        // 5. User requires TFA but hasn't verified email (applicable for EMAIL or SMS TFA)
-        if (!savedUser.emailVerified &&
-            [TfaType.EMAIL, TfaType.SMS].findIndex(tfaType => tfaType === savedUser.tfaType) > -1) {
+        // 5. User requires TFA but hasn't verified email or phone (applicable for EMAIL or SMS TFA)
+        if (!isVerifiedUser(savedUser)) {
 
-            this.logger.warn(`Account not verified: ${savedUser.username}`);
+            this.logger.warn(`User not verified: ${savedUser.username}`);
 
-            await this.tfaStrategyQueue.add(new TFARequestDto(
+            await this.tfaStrategyQueue.add(new TfaRequestDto(
                 savedUser, data.ipClient, TfaAction.SIGN_UP, data.lang // Treat login like a sign-up for verification
             ));
 
@@ -88,7 +87,7 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
         }
 
         // 6. Queue a TFA request for sign-in verification (assuming TFA is enabled)
-        await this.tfaStrategyQueue.add(new TFARequestDto(
+        await this.tfaStrategyQueue.add(new TfaRequestDto(
             savedUser, data.ipClient, TfaAction.SIGN_IN, data.lang
         ));
 

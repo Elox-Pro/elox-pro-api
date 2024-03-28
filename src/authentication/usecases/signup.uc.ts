@@ -3,13 +3,12 @@ import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { SignupRequestDto } from "../dtos/signup/signup.request.dto";
 import { SignupResponseDto } from "../dtos/signup/signup.response.dto";
 import { PrismaService } from "@app/prisma/prisma.service";
-import { HashingStrategy } from "../strategies/hashing/hashing.strategy";
+import { HashingStrategy } from "../../common/strategies/hashing/hashing.strategy";
 import { Queue } from "bull";
-import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
+import { TFA_STRATEGY_QUEUE } from "@app/tfa/constants/tfa.constants";
 import { InjectQueue } from "@nestjs/bull";
-import { TFARequestDto } from "../dtos/tfa/tfa.request.dto";
-import { TfaType } from "@prisma/client";
-import { TfaAction } from "../enums/tfa-action.enum";
+import { TfaRequestDto } from "../../tfa/dtos/tfa/tfa.request.dto";
+import { TfaAction } from "../../tfa/enums/tfa-action.enum";
 
 @Injectable()
 export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto>{
@@ -49,11 +48,10 @@ export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto>{
                 username: data.username,
                 email: data.email,
                 password: hashedPassword,
-                tfaType: TfaType.EMAIL, // By default the tfa type is EMAIL
             }
         });
 
-        await this.tfaStrategyQueue.add(new TFARequestDto(
+        await this.tfaStrategyQueue.add(new TfaRequestDto(
             savedUser, data.ipClient, TfaAction.SIGN_UP, data.lang
         ));
 

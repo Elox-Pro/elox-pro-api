@@ -63,7 +63,7 @@ const timeUnits = [
  * @returns {string} The formatted duration string.
  * @throws {Error} If the provided duration is negative.
  */
-export default function formatTTL(seconds: number, lang: UserLang): string {
+export function formatTTL(seconds: number, lang: UserLang): string {
     // Retrieve the time unit translations for the user's language
     const translation = timeUnitMap.get(lang);
 

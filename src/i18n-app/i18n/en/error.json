@@ -1,0 +1,13 @@
+{
+    "access-denied": "Access denied",
+    "account-not-verified": "Account not verified",
+    "email-already-exists": "Email already exists",
+    "email-not-verified": "Email not verified",
+    "internal-server": "Internal server error",
+    "invalid-credentials": "Invalid credentials",
+    "passwords-do-not-match": "Passwords do not match",
+    "phone-not-verified": "Phone not verified",
+    "user-not-verified": "User not verified",
+    "username-already-exists": "Username already exists",
+    "username-not-found": "Username not found"
+}

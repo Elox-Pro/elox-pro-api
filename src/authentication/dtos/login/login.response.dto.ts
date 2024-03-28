@@ -1,4 +1,4 @@
-import { JwtTokensDto } from "../jwt/jwt-tokens.dto";
+import { JwtTokensDto } from "../../../jwt-app/dtos/jwt/jwt-tokens.dto";
 
 export class LoginResponseDto {
 

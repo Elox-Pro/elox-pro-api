@@ -1,6 +1,6 @@
 import { UserLang } from "@prisma/client";
 import { Request } from "express";
-export default function getAcceptLangReq(req: Request): UserLang {
+export function getAcceptLangReq(req: Request): UserLang {
     const acceptLang = req.headers['accept-language'];
     if (!acceptLang) {
         return UserLang.EN;

@@ -1,5 +1,5 @@
 {
     "material-icon-theme.activeIconPack": "nest",
-    "workbench.colorTheme": "Default Dark Modern",
+    "workbench.colorTheme": "Darcula Solid",
     "html.validate.styles": false
 }
