@@ -20,7 +20,7 @@ export abstract class EmailTemplate {
     protected buildPath(filePath: string) {
         return path.resolve(
             process.cwd(),
-            'src/common/email/resources/ejs/',
+            'src/email/resources/ejs/',
             filePath
         );
     };

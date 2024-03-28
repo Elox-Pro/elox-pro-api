@@ -15,6 +15,7 @@ import { Queue } from "bull";
 import { InjectQueue } from "@nestjs/bull";
 import { EmailProcessorRequestDto } from "@app/email/dtos/email-processor/email-processor.request.dto";
 import { EmailType } from "@app/email/enums/email-type.enum";
+import { getDefaultTfaType } from "@app/common/helpers/get-default-tfa-type";
 
 @Injectable()
 export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTFAResponseDto>{
@@ -41,12 +42,8 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
             throw new UnauthorizedException('error.invalid-credentials');
         }
 
-        const strategy = this.tfaFactory.getTfaStrategy(savedUser.tfaType);
-
-        if (!strategy) {
-            this.logger.error('Tfa strategy is required');
-            throw new UnauthorizedException('error.invalid-credentials');
-        }
+        const type = getDefaultTfaType(savedUser.tfaType);
+        const strategy = this.tfaFactory.getTfaStrategy(type);
 
         const { result, action } = await strategy.verify(
             savedUser.username,

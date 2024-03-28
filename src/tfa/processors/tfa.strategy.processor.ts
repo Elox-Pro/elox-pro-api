@@ -5,6 +5,7 @@ import { Job } from "bull";
 import { TfaRequestDto } from "../dtos/tfa/tfa.request.dto";
 import { TfaFactory } from "../factories/tfa.factory";
 import { TfaType } from "@prisma/client";
+import { getDefaultTfaType } from "@app/common/helpers/get-default-tfa-type";
 
 @Processor(TFA_STRATEGY_QUEUE)
 export class TfaStrategyProcessor {
@@ -24,7 +25,7 @@ export class TfaStrategyProcessor {
         }
 
         // By default the tfa type is email
-        const type = data.user.tfaType === TfaType.NONE ? TfaType.EMAIL : data.user.tfaType;
+        const type = getDefaultTfaType(data.user.tfaType);
 
         const strategy = this.tfaFactory.getTfaStrategy(type);
         if (!strategy) {
