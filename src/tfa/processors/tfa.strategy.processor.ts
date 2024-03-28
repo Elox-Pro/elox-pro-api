@@ -24,7 +24,6 @@ export class TfaStrategyProcessor {
             throw new Error('data is required');
         }
 
-        // By default the tfa type is email
         const type = getDefaultTfaType(data.user.tfaType);
 
         const strategy = this.tfaFactory.getTfaStrategy(type);
