@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { EmailTfaStrategy } from "../strategies/email-tfa.strategy";
+import { EmailTfaStrategy } from "../strategies/tfa/email-tfa.strategy";
 import { TfaType } from "@prisma/client"
-import { TfaStrategy } from "../strategies/tfa.strategy";
+import { TfaStrategy } from "../strategies/tfa/tfa.strategy";
 
 @Injectable()
 export class TfaFactory {
@@ -9,14 +9,14 @@ export class TfaFactory {
         private readonly emailTfa: EmailTfaStrategy,
     ) { }
 
-    getTfaStrategy(type: TfaType): TfaStrategy {
+    createStrategy(type: TfaType): TfaStrategy {
         switch (type) {
             case TfaType.NONE:
                 return null;
             case TfaType.EMAIL:
                 return this.emailTfa;
             default:
-                throw new Error("Invalid TFA type");
+                throw new Error("Invalid type");
         }
     }
 }

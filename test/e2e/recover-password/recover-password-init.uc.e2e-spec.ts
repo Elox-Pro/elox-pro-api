@@ -38,7 +38,7 @@ describe('Recover Password Init Use Case', () => {
             });
         });
 
-        describe('is tfa pending', () => {
+        describe('the TFA is pending', () => {
             it('should return HTTP status OK', async () => {
                 const res = await request(app.getHttpServer()).post(url).send({
                     "username": "alaska",
@@ -52,5 +52,6 @@ describe('Recover Password Init Use Case', () => {
             });
         });
 
+        //TODO: Validate the tfa
     })
 })

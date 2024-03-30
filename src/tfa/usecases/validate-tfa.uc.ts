@@ -3,19 +3,9 @@ import { ValidateTFARequestDto } from "../dtos/validate-tfa/validate-tfa.request
 import { ValidateTFAResponseDto } from "../dtos/validate-tfa/validate-tfa.response.dto";
 import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "@app/prisma/prisma.service";
-import { JwtStrategy } from "../../jwt-app/strategies/jwt.strategy";
 import { TfaFactory } from "../factories/tfa.factory";
-import { JwtAccessPayloadDto } from "../../jwt-app/dtos/jwt/jwt-access-payload.dto";
-import { JwtCookieService } from "@app/jwt-app/services/jwt-cookie.service";
-import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
-import { TfaAction } from "../enums/tfa-action.enum";
-import { TfaType } from "@prisma/client";
-import { EMAIL_QUEUE } from "@app/email/constants/email.constants";
-import { Queue } from "bull";
-import { InjectQueue } from "@nestjs/bull";
-import { EmailProcessorRequestDto } from "@app/email/dtos/email-processor/email-processor.request.dto";
-import { EmailType } from "@app/email/enums/email-type.enum";
 import { getDefaultTfaType } from "@app/common/helpers/get-default-tfa-type";
+import { TfaActionFactory } from "../factories/tfa-action.factory";
 
 @Injectable()
 export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTFAResponseDto>{
@@ -23,12 +13,9 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
     private readonly logger = new Logger(ValidateTfaUC.name);
 
     constructor(
-        @InjectQueue(EMAIL_QUEUE)
-        private readonly emailQueue: Queue,
         private readonly prisma: PrismaService,
         private readonly tfaFactory: TfaFactory,
-        private readonly jwtStrategy: JwtStrategy,
-        private readonly jwtCookieService: JwtCookieService
+        private readonly tfaActionFactory: TfaActionFactory
     ) { }
 
     async execute(data: ValidateTFARequestDto): Promise<ValidateTFAResponseDto> {
@@ -43,7 +30,7 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
         }
 
         const type = getDefaultTfaType(savedUser.tfaType);
-        const strategy = this.tfaFactory.getTfaStrategy(type);
+        const strategy = this.tfaFactory.createStrategy(type);
 
         const { result, action } = await strategy.verify(
             savedUser.username,
@@ -55,36 +42,7 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
             throw new UnauthorizedException('error.invalid-credentials');
         }
 
-        // TODO: Refactor code into strategy pattern
-        if (action === TfaAction.SIGN_UP) {
-            const type = savedUser.tfaType;
-            await this.prisma.user.update({
-                where: { id: savedUser.id },
-                data: {
-                    emailVerified: type === TfaType.EMAIL,
-                    phoneVerified: type === TfaType.SMS,
-                }
-            });
-
-            await this.emailQueue.add(new EmailProcessorRequestDto(
-                EmailType.WELCOME,
-                savedUser,
-                data.lang
-            ));
-
-            return new ValidateTFAResponseDto(type, action);
-        }
-
-        if (action === TfaAction.SIGN_IN) {
-
-            const payload = new JwtAccessPayloadDto(savedUser.username, savedUser.role)
-            const activeUser = new ActiveUserDto(payload.sub, payload.role, true);
-            const tokens = await this.jwtStrategy.generate(payload);
-            this.jwtCookieService.createSession(data.getResponse(), tokens, activeUser);
-
-            return new ValidateTFAResponseDto(savedUser.tfaType, action);
-        }
-
+        const actionStrategy = this.tfaActionFactory.createStrategy(action);
+        return await actionStrategy.execute(data, savedUser);
     }
-
 }

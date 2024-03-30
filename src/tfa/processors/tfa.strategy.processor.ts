@@ -25,7 +25,7 @@ export class TfaStrategyProcessor {
 
         const type = getDefaultTfaType(data.user.tfaType);
 
-        const strategy = this.tfaFactory.getTfaStrategy(type);
+        const strategy = this.tfaFactory.createStrategy(type);
         if (!strategy) {
             this.logger.error('TfaStrategy is required');
             throw new Error('TfaStrategy is required');

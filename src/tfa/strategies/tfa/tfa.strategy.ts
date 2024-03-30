@@ -1,6 +1,6 @@
 import { TfaResponseDto } from "@app/tfa/dtos/tfa/tfa.response.dto";
 import { Injectable } from "@nestjs/common";
-import { TfaRequestDto } from "../dtos/tfa/tfa.request.dto";
+import { TfaRequestDto } from "../../dtos/tfa/tfa.request.dto";
 
 @Injectable()
 export abstract class TfaStrategy {
