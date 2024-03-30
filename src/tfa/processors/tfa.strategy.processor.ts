@@ -4,7 +4,6 @@ import { Logger } from "@nestjs/common";
 import { Job } from "bull";
 import { TfaRequestDto } from "../dtos/tfa/tfa.request.dto";
 import { TfaFactory } from "../factories/tfa.factory";
-import { TfaType } from "@prisma/client";
 import { getDefaultTfaType } from "@app/common/helpers/get-default-tfa-type";
 
 @Processor(TFA_STRATEGY_QUEUE)
@@ -36,6 +35,7 @@ export class TfaStrategyProcessor {
             await strategy.execute(data);
         } catch (error) {
             this.logger.error(`TfaStrategyProcessor for: ${job.id} failed`);
+
             throw new Error(error.message);
         }
 

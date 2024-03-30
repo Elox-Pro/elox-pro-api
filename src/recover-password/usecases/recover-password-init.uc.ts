@@ -4,6 +4,11 @@ import { RecoverPasswordInitRequestDto } from "../dtos/recover-password-init/rec
 import { RecoverPasswordInitResponseDto } from "../dtos/recover-password-init/recover-password-init.response.dto";
 import { PrismaService } from "@app/prisma/prisma.service";
 import { isVerifiedUser } from "@app/common/helpers/is-verified-user";
+import { TFA_STRATEGY_QUEUE } from "@app/tfa/constants/tfa.constants";
+import { InjectQueue } from "@nestjs/bull";
+import { Queue } from "bull";
+import { TfaRequestDto } from "@app/tfa/dtos/tfa/tfa.request.dto";
+import { TfaAction } from "@app/tfa/enums/tfa-action.enum";
 
 @Injectable()
 export class RecoverPasswordInitUC implements IUseCase<RecoverPasswordInitRequestDto, RecoverPasswordInitResponseDto> {
@@ -11,8 +16,8 @@ export class RecoverPasswordInitUC implements IUseCase<RecoverPasswordInitReques
     private readonly logger = new Logger(RecoverPasswordInitUC.name);
 
     constructor(
-        // @InjectQueue(TFA_STRATEGY_QUEUE)
-        // private readonly tfaStrategyQueue: Queue,
+        @InjectQueue(TFA_STRATEGY_QUEUE)
+        private readonly tfaStrategyQueue: Queue,
         private readonly prisma: PrismaService,
     ) { }
 
@@ -33,9 +38,9 @@ export class RecoverPasswordInitUC implements IUseCase<RecoverPasswordInitReques
             throw new UnauthorizedException('error.user-not-verified');
         }
 
-        // await this.tfaStrategyQueue.add(new TFARequestDto(
-        //     user, data.ipClient, TfaAction.RECOVER_PASSWORD, data.lang
-        // ));
+        await this.tfaStrategyQueue.add(new TfaRequestDto(
+            user, data.ipClient, TfaAction.RECOVER_PASSWORD, data.lang
+        ));
 
         return new RecoverPasswordInitResponseDto(true);
     }
