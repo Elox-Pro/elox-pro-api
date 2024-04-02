@@ -40,9 +40,9 @@ export class RecoverPasswordResetUC implements IUseCase<RecoverPasswordResetRequ
      */
     async execute(data: RecoverPasswordResetRequestDto): Promise<RecoverPasswordResetResponseDto> {
 
-        const { username, password1, password2, lang, getResponse, getRequest } = data;
+        const { username, password1, password2, lang } = data;
 
-        const token = this.sessionCookieService.get(getRequest());
+        const token = this.sessionCookieService.get(data.getRequest());
 
         if (!token) {
             this.logger.error("Token not found: " + username);
@@ -56,7 +56,7 @@ export class RecoverPasswordResetUC implements IUseCase<RecoverPasswordResetRequ
             throw new UnauthorizedException("error.invalid-credentials");
         }
 
-        this.sessionCookieService.delete(getResponse());
+        this.sessionCookieService.delete(data.getResponse());
 
         if (password1 !== password2) {
             this.logger.error('Passwords do not match: ' + username);
