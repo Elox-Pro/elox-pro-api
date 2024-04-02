@@ -27,7 +27,7 @@ export class SignUpTfaActionStrategy extends TfaActionStrategy {
         await this.prisma.user.update({
             where: { id: user.id },
             data: {
-                emailVerified: type === TfaType.EMAIL,
+                emailVerified: type === TfaType.EMAIL || type === TfaType.NONE,
                 phoneVerified: type === TfaType.SMS,
             },
         });
