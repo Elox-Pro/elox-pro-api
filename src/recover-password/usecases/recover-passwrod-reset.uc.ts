@@ -14,6 +14,7 @@ import { EmailType } from "@app/email/enums/email-type.enum";
 /**
  * Use case for recovering and resetting a user's password.
  * It verifies the reset token, updates the password, and deletes the session cookie.
+ * It Notifies the user by email.
  * @author Yonatan A Quintero R
  * @date 2024-04-01
  */
@@ -33,6 +34,7 @@ export class RecoverPasswordResetUC implements IUseCase<RecoverPasswordResetRequ
     /**
      * Executes the password recovery and reset use case.
      * Verifies the reset token, updates the password, and deletes the session cookie.
+     * Send the email notification to the user.
      * @param data The recover password reset request data.
      * @returns A promise resolving to a RecoverPasswordResetResponseDto.
      * @throws UnauthorizedException if the token is invalid or missing.
@@ -72,7 +74,9 @@ export class RecoverPasswordResetUC implements IUseCase<RecoverPasswordResetRequ
             }
         })
 
-        await this.emailQueue.add(new EmailProcessorRequestDto(EmailType.WELCOME, user, lang));
+        await this.emailQueue.add(new EmailProcessorRequestDto(
+            EmailType.RECOVER_PASSWORD_SUCCESS, user, lang
+        ));
 
         return new RecoverPasswordResetResponseDto(true);
     }
