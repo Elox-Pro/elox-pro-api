@@ -22,63 +22,24 @@ describe("Find User By Username Use Case", () => {
         await app.close();
     });
 
-
     describe("GET: users/current", () => {
 
         const username = "alaska";
         const password = "098lkj!";
 
-        // await authenticateUser(app.getHttpServer(), username, password);
-        // it('should authenticated alaska user', async () => {
-        //     const res = await request(app.getHttpServer()).post(
-        //         "/authentication/login"
-        //     ).send({
-        //         "username": username,
-        //         "password": password,
-        //         "ipClient": "127.0.01",
-        //         "grecaptchaToken": "<TOKEN>"
-        //     });
-        //     expect(res.status).toBe(HttpStatus.OK);
-        //     expect(res.body).toBeDefined();
-
-        //     const body = res.body as LoginResponseDto;
-
-        //     expect(body.tokens).toBeUndefined();
-        //     expect(body.isTFAPending).toBeFalsy();
-        // });
-
         it("should return HTTP status OK", async () => {
 
-            // let res = await request(app.getHttpServer()).post(
-            //     "/authentication/login"
-            // ).send({
-            //     "username": username,
-            //     "password": password,
-            //     "ipClient": "127.0.01",
-            //     "grecaptchaToken": "<TOKEN>"
-            // })
-            // expect(res.status).toBe(HttpStatus.OK);
-            // expect(res.body).toBeDefined();
-
-            // let body = res.body as LoginResponseDto;
-
-            // expect(body.tokens).toBeUndefined();
-            // expect(body.isTFAPending).toBeFalsy();
-
-            // const cookies = res.headers['set-cookie']
-            // console.log('cookies', cookies)
             const cookies = await createJwtCookieSession(app.getHttpServer(), username, password);
-
             const url = "/users/current";
-
             const res = await request(app.getHttpServer())
                 .get(url)
                 .set('Cookie', cookies)
                 .send();
+
             expect(res.status).toBe(HttpStatus.OK);
             expect(res.body).toBeDefined();
-            const body2 = res.body as FindUserByUserNameResponseDto;
-            expect(body2.user.username).toBe(username);
+            const body = res.body as FindUserByUserNameResponseDto;
+            expect(body.user.username).toBe(username);
         });
     });
 });
