@@ -10,7 +10,7 @@ import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 
 /**
  * Guard to check JWT cookies for authentication and refresh tokens for token renewal.
- * @author yonax73@gmail.com
+ * @author Yonatan A Quintero R
  * @date 2024-02-07
  */
 @Injectable()

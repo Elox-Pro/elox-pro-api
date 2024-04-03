@@ -1,37 +1,36 @@
 import { Controller, HttpStatus, HttpCode, Body, Get, Param, UnauthorizedException, Logger } from "@nestjs/common";
-import { GetProfileUC } from "../usecases/get-profile.uc";
-import { GetProfileRequestDto } from "../dtos/get-profile.request.dto";
-import { GetProfileResponseDto } from "../dtos/get-profile.response.dto";
+import { FindUserByUsername } from "../usecases/find-user-by-username";
+import { FindUserByUsernameRequestDto } from "../dtos/find-user-by-username/find-user-by-username.request.dto";
+import { FindUserByUserNameResponseDto } from "../dtos/find-user-by-username/find-user-by-username.response.dto";
 import { Roles } from "@app/authorization/decorators/roles.decorator";
 import { Role } from "@prisma/client";
 import { UserRequest } from "@app/authorization/decorators/user.request.decorator";
 import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 
+/**
+ * Controller for managing users.
+ * @author Yonatan A Quintero R
+ * @date 2024-04-03
+ */
 @Controller('users')
 @Roles(Role.SYSTEM_ADMIN)
 export class UserController {
 
     private readonly logger = new Logger(UserController.name);
     constructor(
-        private getProfileUC: GetProfileUC,
+        private findUserByUsername: FindUserByUsername,
     ) { }
 
-    @Get('/:username/profile')
+    /**
+     * Get the current authenticated user by username.
+     * @param userRequest The user who makes the request.
+     * @returns The found user.
+     */
+    @Get('/current/')
     @HttpCode(HttpStatus.OK)
-    getProfile(
-        @Param('username') username: string,
-        @UserRequest() userRequest: ActiveUserDto
-    ): Promise<GetProfileResponseDto> {
-
-        if (username !== userRequest.sub) {
-            this.logger.error(
-                `${userRequest.sub} is not authorized to access data of: ${username}`
-            );
-            throw new UnauthorizedException();
-        }
-
-        return this.getProfileUC.execute(new GetProfileRequestDto(userRequest.sub));
-
+    getCurrent(@UserRequest() userRequest: ActiveUserDto
+    ): Promise<FindUserByUserNameResponseDto> {
+        return this.findUserByUsername.execute(new FindUserByUsernameRequestDto(userRequest.sub));
     }
 
 }

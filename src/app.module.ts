@@ -15,16 +15,18 @@ import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
-    AuthenticationModule,
-    AuthorizationModule,
+    // Global Modules
     BullAppModule,
     CommonModule,
     EmailModule,
     GRecaptchaModule,
-    HealthModule,
     I18nAppModule,
     PrismaModule,
     RedisModule,
+    // Local Modules
+    AuthenticationModule,
+    AuthorizationModule,
+    HealthModule,
     RecoverPasswordModule,
     TfaModule,
     UserModule,

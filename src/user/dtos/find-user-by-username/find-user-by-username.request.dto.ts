@@ -1,4 +1,4 @@
-export class GetProfileRequestDto {
+export class FindUserByUsernameRequestDto {
 
     constructor(public readonly username: string) { }
 }

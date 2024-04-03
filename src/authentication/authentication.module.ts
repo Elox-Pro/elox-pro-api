@@ -19,9 +19,9 @@ import { JwtAppModule } from '@app/jwt-app/jwt-app.module';
             provide: APP_GUARD,
             useClass: AuthenticationGuard,
         },
-        SignupUC,
         LoginUC,
         LogoutUC,
+        SignupUC,
     ],
 })
 export class AuthenticationModule { }

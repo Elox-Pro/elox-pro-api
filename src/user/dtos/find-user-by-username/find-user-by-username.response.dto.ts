@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 
-export class GetProfileResponseDto {
+export class FindUserByUserNameResponseDto {
 
     constructor(readonly user: User) { }
 }

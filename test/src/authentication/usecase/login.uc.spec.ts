@@ -1,4 +1,4 @@
-import { LoginUC } from "authentication/usecases/login.uc";
+// import { LoginUC } from "authentication/usecases/login.uc";
 
 describe('LoginUC', () => {
 

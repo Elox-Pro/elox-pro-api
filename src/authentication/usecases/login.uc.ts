@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { LoginRequestDto } from "authentication/dtos/login/login.request.dto";
 import { IUseCase } from "common/usecase/usecase.interface";
-import { JwtAccessPayloadDto } from "../../jwt-app/dtos/jwt/jwt-access-payload.dto";
 import { LoginResponseDto } from "../dtos/login/login.response.dto";
 import { PrismaService } from "prisma//prisma.service";
 import { HashingStrategy } from "../../common/strategies/hashing/hashing.strategy";
@@ -10,17 +9,15 @@ import { TFA_STRATEGY_QUEUE } from "@app/tfa/constants/tfa.constants";
 import { Queue } from "bull";
 import { InjectQueue } from "@nestjs/bull";
 import { TfaType } from "@prisma/client";
-import { JwtStrategy } from "../../jwt-app/strategies/jwt.strategy";
-import { JwtCookieService } from "@app/jwt-app/services/jwt-cookie.service";
-import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 import { TfaAction } from "../../tfa/enums/tfa-action.enum";
 import { isVerifiedUser } from "../../common/helpers/is-verified-user";
+import { JwtCookieSessionService } from "../../jwt-app/services/jwt-cookie-session.service";
 
 /**
  * Use case for handling user login.
  * It verifies credentials, generates JWT tokens, and manages session cookies.
  * If TFA is enabled, it adds a job to the TFA strategy queue.
- * @author yonax73@gmail.com
+ * @author Yonatan A Quintero R
  * @date 2024-02-07
  */
 @Injectable()
@@ -33,8 +30,7 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
         private readonly tfaStrategyQueue: Queue,
         private readonly prisma: PrismaService,
         private readonly hashingStrategy: HashingStrategy,
-        private readonly jwtStrategy: JwtStrategy,
-        private readonly jwtCookieService: JwtCookieService
+        private readonly jwtCookieSessionService: JwtCookieSessionService,
     ) { }
 
     /**
@@ -66,17 +62,15 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
 
         // 4. Check if Two-Factor Authentication (TFA) is required for this user
         if (savedUser.tfaType === TfaType.NONE) {
+
             // 4.1 No TFA required, generate access tokens and set session cookie
-            const payload = new JwtAccessPayloadDto(savedUser.username, savedUser.role);
-            const tokens = await this.jwtStrategy.generate(payload);
-            const activeUser = new ActiveUserDto(payload.sub, payload.role, true);
-            this.jwtCookieService.createSession(data.getResponse(), tokens, activeUser);
+            await this.jwtCookieSessionService.create(data.getResponse(), savedUser);
             return new LoginResponseDto(false); // Indicates no further action needed
         }
 
+
         // 5. User requires TFA but hasn't verified email or phone (applicable for EMAIL or SMS TFA)
         if (!isVerifiedUser(savedUser)) {
-
             this.logger.warn(`User not verified: ${savedUser.username}`);
 
             await this.tfaStrategyQueue.add(new TfaRequestDto(

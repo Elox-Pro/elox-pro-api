@@ -6,7 +6,7 @@ import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 
 /**
  * Service to handle JWT tokens and active user data in cookies for session management.
- * @author yonax73@gmail.com
+ * @author Yonatan A Quintero R
  * @date 2024-02-07
  */
 @Injectable()

@@ -3,10 +3,10 @@ import { TestModule } from "./test.module";
 import { ValidationPipe } from "@nestjs/common";
 import * as cookieParser from 'cookie-parser';
 
-export async function bootstrapTest() {
+export async function bootstrapTest(localModules = []) {
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
-        imports: [TestModule]
+        imports: [TestModule, ...localModules]
     }).compile();
 
     const app = moduleFixture.createNestApplication();

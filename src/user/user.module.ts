@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
-import { GetProfileUC } from "./usecases/get-profile.uc";
+import { FindUserByUsername } from "./usecases/find-user-by-username";
 import { UserController } from "./controllers/user.controller";
 
 @Module({
     controllers: [UserController],
-    providers: [GetProfileUC]
+    providers: [FindUserByUsername]
 })
 export class UserModule { }

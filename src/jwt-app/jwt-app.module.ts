@@ -8,6 +8,7 @@ import { AccessTokenGuard } from "./guards/access-token.guard";
 import { JwtCookiesGuard } from "./guards/jwt-cookies.guard";
 import { JwtCookieService } from "./services/jwt-cookie.service";
 import { JwtController } from "./controllers/jwt.controller";
+import { JwtCookieSessionService } from "./services/jwt-cookie-session.service";
 
 @Module({
     controllers: [
@@ -18,6 +19,7 @@ import { JwtController } from "./controllers/jwt.controller";
         JwtCookiesGuard,
         JwtCookieService,
         JwtStrategy,
+        JwtCookieSessionService
     ],
     imports: [
         JwtModule
@@ -27,6 +29,7 @@ import { JwtController } from "./controllers/jwt.controller";
         JwtConfig,
         JwtCookiesGuard,
         JwtCookieService,
+        JwtCookieSessionService,
         RefreshTokenUC,
         {
             provide: JwtStrategy,
