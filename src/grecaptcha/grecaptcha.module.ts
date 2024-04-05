@@ -1,4 +1,4 @@
-import { Enviroment } from '@app/common/constants/common.constants';
+import { Enviroment } from '@app/common/enums/enviroment.enum';
 import { Module } from '@nestjs/common';
 import { GoogleRecaptchaModule } from '@nestlab/google-recaptcha';
 

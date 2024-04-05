@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Enviroment } from "../constants/common.constants";
+import { Enviroment } from "../enums/enviroment.enum";
 
 @Injectable()
 export class CommonConfig {
