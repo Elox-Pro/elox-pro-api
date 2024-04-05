@@ -284,7 +284,7 @@ model Country {
   createdAt DateTime @default(now()) @map("created_at")
 
   // Country name
-  name String
+  name String @unique
 
   // ISO2 Country code
   iso2 String
