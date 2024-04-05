@@ -3,6 +3,8 @@ import { AppModule } from './app.module';
 import { CommonConfig } from './common/config/common.config';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 async function bootstrap() {
 
@@ -17,14 +19,15 @@ async function bootstrap() {
     }
   }));
 
-  const apiConfig = app.get<CommonConfig>(CommonConfig);
+  const config = app.get<CommonConfig>(CommonConfig);
 
   app.enableCors({
-    origin: apiConfig.WEB_CLIENT_ORIGIN,
+    origin: config.WEB_CLIENT_ORIGIN,
     credentials: true
   });
+  
   app.use(cookieParser());
-  await app.listen(apiConfig.PORT);
+  await app.listen(config.PORT);
 
 }
 
