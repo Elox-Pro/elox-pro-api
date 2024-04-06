@@ -10,7 +10,7 @@ import { PrismaService } from "@app/prisma/prisma.service";
  * @date 2024-02-03
  */
 @Injectable()
-export class FindUserByUsername implements IUseCase<FindUserByUsernameRequestDto, FindUserByUserNameResponseDto> {
+export class FindUserByUsernameUC implements IUseCase<FindUserByUsernameRequestDto, FindUserByUserNameResponseDto> {
 
     constructor(private prisma: PrismaService) { }
 

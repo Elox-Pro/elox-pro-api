@@ -1,15 +1,7 @@
 import { Gender, TfaType, UserLang, UserTheme } from "@prisma/client";
-import { IsEmail, IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 
 export class UpdateUserRequestDto {
-
-    @IsString()
-    @IsNotEmpty()
-    readonly username: string;
-
-    @IsEmail()
-    @IsNotEmpty()
-    readonly email: string;
 
     @IsString()
     @IsNotEmpty()
@@ -38,5 +30,15 @@ export class UpdateUserRequestDto {
     @IsEnum(UserTheme)
     @IsNotEmpty()
     readonly theme: UserTheme;
+
+    private username: string;
+
+    setUsername(username: string):void {
+        this.username = username;
+    }
+
+    getUsername(): string {
+        return this.username;
+    }
 
 }

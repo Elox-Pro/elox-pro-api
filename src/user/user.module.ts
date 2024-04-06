@@ -1,9 +1,10 @@
 import { Module } from "@nestjs/common";
-import { FindUserByUsername } from "./usecases/find-user-by-username.uc";
+import { FindUserByUsernameUC } from "./usecases/find-user-by-username.uc";
 import { UserController } from "./controllers/user.controller";
+import { UpdateUserUC } from "./usecases/update-user.uc";
 
 @Module({
     controllers: [UserController],
-    providers: [FindUserByUsername]
+    providers: [FindUserByUsernameUC, UpdateUserUC]
 })
 export class UserModule { }
