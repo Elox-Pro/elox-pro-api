@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { FindUserByUsername } from "./usecases/find-user-by-username";
+import { FindUserByUsername } from "./usecases/find-user-by-username.uc";
 import { UserController } from "./controllers/user.controller";
 
 @Module({

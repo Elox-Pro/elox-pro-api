@@ -1,5 +1,5 @@
 import { Controller, HttpStatus, HttpCode, Body, Get, Param, UnauthorizedException, Logger } from "@nestjs/common";
-import { FindUserByUsername } from "../usecases/find-user-by-username";
+import { FindUserByUsername } from "../usecases/find-user-by-username.uc";
 import { FindUserByUsernameRequestDto } from "../dtos/find-user-by-username/find-user-by-username.request.dto";
 import { FindUserByUserNameResponseDto } from "../dtos/find-user-by-username/find-user-by-username.response.dto";
 import { Roles } from "@app/authorization/decorators/roles.decorator";

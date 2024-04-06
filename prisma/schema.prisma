@@ -136,6 +136,11 @@ enum UserLang {
   ES
 }
 
+enum UserTheme {
+  LIGHT
+  DARK
+}
+
 // This model store the information about the company and their relations with users and loan settings
 model Company {
   id        Int      @id @default(autoincrement())
@@ -182,6 +187,9 @@ model User {
 
   // The user language
   lang UserLang @default(DEFAULT)
+
+  // The UI user theme
+  theme UserTheme @default(LIGHT)
 
   // Information related with the customer ranks
   customerRank UserRank?
