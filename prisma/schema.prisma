@@ -165,8 +165,8 @@ model User {
   username  String  @unique
   email     String  @unique
   password  String
-  firstName String?
-  lastName  String?
+  firstName String? @map("first_name")
+  lastName  String? @map("last_name")
   phone     String? @unique
 
   gender Gender @default(MALE)

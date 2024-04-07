@@ -23,8 +23,8 @@
     "test:e2e": "jest --config ./jest-e2e.config.ts --detectOpenHandles",
     "test:seed": "dotenv -e .env.test npx ts-node prisma/seed.ts",
     "test:e2e:dotenv": "dotenv -e .env.test npm run test:e2e",
-    "test:current": "npx jest test/e2e/user/find-user-by-username.uc.e2e-spec.ts --config ./jest-e2e.config.ts --detectOpenHandles",
-    "test:current:dotenv": "dotenv -e .env.test npm run test:current"
+    "test:current": "npx jest $1 --config ./jest-e2e.config.ts --detectOpenHandles",
+    "test:current:dotenv": "dotenv -e .env.test npm run test:current $1"
   },
   "dependencies": {
     "@nestjs/bull": "^10.0.1",

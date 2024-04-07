@@ -25,11 +25,11 @@ export class UserController {
     ) { }
 
     /**
-     * Get the current authenticated user by username.
+     * Get the profile's authenticated user by username.
      * @param userRequest The user who makes the request.
      * @returns The found user.
      */
-    @Get('/current/')
+    @Get('/profile/')
     @HttpCode(HttpStatus.OK)
     getCurrent(@UserRequest() userRequest: ActiveUserDto
     ): Promise<FindUserByUserNameResponseDto> {
@@ -37,12 +37,12 @@ export class UserController {
     }
 
     /**
-     * Update the current authenticated user by username.
+     * Update the profile's authenticated user by username.
      * @param UserRequest The user who makes the request.
      * @param dto The update user dto.
      * @returns The updated user.
      */
-    @Patch('/current/')
+    @Patch('/profile/')
     @HttpCode(HttpStatus.OK)
     updateCurrentUser(
         @UserRequest() UserRequest: ActiveUserDto,
