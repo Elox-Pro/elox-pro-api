@@ -169,7 +169,7 @@ model User {
   lastName  String? @map("last_name")
   phone     String? @unique
 
-  gender Gender @default(MALE)
+  gender Gender
 
   avatarUrl String? @map("avatar_url")
 

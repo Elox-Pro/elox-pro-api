@@ -1,4 +1,4 @@
-import { Controller, HttpStatus, HttpCode, Body, Get, Param, Patch } from "@nestjs/common";
+import { Controller, HttpStatus, HttpCode, Body, Get, Param, Patch, BadRequestException } from "@nestjs/common";
 import { FindUserByUsernameUC } from "../usecases/find-user-by-username.uc";
 import { FindUserByUsernameRequestDto } from "../dtos/find-user-by-username/find-user-by-username.request.dto";
 import { FindUserByUserNameResponseDto } from "../dtos/find-user-by-username/find-user-by-username.response.dto";
@@ -33,7 +33,9 @@ export class UserController {
     @HttpCode(HttpStatus.OK)
     getCurrent(@UserRequest() userRequest: ActiveUserDto
     ): Promise<FindUserByUserNameResponseDto> {
-        return this.findUserByUsernameUC.execute(new FindUserByUsernameRequestDto(userRequest.sub));
+        return this.findUserByUsernameUC.execute(
+            new FindUserByUsernameRequestDto(userRequest.sub)
+        );
     }
 
     /**
