@@ -168,8 +168,7 @@ model User {
   firstName String? @map("first_name")
   lastName  String? @map("last_name")
   phone     String? @unique
-
-  gender Gender
+  gender    Gender?
 
   avatarUrl String? @map("avatar_url")
 

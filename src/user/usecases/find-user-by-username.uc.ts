@@ -3,6 +3,8 @@ import { FindUserByUsernameRequestDto } from "../dtos/find-user-by-username/find
 import { FindUserByUserNameResponseDto } from "../dtos/find-user-by-username/find-user-by-username.response.dto";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "@app/prisma/prisma.service";
+import { UserTranslator } from "../translate/user.translate";
+import { getUserLang } from "@app/common/helpers/get-user-lang.helper";
 
 /**
  * Use case for finding a user by username.
@@ -12,7 +14,10 @@ import { PrismaService } from "@app/prisma/prisma.service";
 @Injectable()
 export class FindUserByUsernameUC implements IUseCase<FindUserByUsernameRequestDto, FindUserByUserNameResponseDto> {
 
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private prisma: PrismaService,
+        private userTranslator: UserTranslator
+    ) { }
 
     /**
      * Executes the find user by username use case.
@@ -21,9 +26,12 @@ export class FindUserByUsernameUC implements IUseCase<FindUserByUsernameRequestD
      * @returns A promise resolving to a FindUserByUsernameResponseDto.
      * @throws BadRequestException if the user does not exist.
      */
-    async execute(data: FindUserByUsernameRequestDto): Promise<FindUserByUserNameResponseDto> {
+    async execute(
+        data: FindUserByUsernameRequestDto
+    ): Promise<FindUserByUserNameResponseDto> {
 
-        const { username } = data;
+        const username = data.getUsername();
+        const { lang } = data;
         const user = await this.prisma.user.findUnique({
             where: { username }
         });
@@ -32,6 +40,10 @@ export class FindUserByUsernameUC implements IUseCase<FindUserByUsernameRequestD
             throw new BadRequestException('error.user-not-found');
         }
 
-        return new FindUserByUserNameResponseDto(user);
+        const userTranslations = await this.userTranslator.translate(
+            user, getUserLang(lang, user.lang)
+        );
+
+        return new FindUserByUserNameResponseDto(user, userTranslations);
     }
 }

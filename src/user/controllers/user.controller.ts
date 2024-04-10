@@ -1,4 +1,4 @@
-import { Controller, HttpStatus, HttpCode, Body, Get, Param, Patch, BadRequestException } from "@nestjs/common";
+import { Controller, HttpStatus, HttpCode, Body, Get, Param, Patch, BadRequestException, UseInterceptors } from "@nestjs/common";
 import { FindUserByUsernameUC } from "../usecases/find-user-by-username.uc";
 import { FindUserByUsernameRequestDto } from "../dtos/find-user-by-username/find-user-by-username.request.dto";
 import { FindUserByUserNameResponseDto } from "../dtos/find-user-by-username/find-user-by-username.response.dto";
@@ -9,6 +9,8 @@ import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 import { UpdateUserUC } from "../usecases/update-user.uc";
 import { UpdateUserRequestDto } from "../dtos/update-user/update-user.request.dto";
 import { UpdateUserResponseDto } from "../dtos/update-user/update-user.response.dto";
+import { LangClientInterceptor } from "@app/common/interceptors/lang-client.interceptor";
+import { dot } from "node:test/reporters";
 
 /**
  * Controller for managing users.
@@ -31,11 +33,13 @@ export class UserController {
      */
     @Get('/profile/')
     @HttpCode(HttpStatus.OK)
-    getCurrent(@UserRequest() userRequest: ActiveUserDto
+    @UseInterceptors(LangClientInterceptor)
+    getProfile(
+        @UserRequest() userRequest: ActiveUserDto,
+        @Body() dto: FindUserByUsernameRequestDto
     ): Promise<FindUserByUserNameResponseDto> {
-        return this.findUserByUsernameUC.execute(
-            new FindUserByUsernameRequestDto(userRequest.sub)
-        );
+        dto.setUsername(userRequest.sub);
+        return this.findUserByUsernameUC.execute(dto);
     }
 
     /**
