@@ -36,8 +36,7 @@ export class UserController {
     @UseInterceptors(LangClientInterceptor)
     getProfile(
         @UserRequest() userRequest: ActiveUserDto,
-        @Body() dto: FindUserByUsernameRequestDto
-    ): Promise<FindUserByUserNameResponseDto> {
+        @Body() dto: FindUserByUsernameRequestDto): Promise<FindUserByUserNameResponseDto> {
         dto.setUsername(userRequest.sub);
         return this.findUserByUsernameUC.execute(dto);
     }

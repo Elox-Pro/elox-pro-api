@@ -4,5 +4,10 @@
     "COMPANY_ADMIN": "Company admin",
     "COMPANY_CUSTOMER": "Company customer",
     "MALE": "Male",
-    "FEMALE": "Female"
+    "FEMALE": "Female",
+    "DEFAULT": "Default",
+    "EN": "English",
+    "ES": "Spanish",
+    "LIGHT": "Light",
+    "DARK": "Dark"
 }

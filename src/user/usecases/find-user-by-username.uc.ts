@@ -39,9 +39,8 @@ export class FindUserByUsernameUC implements IUseCase<FindUserByUsernameRequestD
         if (!user) {
             throw new BadRequestException('error.user-not-found');
         }
-
         const userTranslations = await this.userTranslator.translate(
-            user, getUserLang(lang, user.lang)
+            user, getUserLang(user.lang, lang)
         );
 
         return new FindUserByUserNameResponseDto(user, userTranslations);
