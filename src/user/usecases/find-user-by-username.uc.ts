@@ -3,7 +3,7 @@ import { FindUserByUsernameRequestDto } from "../dtos/find-user-by-username/find
 import { FindUserByUserNameResponseDto } from "../dtos/find-user-by-username/find-user-by-username.response.dto";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "@app/prisma/prisma.service";
-import { UserTranslator } from "../translate/user.translate";
+import { UserTranslator } from "../translators/user.translator";
 import { getUserLang } from "@app/common/helpers/get-user-lang.helper";
 
 /**

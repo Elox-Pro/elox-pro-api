@@ -1,3 +1,3 @@
 export interface Translator<T> {
-    translate(entity: T, lang: string): Promise<Map<string, string>>;
+    translate(model: T, lang: string): Promise<Record<string, string>>;
 }

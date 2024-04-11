@@ -1,0 +1,1 @@
+export const MODEL_KEY = "model-key.";

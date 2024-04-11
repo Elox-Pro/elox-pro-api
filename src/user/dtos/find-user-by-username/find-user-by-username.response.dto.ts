@@ -4,7 +4,7 @@ export class FindUserByUserNameResponseDto {
 
     constructor(
         readonly user: User,
-        readonly userTranslations: Map<string, string>
+        readonly userTranslations: Record<string, string>,
     ) {
         this.user.password = null;
     }
