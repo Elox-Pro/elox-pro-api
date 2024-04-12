@@ -137,6 +137,7 @@ enum UserLang {
 }
 
 enum UserTheme {
+  DEFAULT
   LIGHT
   DARK
 }
@@ -188,7 +189,7 @@ model User {
   lang UserLang @default(DEFAULT)
 
   // The UI user theme
-  theme UserTheme @default(LIGHT)
+  theme UserTheme @default(DEFAULT)
 
   // Information related with the customer ranks
   customerRank UserRank?
