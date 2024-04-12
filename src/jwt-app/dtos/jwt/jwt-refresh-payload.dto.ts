@@ -3,9 +3,9 @@ import { Role } from "@prisma/client";
 export class JwtRefreshPayloadDto {
     constructor(
         /**
-         * The sub is the username
+         * The username
          */
-        readonly sub: string,
+        readonly username: string,
 
         readonly refreshTokenId: string
     ) {

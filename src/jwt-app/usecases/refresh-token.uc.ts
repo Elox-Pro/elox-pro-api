@@ -22,11 +22,11 @@ export class RefreshTokenUC implements IUseCase<RefreshTokenRequestDto, RefreshT
 
         const payload = await this.jwtStrategy.verify<JwtRefreshPayloadDto>(data.refreshToken);
         const user = await this.prisma.user.findUnique({
-            where: { username: payload.sub }
+            where: { username: payload.username }
         });
 
         if (!user) {
-            this.logger.error(`User not found: ${payload.sub}`);
+            this.logger.error(`User not found: ${payload.username}`);
             throw new UnauthorizedException('error.invalid-credentials');
         }
 
@@ -48,7 +48,7 @@ export class RefreshTokenUC implements IUseCase<RefreshTokenRequestDto, RefreshT
         }
 
         const tokens = await this.jwtStrategy.generate(
-            new JwtAccessPayloadDto(user.username, user.role)
+            new JwtAccessPayloadDto(user.username, user.role, user.lang),
         );
 
         return new RefreshTokenResponseDto(tokens);

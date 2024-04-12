@@ -37,16 +37,16 @@ export class JwtRedisStrategy extends JwtStrategy {
     async generate(payload: JwtAccessPayloadDto): Promise<JwtTokensDto> {
         // Generate a random refresh token ID and extract the subject from the payload
         const refreshTokenId = randomUUID();
-        const sub = payload.sub;
+        const username = payload.username;
 
         // Generate access token and refresh token asynchronously
         const [accessToken, refreshToken] = await Promise.all([
-            this.generateAccessToken(sub, payload),
-            this.generateRefreshToken(sub, { refreshTokenId, sub })
+            this.generateAccessToken(username, payload),
+            this.generateRefreshToken(username, { refreshTokenId, username })
         ]);
 
         // Store the refresh token in Redis and return JWT tokens with TTL values
-        await this.insert(sub, refreshTokenId);
+        await this.insert(username, refreshTokenId);
 
         return new JwtTokensDto(
             accessToken,
@@ -80,50 +80,50 @@ export class JwtRedisStrategy extends JwtStrategy {
     */
     async validateRefreshToken(payload: JwtRefreshPayloadDto): Promise<Boolean> {
         // Validate the refresh token against the stored ID in Redis and invalidate it
-        if (!(await this.validate(payload.sub, payload.refreshTokenId))) {
+        if (!(await this.validate(payload.username, payload.refreshTokenId))) {
             throw new Error('Refresh token is not valid');
         }
 
-        await this.invalidate(payload.sub);
+        await this.invalidate(payload.username);
         return true;
     }
 
     /**
      * Generates a JWT access token with the given payload.
      *
-     * @param sub The subject of the token (e.g., user ID).
+     * @param username The subject of the token
      * @param payload The JWT access payload.
      * @returns Promise with the signed JWT access token.
      */
-    private async generateAccessToken(sub: string, payload: JwtAccessPayloadDto): Promise<string> {
+    private async generateAccessToken(username: string, payload: JwtAccessPayloadDto): Promise<string> {
         // Sign and return an access token with the specified expiration time
-        return await this.signToken(sub, this.config.ACCESS_TOKEN_TTL, payload);
+        return await this.signToken(username, this.config.ACCESS_TOKEN_TTL, payload);
     }
 
     /**
      * Generates a JWT refresh token with the given payload.
      *
-     * @param sub The subject of the token (e.g., user ID).
+     * @param username The subject of the token
      * @param payload The JWT refresh payload.
      * @returns Promise with the signed JWT refresh token.
      */
-    private async generateRefreshToken(sub: string, payload: JwtRefreshPayloadDto): Promise<string> {
+    private async generateRefreshToken(username: string, payload: JwtRefreshPayloadDto): Promise<string> {
         // Sign and return a refresh token with the specified expiration time
-        return await this.signToken(sub, this.config.REFRESH_TOKEN_TTL, payload);
+        return await this.signToken(username, this.config.REFRESH_TOKEN_TTL, payload);
     }
 
     /**
      * Signs a token with the provided payload and expiration time.
      *
-     * @param sub The subject of the token (e.g., user ID).
+     * @param username The subject of the token.
      * @param expiresIn Token expiration time in seconds.
      * @param payload The JWT payload to sign.
      * @returns Promise with the signed token.
      */
-    private async signToken<T>(sub: string, expiresIn: number, payload: T): Promise<string> {
+    private async signToken<T>(username: string, expiresIn: number, payload: T): Promise<string> {
         // Sign a JWT token using the JWT service with audience, issuer, secret, and expiration
         return await this.jwtService.signAsync({
-            sub: sub,
+            username,
             ...payload
         }, {
             audience: this.config.AUDIENCE,
@@ -136,26 +136,26 @@ export class JwtRedisStrategy extends JwtStrategy {
     /**
      * Inserts the refresh token into Redis for validation.
      *
-     * @param sub The subject of the token (e.g., user ID).
+     * @param username The subject of the token.
      * @param tokenId The ID of the refresh token.
      * @returns Promise indicating successful insertion.
      */
-    private async insert(sub: string, tokenId: string): Promise<void> {
+    private async insert(username: string, tokenId: string): Promise<void> {
         // Store the refresh token ID in Redis with the user's key
-        await this.redis.getClient().set(this.getKey(sub), tokenId);
+        await this.redis.getClient().set(this.getKey(username), tokenId);
     }
 
     /**
      * Validates the refresh token against the stored token ID.
      *
-     * @param sub The subject of the token (e.g., user ID).
+     * @param username The subject of the token.
      * @param tokenId The ID of the refresh token.
      * @returns Promise indicating if the refresh token is valid.
      * @throws {InvalidateRefreshTokenError} If the refresh token is invalid.
      */
-    private async validate(sub: string, tokenId: string): Promise<Boolean> {
+    private async validate(username: string, tokenId: string): Promise<Boolean> {
         // Retrieve the stored refresh token ID from Redis and validate against the provided ID
-        const storeId = await this.redis.getClient().get(this.getKey(sub));
+        const storeId = await this.redis.getClient().get(this.getKey(username));
 
         if (storeId !== tokenId) {
             throw new InvalidateRefreshTokenError();
@@ -167,23 +167,23 @@ export class JwtRedisStrategy extends JwtStrategy {
     /**
      * Invalidates the refresh token stored in Redis.
      *
-     * @param sub The subject of the token (e.g., user ID).
+     * @param username The subject of the token.
      * @returns Promise indicating successful invalidation.
      */
-    private async invalidate(sub: string): Promise<void> {
+    private async invalidate(username: string): Promise<void> {
         // Delete the stored refresh token ID from Redis upon invalidation
-        await this.redis.getClient().del(this.getKey(sub));
+        await this.redis.getClient().del(this.getKey(username));
     }
 
     /**
      * Generates the Redis key for storing refresh token IDs.
      *
-     * @param sub The subject of the token (e.g., user ID).
+     * @param username The subject of the token.
      * @returns The Redis key for the given subject.
      */
-    private getKey(sub: string): string {
+    private getKey(username: string): string {
         // Generate a unique key for the user's refresh token in Redis
-        return `${JWT_REDIS_STRATEGY_KEY}${sub}`;
+        return `${JWT_REDIS_STRATEGY_KEY}${username}`;
     }
 
 }

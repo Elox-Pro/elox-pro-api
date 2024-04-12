@@ -41,7 +41,7 @@ export class JwtCookieSessionService {
             const tokens = await this.jwtStrategy.generate(payload);
 
             // Create an active user object with the user's details
-            const activeUser = new ActiveUserDto(payload.sub, payload.role, sessionLang, true);
+            const activeUser = new ActiveUserDto(payload.username, payload.role, sessionLang, true);
 
             // Create a session using the JWT cookie service
             this.jwtCookieService.createSession(response, tokens, activeUser);

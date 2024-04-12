@@ -10,6 +10,9 @@ import { UpdateUserUC } from "../usecases/update-user.uc";
 import { UpdateUserRequestDto } from "../dtos/update-user/update-user.request.dto";
 import { UpdateUserResponseDto } from "../dtos/update-user/update-user.response.dto";
 import { LangClientInterceptor } from "@app/common/interceptors/lang-client.interceptor";
+import { UpdateAvatarRequestDto } from "../dtos/update-avatar/update-avatar.request.dto";
+import { UpdateAvatarResponseDto } from "../dtos/update-avatar/update-avatar.response.dto";
+import { UpdateAvatarUC } from "../usecases/update-avatar.uc";
 
 /**
  * Controller for managing users.
@@ -22,7 +25,8 @@ export class UserController {
 
     constructor(
         private readonly findUserByUsernameUC: FindUserByUsernameUC,
-        private readonly updateUserUC: UpdateUserUC
+        private readonly updateUserUC: UpdateUserUC,
+        private readonly updateAvatarUC: UpdateAvatarUC
     ) { }
 
     /**
@@ -47,12 +51,22 @@ export class UserController {
      */
     @Patch('/profile/')
     @HttpCode(HttpStatus.OK)
-    updateCurrentUser(
-        @UserRequest() UserRequest: ActiveUserDto,
+    updateProfile(
+        @UserRequest() userRequest: ActiveUserDto,
         @Body() dto: UpdateUserRequestDto
     ): Promise<UpdateUserResponseDto> {
-        dto.setUsername(UserRequest.username);
+        dto.setUsername(userRequest.username);
         return this.updateUserUC.execute(dto);
+    }
+
+    @Patch('/profile/avatar')
+    @HttpCode(HttpStatus.OK)
+    updateProfileAvatar(
+        @UserRequest() userRequest: ActiveUserDto,
+        @Body() dto: UpdateAvatarRequestDto
+    ): Promise<UpdateAvatarResponseDto> {
+        dto.setUserRequest(userRequest);
+        return this.updateAvatarUC.execute(dto);
     }
 
 }

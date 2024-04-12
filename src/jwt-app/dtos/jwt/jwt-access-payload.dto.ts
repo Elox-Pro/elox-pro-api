@@ -10,9 +10,9 @@ export class JwtAccessPayloadDto {
     constructor(
 
         /**
-         * The subject is the username
+         * The username
          */
-        readonly sub: string,
+        readonly username: string,
 
         /**
          * The role of the user

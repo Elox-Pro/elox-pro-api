@@ -73,7 +73,7 @@ export class JwtCookiesGuard implements CanActivate {
                 this.jwtCookieService.hydratateSession(
                     response,
                     tokens,
-                    new ActiveUserDto(payload.sub, payload.role, payload.lang, true)
+                    new ActiveUserDto(payload.username, payload.role, payload.lang, true)
                 );
             }
 
