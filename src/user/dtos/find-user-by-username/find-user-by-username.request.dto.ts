@@ -1,18 +1,5 @@
-import { UserLang } from "@prisma/client";
-import { IsString } from "class-validator";
+import { UserRequestDto } from "@app/authorization/dto/active-user.request.dto";
 
-export class FindUserByUsernameRequestDto {
+export class FindUserByUsernameRequestDto extends UserRequestDto {
 
-    @IsString()
-    readonly lang: UserLang;
-
-    private username: string
-
-    setUsername(username: string): void {
-        this.username = username;
-    }
-
-    getUsername(): string {
-        return this.username;
-    }
 }

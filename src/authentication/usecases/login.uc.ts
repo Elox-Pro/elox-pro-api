@@ -64,7 +64,7 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
         if (savedUser.tfaType === TfaType.NONE) {
 
             // 4.1 No TFA required, generate access tokens and set session cookie
-            await this.jwtCookieSessionService.create(data.getResponse(), savedUser);
+            await this.jwtCookieSessionService.create(data.getResponse(), savedUser, data.lang);
             return new LoginResponseDto(false); // Indicates no further action needed
         }
 

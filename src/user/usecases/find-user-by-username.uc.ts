@@ -26,12 +26,11 @@ export class FindUserByUsernameUC implements IUseCase<FindUserByUsernameRequestD
      * @returns A promise resolving to a FindUserByUsernameResponseDto.
      * @throws BadRequestException if the user does not exist.
      */
-    async execute(
-        data: FindUserByUsernameRequestDto
-    ): Promise<FindUserByUserNameResponseDto> {
+    async execute(data: FindUserByUsernameRequestDto): Promise<FindUserByUserNameResponseDto> {
 
         const username = data.getUsername();
-        const { lang } = data;
+        const lang = data.getLang();
+
         const user = await this.prisma.user.findUnique({
             where: { username }
         });
@@ -39,9 +38,7 @@ export class FindUserByUsernameUC implements IUseCase<FindUserByUsernameRequestD
         if (!user) {
             throw new BadRequestException('error.user-not-found');
         }
-        const userTranslations = await this.userTranslator.translate(
-            user, getUserLang(user.lang, lang)
-        );
+        const userTranslations = await this.userTranslator.translate(user, lang);
 
         return new FindUserByUserNameResponseDto(user, userTranslations);
     }

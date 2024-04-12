@@ -34,7 +34,7 @@ export class LoginTfaActionStrategy extends TfaActionStrategy {
      */
     async execute(data: ValidateTFARequestDto, user: User): Promise<ValidateTFAResponseDto> {
         // Create a session for the user using the CookieSessionService
-        await this.jwtCookieSessionService.create(data.getResponse(), user);
+        await this.jwtCookieSessionService.create(data.getResponse(), user, data.lang);
         // Return a response with the TFA action set to SIGN_IN
         return new ValidateTFAResponseDto(user.tfaType, TfaAction.SIGN_IN);
     }

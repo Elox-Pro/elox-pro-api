@@ -1,18 +1,23 @@
-import { Role } from "@prisma/client";
+import { Role, UserLang } from "@prisma/client";
 
 export class ActiveUserDto {
 
     constructor(
 
         /**
-         * The subject is the username
+         * The username
          */
-        readonly sub: string,
+        readonly username: string,
 
         /**
          * The role of the user
          */
         readonly role: Role,
+
+        /**
+         * The user language
+         */
+        readonly lang: UserLang,
 
         /**
          * Whether the user is active

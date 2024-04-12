@@ -1,9 +1,10 @@
 import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
+import { getUserLang } from "@app/common/helpers/get-user-lang.helper";
 import { JwtAccessPayloadDto } from "@app/jwt-app/dtos/jwt/jwt-access-payload.dto";
 import { JwtCookieService } from "@app/jwt-app/services/jwt-cookie.service";
 import { JwtStrategy } from "@app/jwt-app/strategies/jwt.strategy";
 import { Injectable, Logger } from "@nestjs/common";
-import { User } from "@prisma/client";
+import { User, UserLang } from "@prisma/client";
 import { Response } from "express";
 
 /**
@@ -27,15 +28,20 @@ export class JwtCookieSessionService {
      * Generates JWT tokens, creates an active user object, and sets the session cookie.
      * @param response The Express Response object for setting cookies.
      * @param user The User object representing the user.
+     * @param reqLang The user request language.
      */
-    async create(response: Response, user: User): Promise<void> {
+    async create(response: Response, user: User, reqLang: UserLang): Promise<void> {
         try {
+
+            // Validate the language of the user to handle during the whole session
+            const sessionLang = getUserLang(user.lang, reqLang);
+
             // Generate JWT tokens with the user's username and role as payload
-            const payload = new JwtAccessPayloadDto(user.username, user.role);
+            const payload = new JwtAccessPayloadDto(user.username, user.role, sessionLang);
             const tokens = await this.jwtStrategy.generate(payload);
 
             // Create an active user object with the user's details
-            const activeUser = new ActiveUserDto(payload.sub, payload.role, true);
+            const activeUser = new ActiveUserDto(payload.sub, payload.role, sessionLang, true);
 
             // Create a session using the JWT cookie service
             this.jwtCookieService.createSession(response, tokens, activeUser);

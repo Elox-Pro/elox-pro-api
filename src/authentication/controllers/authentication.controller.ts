@@ -27,8 +27,12 @@ export class AuthenticationController {
     @UseInterceptors(IpClientInterceptor, LangClientInterceptor)
     @Recaptcha()
     @HttpCode(HttpStatus.CREATED)
-    async signup(@Body() dto: SignupRequestDto): Promise<SignupResponseDto> {
-        return await this.signupUC.execute(dto);
+    signup(
+        @Body() dto: SignupRequestDto
+    ): Promise<SignupResponseDto> {
+
+        return this.signupUC.execute(dto);
+
     }
 
     @Post('login')
@@ -44,11 +48,15 @@ export class AuthenticationController {
         return this.loginUC.execute(dto);
     }
 
+    @Post('logout')
     @HttpCode(HttpStatus.OK)
     @Authentication(AuthenticationType.JwtCookies)
-    @Post('logout')
-    logout(@Res({ passthrough: true }) response: Response): void {
+    logout(
+        @Res({ passthrough: true }) response: Response
+    ): void {
+
         this.logoutUC.execute(response);
+
     }
 
 }

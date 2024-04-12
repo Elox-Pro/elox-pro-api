@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { Role, UserLang } from "@prisma/client";
 
 export class JwtAccessPayloadDto {
 
@@ -18,6 +18,11 @@ export class JwtAccessPayloadDto {
          * The role of the user
          */
         readonly role: Role,
+
+        /**
+         * The language of the user
+         */
+        readonly lang: UserLang
 
     ) { }
 }
