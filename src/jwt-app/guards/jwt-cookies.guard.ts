@@ -43,6 +43,7 @@ export class JwtCookiesGuard implements CanActivate {
             // Check if the access token is missing
             if (!accessToken) {
                 this.logger.error('Access token not found');
+                this.jwtCookieService.deleteSession(response);
                 throw new UnauthorizedException();
             }
 

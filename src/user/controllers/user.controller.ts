@@ -1,4 +1,4 @@
-import { Controller, HttpStatus, HttpCode, Body, Get, Patch, UseInterceptors } from "@nestjs/common";
+import { Controller, HttpStatus, HttpCode, Body, Get, Patch, BadRequestException } from "@nestjs/common";
 import { FindUserByUsernameUC } from "../usecases/find-user-by-username.uc";
 import { FindUserByUsernameRequestDto } from "../dtos/find-user-by-username/find-user-by-username.request.dto";
 import { FindUserByUserNameResponseDto } from "../dtos/find-user-by-username/find-user-by-username.response.dto";
@@ -9,7 +9,6 @@ import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 import { UpdateUserUC } from "../usecases/update-user.uc";
 import { UpdateUserRequestDto } from "../dtos/update-user/update-user.request.dto";
 import { UpdateUserResponseDto } from "../dtos/update-user/update-user.response.dto";
-import { LangClientInterceptor } from "@app/common/interceptors/lang-client.interceptor";
 import { UpdateAvatarRequestDto } from "../dtos/update-avatar/update-avatar.request.dto";
 import { UpdateAvatarResponseDto } from "../dtos/update-avatar/update-avatar.response.dto";
 import { UpdateAvatarUC } from "../usecases/update-avatar.uc";
