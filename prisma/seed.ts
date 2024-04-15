@@ -26,6 +26,7 @@ async function main() {
     try {
         await seedCountries();
         await seedUsers();
+        await seedAvatars();
     } catch (error) {
         console.error('Error during seeding:', error);
     } finally {
@@ -39,11 +40,11 @@ async function main() {
 async function seedCountries() {
     try {
         const jsonData: any[] = await filePathService.readJsonFile('countries', true);
-        const data = jsonData.map(country=>{
+        const data = jsonData.map(country => {
             return {
-                name:country.name,
-                iso2:country.iso2,
-                e164:country.e164
+                name: country.name,
+                iso2: country.iso2,
+                e164: country.e164
             }
         })
         await prisma.country.createMany({
@@ -75,6 +76,26 @@ async function seedUsers() {
         console.log('✔ Users seeded successfully.');
     } catch (error) {
         console.error('Error seeding users:', error);
+    }
+}
+
+/**
+ * Seed avatars into the database
+ */
+async function seedAvatars() {
+    try {
+        const jsonData: any[] = await filePathService.readJsonFile("avatars", true);
+        const data = await Promise.all(jsonData.map(async (avatar) => {
+            return {
+                url: avatar.url
+            }
+        }));
+        await prisma.avatar.createMany({
+            data
+        });
+        console.log("✔ Avatars seeded successfully.");
+    } catch (error) {
+        console.error("Error seeding avatars", error);
     }
 }
 
