@@ -12,6 +12,7 @@ import { RedisModule } from './redis/redis.module';
 import { BullAppModule } from './bull-app/bull-app.module';
 import { TfaModule } from './tfa/tfa.module';
 import { CommonModule } from './common/common.module';
+import { AvatarModule } from './avatar/avatar.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CommonModule } from './common/common.module';
     RecoverPasswordModule,
     TfaModule,
     UserModule,
+    AvatarModule
   ]
 })
 export class AppModule { }
