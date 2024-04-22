@@ -27,7 +27,7 @@ export class UpdateUserUC implements IUseCase<UpdateUserRequestDto, UpdateUserRe
      */
     async execute(request: UpdateUserRequestDto): Promise<UpdateUserResponseDto> {
 
-        const {  firstName, lastName, phone, gender, tfaType, lang, theme } = request;
+        const { firstName, lastName, gender, lang, theme } = request;
 
         const username = request.getUsername();
 
@@ -39,32 +39,30 @@ export class UpdateUserUC implements IUseCase<UpdateUserRequestDto, UpdateUserRe
             throw new BadRequestException('error.user-not-found');
         }
 
-        if (savedUser.phone !== phone) {
-            const countPhone = await this.prisma.user.count({
-                where: { phone }
-            });
-            if (countPhone > 0) {
-                throw new BadRequestException('error.phone-already-exists');
-            }
-        }
-        const tfaTypes: TfaType[] = [TfaType.SMS, TfaType.GOOGLE_TFA];
-        if (tfaTypes.includes(tfaType)) {
-            throw new BadRequestException('error.tfa-type-not-supported');
-        }
+        // if (savedUser.phone !== phone) {
+        //     const countPhone = await this.prisma.user.count({
+        //         where: { phone }
+        //     });
+        //     if (countPhone > 0) {
+        //         throw new BadRequestException('error.phone-already-exists');
+        //     }
+        // }
+        // const tfaTypes: TfaType[] = [TfaType.SMS, TfaType.GOOGLE_TFA];
+        // if (tfaTypes.includes(tfaType)) {
+        //     throw new BadRequestException('error.tfa-type-not-supported');
+        // }
 
-        const user = await this.prisma.user.update({
+        await this.prisma.user.update({
             where: { username },
             data: {
                 firstName,
                 lastName,
-                phone,
                 gender,
-                tfaType,
                 lang,
                 theme,
             },
         });
 
-        return new UpdateUserResponseDto(user);
+        return new UpdateUserResponseDto(true);
     }
 }

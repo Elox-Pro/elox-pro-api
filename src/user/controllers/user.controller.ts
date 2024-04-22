@@ -12,6 +12,8 @@ import { UpdateUserResponseDto } from "../dtos/update-user/update-user.response.
 import { UpdateAvatarRequestDto } from "../dtos/update-avatar/update-avatar.request.dto";
 import { UpdateAvatarResponseDto } from "../dtos/update-avatar/update-avatar.response.dto";
 import { UpdateAvatarUC } from "../usecases/update-avatar.uc";
+import { UpdateNameUC } from "../usecases/update-name.uc";
+import { UpdateNameRequestDto } from "../dtos/update-name/update-name.request.dto";
 
 /**
  * Controller for managing users.
@@ -25,7 +27,8 @@ export class UserController {
     constructor(
         private readonly findUserByUsernameUC: FindUserByUsernameUC,
         private readonly updateUserUC: UpdateUserUC,
-        private readonly updateAvatarUC: UpdateAvatarUC
+        private readonly updateAvatarUC: UpdateAvatarUC,
+        private readonly updateNameUC: UpdateNameUC
     ) { }
 
     /**
@@ -54,7 +57,7 @@ export class UserController {
         @UserRequest() userRequest: ActiveUserDto,
         @Body() dto: UpdateUserRequestDto
     ): Promise<UpdateUserResponseDto> {
-        dto.setUsername(userRequest.username);
+        dto.setUserRequest(userRequest);
         return this.updateUserUC.execute(dto);
     }
 
@@ -66,6 +69,15 @@ export class UserController {
     ): Promise<UpdateAvatarResponseDto> {
         dto.setUserRequest(userRequest);
         return this.updateAvatarUC.execute(dto);
+    }
+
+    @Patch('/profile/name')
+    @HttpCode(HttpStatus.OK)
+    updateProfileName(
+        @UserRequest() userRequest: ActiveUserDto,
+        @Body() dto: UpdateNameRequestDto) {
+        dto.setUserRequest(userRequest);
+        return this.updateNameUC.execute(dto);
     }
 
 }

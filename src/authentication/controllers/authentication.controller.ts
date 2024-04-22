@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Res, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Post, Res, UseInterceptors } from "@nestjs/common";
 import { LoginUC } from "../usecases/login.uc";
 import { LoginRequestDto } from "../dtos/login/login.request.dto";
 import { IpClientInterceptor } from "../../common/interceptors/ip-client.interceptor";
@@ -43,7 +43,6 @@ export class AuthenticationController {
         @Res({ passthrough: true }) response: Response,
         @Body() dto: LoginRequestDto
     ): Promise<LoginResponseDto> {
-
         dto.setResponse(response);
         return this.loginUC.execute(dto);
     }

@@ -2,8 +2,6 @@ import { Controller, Get, HttpCode, HttpStatus } from "@nestjs/common";
 import { FindManyAvatarsUC } from "../usecase/find-many-avatars.uc";
 import { Roles } from "@app/authorization/decorators/roles.decorator";
 import { Role } from "@prisma/client";
-import { UserRequest } from "@app/authorization/decorators/user.request.decorator";
-import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 import { FindManyAvatarsResponsetDto } from "../dto/find-many-avatars/find-many-avatars.response.dto";
 
 /**

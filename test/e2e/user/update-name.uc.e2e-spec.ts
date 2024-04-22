@@ -4,10 +4,10 @@ import { AuthenticationModule } from "@app/authentication/authentication.module"
 import { UserModule } from "@app/user/user.module";
 import { createJwtCookieSession } from "../test-helpers/create-jwt-cookie-session.test-helper";
 import * as request from "supertest";
-import { UpdateAvatarRequestDto } from "@app/user/dtos/update-avatar/update-avatar.request.dto";
-import { UpdateAvatarResponseDto } from "@app/user/dtos/update-avatar/update-avatar.response.dto";
+import { UpdateNameRequestDto } from "@app/user/dtos/update-name/update-name.request.dto";
+import { UpdateNameResponseDto } from "@app/user/dtos/update-name/update-name.responde.dto";
 
-describe("Update avatar use case", () => {
+describe("Update name use case", () => {
     let app: INestApplication;
 
     beforeAll(async () => {
@@ -21,10 +21,10 @@ describe("Update avatar use case", () => {
         await app.close();
     });
 
-    describe("PATCH: users/profile/avatar", () => {
+    describe("PATCH: users/profile/name", () => {
         const username = "alaska";
         const password = "098lkj!";
-        const url = "/users/profile/avatar";
+        const url = "/users/profile/name";
 
         let cookies: string;
 
@@ -44,14 +44,16 @@ describe("Update avatar use case", () => {
                 .patch(url)
                 .set('Cookie', cookies)
                 .send({
-                    avatarUrl: "https://api.dicebear.com/8.x/bottts-neutral/svg?seed=Simon"
-                } as UpdateAvatarRequestDto);
+                    firstName: "Yadir Edilio",
+                    lastName: "Quintero Rodriguez",
+                } as UpdateNameRequestDto);
 
             expect(res.status).toBe(HttpStatus.OK);
             expect(res.body).toBeDefined();
-            const body = res.body as UpdateAvatarResponseDto;
+            const body = res.body as UpdateNameResponseDto;
             expect(body.OK).toBe(true);
             expect(HttpStatus.OK).toBe(res.status);
         });
+
     });
 });
