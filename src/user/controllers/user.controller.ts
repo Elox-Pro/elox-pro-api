@@ -14,6 +14,8 @@ import { UpdateAvatarResponseDto } from "../dtos/update-avatar/update-avatar.res
 import { UpdateAvatarUC } from "../usecases/update-avatar.uc";
 import { UpdateNameUC } from "../usecases/update-name.uc";
 import { UpdateNameRequestDto } from "../dtos/update-name/update-name.request.dto";
+import { UpdateGenderUC } from "../usecases/update-gender.uc";
+import { UpdateGenderRequestDto } from "../dtos/update-gender/update-gender.request.dto";
 
 /**
  * Controller for managing users.
@@ -28,7 +30,8 @@ export class UserController {
         private readonly findUserByUsernameUC: FindUserByUsernameUC,
         private readonly updateUserUC: UpdateUserUC,
         private readonly updateAvatarUC: UpdateAvatarUC,
-        private readonly updateNameUC: UpdateNameUC
+        private readonly updateNameUC: UpdateNameUC,
+        private readonly updateGenderUC: UpdateGenderUC
     ) { }
 
     /**
@@ -78,6 +81,15 @@ export class UserController {
         @Body() dto: UpdateNameRequestDto) {
         dto.setUserRequest(userRequest);
         return this.updateNameUC.execute(dto);
+    }
+
+    @Patch('/profile/gender')
+    @HttpCode(HttpStatus.OK)
+    updateProfileGender(
+        @UserRequest() userRequest: ActiveUserDto,
+        @Body() dto: UpdateGenderRequestDto) {
+        dto.setUserRequest(userRequest);
+        return this.updateGenderUC.execute(dto);
     }
 
 }

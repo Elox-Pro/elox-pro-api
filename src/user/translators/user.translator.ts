@@ -23,11 +23,21 @@ export class UserTranslator implements Translator<User> {
     async translate(entity: User, lang: string): Promise<Record<string, string>> {
         const records = {};
 
-        // Translate user role, gender, language, and theme
-        records[entity.role] = await this.t.getValue(entity.role, lang);
-        records[entity.gender] = await this.t.getValue(entity.gender, lang);
-        records[entity.lang] = await this.t.getValue(entity.lang, lang);
-        records[entity.theme] = await this.t.getValue(entity.theme, lang);
+        if (entity.role) {
+            records[entity.role] = await this.t.getValue(entity.role, lang);
+        }
+
+        if (entity.gender) {
+            records[entity.gender] = await this.t.getValue(entity.gender, lang);
+        }
+
+        if (entity.lang) {
+            records[entity.lang] = await this.t.getValue(entity.lang, lang);
+        }
+
+        if (entity.theme) {
+            records[entity.theme] = await this.t.getValue(entity.theme, lang);
+        }
 
         return records;
     }
