@@ -56,6 +56,5 @@ export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto>{
         ));
 
         return new SignupResponseDto(true);
-
     }
 }

@@ -1,4 +1,4 @@
-import { Controller, HttpStatus, HttpCode, Body, Get, Patch, BadRequestException } from "@nestjs/common";
+import { Controller, HttpStatus, HttpCode, Body, Get, Patch, BadRequestException, UseInterceptors } from "@nestjs/common";
 import { FindUserByUsernameUC } from "../usecases/find-user-by-username.uc";
 import { FindUserByUsernameRequestDto } from "../dtos/find-user-by-username/find-user-by-username.request.dto";
 import { FindUserByUserNameResponseDto } from "../dtos/find-user-by-username/find-user-by-username.response.dto";
@@ -16,6 +16,10 @@ import { UpdateNameUC } from "../usecases/update-name.uc";
 import { UpdateNameRequestDto } from "../dtos/update-name/update-name.request.dto";
 import { UpdateGenderUC } from "../usecases/update-gender.uc";
 import { UpdateGenderRequestDto } from "../dtos/update-gender/update-gender.request.dto";
+import { UpdateEmailUC } from "../usecases/update-email.uc";
+import { UpdateEmailRequestDto } from "../dtos/update-email/update-email-request.dto";
+import { UpdateEmailResponseDto } from "../dtos/update-email/update-email-response.dto";
+import { IpClientInterceptor } from "@app/common/interceptors/ip-client.interceptor";
 
 /**
  * Controller for managing users.
@@ -31,7 +35,8 @@ export class UserController {
         private readonly updateUserUC: UpdateUserUC,
         private readonly updateAvatarUC: UpdateAvatarUC,
         private readonly updateNameUC: UpdateNameUC,
-        private readonly updateGenderUC: UpdateGenderUC
+        private readonly updateGenderUC: UpdateGenderUC,
+        private readonly updateEmailUC: UpdateEmailUC
     ) { }
 
     /**
@@ -90,6 +95,19 @@ export class UserController {
         @Body() dto: UpdateGenderRequestDto) {
         dto.setUserRequest(userRequest);
         return this.updateGenderUC.execute(dto);
+    }
+
+    @Patch('/profile/email')
+    @HttpCode(HttpStatus.OK)
+    @UseInterceptors(IpClientInterceptor)
+    updateEmailGender(
+        @UserRequest()
+        userRequest: ActiveUserDto,
+        @Body()
+        dto: UpdateEmailRequestDto):
+        Promise<UpdateEmailResponseDto> {
+        dto.setUserRequest(userRequest);
+        return this.updateEmailUC.execute(dto);
     }
 
 }

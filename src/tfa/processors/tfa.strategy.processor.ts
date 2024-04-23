@@ -35,7 +35,6 @@ export class TfaStrategyProcessor {
             await strategy.execute(data);
         } catch (error) {
             this.logger.error(`TfaStrategyProcessor for: ${job.id} failed`);
-
             throw new Error(error.message);
         }
 

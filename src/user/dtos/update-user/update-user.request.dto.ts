@@ -1,4 +1,4 @@
-import { UserRequestDto } from "@app/authorization/dto/active-user.request.dto";
+import { UserRequestDto } from "@app/authorization/dto/user.request.dto";
 import { Gender, TfaType, UserLang, UserTheme } from "@prisma/client";
 import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 

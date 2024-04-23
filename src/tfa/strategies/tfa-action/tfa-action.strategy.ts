@@ -3,5 +3,9 @@ import { ValidateTFAResponseDto } from "@app/tfa/dtos/validate-tfa/validate-tfa.
 import { User } from "@prisma/client";
 
 export abstract class TfaActionStrategy {
-    abstract execute(data: ValidateTFARequestDto, user: User): Promise<ValidateTFAResponseDto>;
+    abstract execute(
+        data: ValidateTFARequestDto,
+        user: User,
+        metadata?: Record<string, string>
+    ): Promise<ValidateTFAResponseDto>;
 }

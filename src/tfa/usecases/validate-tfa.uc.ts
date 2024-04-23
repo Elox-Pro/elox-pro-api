@@ -32,7 +32,7 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
         const type = getDefaultTfaType(savedUser.tfaType);
         const strategy = this.tfaFactory.createStrategy(type);
 
-        const { result, action } = await strategy.verify(
+        const { result, action, metadata } = await strategy.verify(
             savedUser.username,
             data.code.toString()
         );
@@ -43,6 +43,6 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
         }
 
         const actionStrategy = this.tfaActionFactory.createStrategy(action);
-        return await actionStrategy.execute(data, savedUser);
+        return await actionStrategy.execute(data, savedUser, metadata);
     }
 }

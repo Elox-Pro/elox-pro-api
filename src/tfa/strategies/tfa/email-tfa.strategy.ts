@@ -37,22 +37,26 @@ export class EmailTfaStrategy extends TfaStrategy {
 
         if (!username) {
             this.logger.error(`Username not found: ${username}`);
-            throw new UnauthorizedException('error.invalid-credentials');
+            // throw new UnauthorizedException('error.invalid-credentials');
+            throw new UnauthorizedException('username not found');
         }
 
         if (!email) {
             this.logger.error(`Email not found: ${email}`);
-            throw new UnauthorizedException('error.invalid-credentials');
+            throw new UnauthorizedException('email not found');
+            // throw new UnauthorizedException('error.invalid-credentials');
         }
 
         if (action !== TfaAction.SIGN_UP && !emailVerified) {
             this.logger.error(`Email not verified: ${email}`);
-            throw new UnauthorizedException('error.email-not-verified');
+            throw new UnauthorizedException('email not verified');
+            // throw new UnauthorizedException('error.email-not-verified');
         }
 
         if (!ipClient) {
             this.logger.error(`IpClient not found: ${ipClient}`);
-            throw new UnauthorizedException('error.invalid-credentials');
+            throw new UnauthorizedException('ipClient not found');
+            // throw new UnauthorizedException('error.invalid-credentials');
         }
 
         const code = this.generateCode(this.CODE_LENGTH);
@@ -65,11 +69,25 @@ export class EmailTfaStrategy extends TfaStrategy {
             return true;
         }
 
-        const ttl = action !== TfaAction.SIGN_UP ? this.DEFAUT_TTL : this.SIGNUP_TTL;
+        let ttl = this.DEFAUT_TTL;
+        const metadata: Record<string, string> = {};
+        switch (action) {
+            case TfaAction.SIGN_UP:
+                ttl = this.SIGNUP_TTL;
+                break;
+            case TfaAction.UPDATE_EMAIL:
+                metadata["update-email"] = email;
+                break;
+            default:
+                this.logger.error(`Invalid action: ${action}`);
+                throw new UnauthorizedException('invalid action');
+        }
 
-        await this.redis.getClient().set(key, JSON.stringify(new TFADto(hash, action)), {
-            EX: ttl
-        });
+        await this.redis
+            .getClient()
+            .set(key, JSON.stringify(new TFADto(hash, action, metadata)), {
+                EX: ttl
+            });
 
         const emailTemplate = this.emailFactory.getEmail(EmailType.TFA);
 
@@ -94,7 +112,7 @@ export class EmailTfaStrategy extends TfaStrategy {
         }
 
         const tfa = JSON.parse(serializedTFA);
-        const { hash, action } = tfa;
+        const { hash, action, metadata } = tfa;
 
         if (!username) {
             this.logger.error(`Username not found: ${username}`);
@@ -117,7 +135,7 @@ export class EmailTfaStrategy extends TfaStrategy {
             await this.redis.getClient().del(key);
         }
 
-        return new TfaResponseDto(result, action);
+        return new TfaResponseDto(result, action, metadata);
     }
 
     private generateCode(digits: number): number {

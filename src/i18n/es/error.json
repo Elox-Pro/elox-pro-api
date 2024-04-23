@@ -12,5 +12,6 @@
     "user-not-found": "Usuario no encontrado",
     "user-not-verified": "Usuario no verificado",
     "username-already-exists": "El nombre de usuario ya existe",
-    "username-not-found": "Usuario no encontrado"
+    "username-not-found": "Usuario no encontrado",
+    "user-already-has-email": "El usuario ya tiene un correo electrónico"
 }

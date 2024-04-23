@@ -9,6 +9,7 @@ import { TfaActionFactory } from './factories/tfa-action.factory';
 import { LoginTfaActionStrategy } from './strategies/tfa-action/login-tfa-action.strategy';
 import { SignUpTfaActionStrategy } from './strategies/tfa-action/signup-tfa-action.strategy';
 import { RecoverPasswordTfaActionStrategy } from './strategies/tfa-action/recover-password-tfa-action.strategy';
+import { UpdateEmailTfaActionStrategy } from './strategies/tfa-action/update-email-tfa-action.strategy';
 
 @Module({
     imports: [
@@ -23,6 +24,7 @@ import { RecoverPasswordTfaActionStrategy } from './strategies/tfa-action/recove
         TfaStrategyProcessor,
         SignUpTfaActionStrategy,
         ValidateTfaUC,
+        UpdateEmailTfaActionStrategy,
     ],
     controllers: [
         TfaController

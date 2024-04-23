@@ -1,4 +1,4 @@
-import { UserRequestDto } from "@app/authorization/dto/active-user.request.dto";
+import { UserRequestDto } from "@app/authorization/dto/user.request.dto";
 
 export class FindUserByUsernameRequestDto extends UserRequestDto {
 
