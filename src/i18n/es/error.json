@@ -13,5 +13,7 @@
     "user-not-verified": "Usuario no verificado",
     "username-already-exists": "El nombre de usuario ya existe",
     "username-not-found": "Usuario no encontrado",
-    "user-already-has-email": "El usuario ya tiene un correo electrónico"
+    "user-already-has-email": "El usuario ya tiene un correo electrónico",
+    "email-not-found": "Correo electrónico no encontrado",
+    "ip-request-not-found": "Ip solicitud no encontrada"
 }

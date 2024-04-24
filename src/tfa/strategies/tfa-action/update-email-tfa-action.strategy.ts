@@ -10,6 +10,7 @@ import { PrismaService } from "@app/prisma/prisma.service";
 import { EmailProcessorRequestDto } from "@app/email/dtos/email-processor/email-processor.request.dto";
 import { EmailType } from "@app/email/enums/email-type.enum";
 import { TfaAction } from "@app/tfa/enums/tfa-action.enum";
+import { UPDATE_EMAIL_ACTION_KEY } from "@app/tfa/constants/tfa.constants";
 
 @Injectable()
 export class UpdateEmailTfaActionStrategy extends TfaActionStrategy {
@@ -32,7 +33,7 @@ export class UpdateEmailTfaActionStrategy extends TfaActionStrategy {
             throw new Error('Missing metadata');
         }
 
-        const updateEmail = metadata["update-email"];
+        const updateEmail = metadata[UPDATE_EMAIL_ACTION_KEY.NEW_EMAIL];
 
         if (!updateEmail) {
             throw new Error('Missing update-email metadata');
