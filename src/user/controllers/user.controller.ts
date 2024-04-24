@@ -20,6 +20,7 @@ import { UpdateEmailUC } from "../usecases/update-email.uc";
 import { UpdateEmailRequestDto } from "../dtos/update-email/update-email-request.dto";
 import { UpdateEmailResponseDto } from "../dtos/update-email/update-email-response.dto";
 import { IpClientInterceptor } from "@app/common/interceptors/ip-client.interceptor";
+import { LangClientInterceptor } from "@app/common/interceptors/lang-client.interceptor";
 
 /**
  * Controller for managing users.
@@ -48,7 +49,9 @@ export class UserController {
     @HttpCode(HttpStatus.OK)
     getProfile(
         @UserRequest() userRequest: ActiveUserDto,
-        @Body() dto: FindUserByUsernameRequestDto): Promise<FindUserByUserNameResponseDto> {
+        @Body() dto: FindUserByUsernameRequestDto):
+        Promise<FindUserByUserNameResponseDto> {
+        console.log("userRequest", userRequest);
         dto.setUserRequest(userRequest);
         return this.findUserByUsernameUC.execute(dto);
     }

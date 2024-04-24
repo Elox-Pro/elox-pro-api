@@ -32,7 +32,6 @@ export class JwtCookieSessionService {
      */
     async create(response: Response, user: User, reqLang: UserLang): Promise<void> {
         try {
-
             // Validate the language of the user to handle during the whole session
             const sessionLang = getUserLang(user.lang, reqLang);
 

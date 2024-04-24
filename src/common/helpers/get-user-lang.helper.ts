@@ -6,6 +6,7 @@ import { UserLang } from "@prisma/client";
  * @param requestLang the language requested by the user
  */
 export function getUserLang(userLang: UserLang, requestLang: UserLang): UserLang {
+
     if (userLang === UserLang.DEFAULT) {
         return requestLang;
     }

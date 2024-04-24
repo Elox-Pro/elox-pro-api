@@ -59,47 +59,56 @@ export class EmailTfaStrategy extends TfaStrategy {
             // throw new UnauthorizedException('error.invalid-credentials');
         }
 
-        const code = this.generateCode(this.CODE_LENGTH);
-        const hash = await this.hashingStrategy.hash(code.toString());
-        const key = this.generateKey(username);
+        try {
+            const code = this.generateCode(this.CODE_LENGTH);
+            const hash = await this.hashingStrategy.hash(code.toString());
+            const key = this.generateKey(username);
 
-        const savedCode = await this.redis.getClient().get(key);
+            const savedCode = await this.redis.getClient().get(key);
 
-        if (savedCode) {
+            if (savedCode) {
+                this.logger.log(`Code already exists`);
+                return true;
+            }
+
+            let ttl = this.DEFAUT_TTL;
+            const metadata: Record<string, string> = {};
+            switch (action) {
+                case TfaAction.SIGN_UP:
+                    ttl = this.SIGNUP_TTL;
+                    break;
+                case TfaAction.UPDATE_EMAIL:
+                    metadata["update-email"] = email;
+                    break;
+                default:
+                    this.logger.error(`Invalid action: ${action}`);
+                    throw new UnauthorizedException('invalid action');
+            }
+
+            await this.redis
+                .getClient()
+                .set(key, JSON.stringify(new TFADto(hash, action, metadata)), {
+                    EX: ttl
+                });
+
+            const emailTemplate = this.emailFactory.getEmail(EmailType.TFA);
+
+            await emailTemplate.send(new EmailAddressDto(email, username), new Map<string, string>([
+                ['lang', userLang],
+                ['code', code.toString()],
+                ['username', username],
+                ['ipClient', ipClient],
+                ['ttl', ttl.toString()]
+            ]));
+
+            this.logger.log(`Email sent to ${email}`);
+
             return true;
+        } catch (error) {
+            await this.redis.getClient().del(this.generateKey(username));
+            console.error(error);
+            throw error;
         }
-
-        let ttl = this.DEFAUT_TTL;
-        const metadata: Record<string, string> = {};
-        switch (action) {
-            case TfaAction.SIGN_UP:
-                ttl = this.SIGNUP_TTL;
-                break;
-            case TfaAction.UPDATE_EMAIL:
-                metadata["update-email"] = email;
-                break;
-            default:
-                this.logger.error(`Invalid action: ${action}`);
-                throw new UnauthorizedException('invalid action');
-        }
-
-        await this.redis
-            .getClient()
-            .set(key, JSON.stringify(new TFADto(hash, action, metadata)), {
-                EX: ttl
-            });
-
-        const emailTemplate = this.emailFactory.getEmail(EmailType.TFA);
-
-        await emailTemplate.send(new EmailAddressDto(email, username), new Map<string, string>([
-            ['lang', userLang],
-            ['code', code.toString()],
-            ['username', username],
-            ['ipClient', ipClient],
-            ['ttl', ttl.toString()]
-        ]));
-
-        return true;
     }
 
     async verify(username: string, code: string): Promise<TfaResponseDto> {

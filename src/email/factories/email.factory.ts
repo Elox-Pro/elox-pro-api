@@ -14,15 +14,20 @@ export class EmailFactory {
 
     public getEmail(type: EmailType): EmailTemplate {
 
-        switch (type) {
-            case EmailType.TFA:
-                return new TfaEmailTemplate(this.emailSender);
-            case EmailType.WELCOME:
-                return new WelcomeEmailTemplate(this.emailSender);
-            case EmailType.RECOVER_PASSWORD_SUCCESS:
-                return new RecoverPasswordSuccessEmailTemplate(this.emailSender);
-            default:
-                throw new Error('Invalid email type');
+        try {
+            switch (type) {
+                case EmailType.TFA:
+                    return new TfaEmailTemplate(this.emailSender);
+                case EmailType.WELCOME:
+                    return new WelcomeEmailTemplate(this.emailSender);
+                case EmailType.RECOVER_PASSWORD_SUCCESS:
+                    return new RecoverPasswordSuccessEmailTemplate(this.emailSender);
+                default:
+                    throw new Error('Invalid email type');
+            }
+        } catch (error) {
+            console.error(error);
+            throw error;
         }
     }
 

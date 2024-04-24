@@ -38,7 +38,7 @@ const TIME_UNITS_ES = {
  */
 const timeUnitMap = new Map<UserLang, Object>([
     [UserLang.EN, TIME_UNITS_EN],
-    [UserLang.ES, TIME_UNITS_ES],
+    [UserLang.ES, TIME_UNITS_ES]
 ]);
 
 /**
@@ -64,22 +64,32 @@ const timeUnits = [
  * @throws {Error} If the provided duration is negative.
  */
 export function formatTTL(seconds: number, lang: UserLang): string {
-    // Retrieve the time unit translations for the user's language
-    const translation = timeUnitMap.get(lang);
 
-    // Validate input
-    if (seconds < 0) {
-        throw new Error("Duration cannot be negative");
-    }
-
-    // Find the appropriate time unit and calculate the value
-    for (const unit of timeUnits) {
-        if (seconds >= unit.conversion) {
-            const value = Math.floor(seconds / unit.conversion);
-            return `${value} ${translation[unit.unit]}`;
+    try {
+        // Validate input
+        if (seconds < 0) {
+            throw new Error("Duration cannot be negative");
         }
-    }
 
-    // If no matching unit is found, return the translation for milliseconds (less than a minute)
-    return translation[TimeUnitKey.MILLISECONDS];
+        if (lang === UserLang.DEFAULT) {
+            throw new Error("User language cannot be default");
+        }
+
+        // Retrieve the time unit translations for the user's language
+        const translation = timeUnitMap.get(lang);
+
+        // Find the appropriate time unit and calculate the value
+        for (const unit of timeUnits) {
+            if (seconds >= unit.conversion) {
+                const value = Math.floor(seconds / unit.conversion);
+                return `${value} ${translation[unit.unit]}`;
+            }
+        }
+
+        // If no matching unit is found, return the translation for milliseconds (less than a minute)
+        return translation[TimeUnitKey.MILLISECONDS];
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 }

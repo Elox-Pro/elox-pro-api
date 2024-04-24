@@ -27,16 +27,21 @@ export class TfaEmailTemplate extends EmailTemplate {
             throw new Error("Code not found in params");
         }
 
-        const lang = params.get("lang") as UserLang || UserLang.EN;
-        params.set("ttlFormatted", formatTTL(parseInt(params.get("ttl")), lang));
+        try {
+            const lang = params.get("lang") as UserLang || UserLang.EN;
+            params.set("ttlFormatted", formatTTL(parseInt(params.get("ttl")), lang));
 
-        return await this.sender.send(new EmailDTO(
-            this.noReply,
-            to,
-            this.subjects.get(lang),
-            this.buildPath(this.filePaths.get(lang)),
-            new Map<string, string>([...params, ...this.defaultParams])
-        ));
+            return await this.sender.send(new EmailDTO(
+                this.noReply,
+                to,
+                this.subjects.get(lang),
+                this.buildPath(this.filePaths.get(lang)),
+                new Map<string, string>([...params, ...this.defaultParams])
+            ));
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
 
     }
 }
