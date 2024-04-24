@@ -13,7 +13,7 @@ import { IpClientInterceptor } from "@app/common/interceptors/ip-client.intercep
 export class TfaController {
 
     constructor(
-        private readonly validateTfaUC: ValidateTfaUC,
+        private readonly validateTfaUC: ValidateTfaUC
     ) { }
 
     @HttpCode(HttpStatus.OK)
@@ -25,7 +25,5 @@ export class TfaController {
         dto.setResponse(response);
         return this.validateTfaUC.execute(dto);
     }
-
-
 
 }

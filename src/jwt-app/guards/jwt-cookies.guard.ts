@@ -32,18 +32,17 @@ export class JwtCookiesGuard implements CanActivate {
      * @throws UnauthorizedException if authentication fails.
      */
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        try {
-            // Extract the request and response objects from the ExecutionContext
-            const request = context.switchToHttp().getRequest();
-            const response = context.switchToHttp().getResponse();
+        // Extract the request and response objects from the ExecutionContext
+        const request = context.switchToHttp().getRequest();
+        const response = context.switchToHttp().getResponse();
 
+        try {
             // Retrieve the access token from the request using the JwtCookieService
             const accessToken = this.jwtCookieService.getAccessToken(request);
 
             // Check if the access token is missing
             if (!accessToken) {
                 this.logger.error('Access token not found');
-                this.jwtCookieService.deleteSession(response);
                 throw new UnauthorizedException();
             }
 
@@ -54,7 +53,8 @@ export class JwtCookiesGuard implements CanActivate {
             const bufferTime = this.jwtConfig.BUFFER_TIME * 1000;
 
             // Check if the access token is about to expire
-            if ((payload.exp * 1000) <= Date.now() + bufferTime) {
+            // if ((payload.exp * 1000) <= Date.now() + bufferTime) {
+            if (true) {
                 // Retrieve the refresh token from the request using the JwtCookieService
                 const refreshToken = this.jwtCookieService.getRefreshToken(request);
 
@@ -94,6 +94,7 @@ export class JwtCookiesGuard implements CanActivate {
 
         } catch (error) {
             // Log and throw an UnauthorizedException if token verification fails
+            this.jwtCookieService.deleteSession(response);
             this.logger.error('Invalid token');
             throw new UnauthorizedException();
         }

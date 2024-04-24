@@ -97,7 +97,7 @@ export class EmailTfaStrategy extends TfaStrategy {
                 ['ttl', ttl.toString()]
             ]));
 
-            this.logger.log(`Email sent to ${email}`);
+            this.logger.log(`TFA Email sent to ${email}`);
 
             return true;
         } catch (error) {
