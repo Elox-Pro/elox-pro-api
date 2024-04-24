@@ -20,4 +20,12 @@ export class UserRequestDto {
     getLang(): UserLang {
         return this.userRequest.lang;
     }
+
+    getIp(): string {
+        return this.userRequest.ip;
+    }
+
+    isAuthenticated(): boolean {
+        return this.userRequest.isAuthenticated;
+    }
 }

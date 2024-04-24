@@ -65,7 +65,11 @@ export class JwtCookiesGuard implements CanActivate {
                 }
 
                 // Execute the refresh token use case to obtain new tokens
-                const { tokens } = await this.refreshTokenUC.execute(new RefreshTokenRequestDto(refreshToken));
+                const { tokens } = await this.refreshTokenUC.execute(
+                    new RefreshTokenRequestDto(
+                        refreshToken,
+                        payload.ip)
+                );
 
                 // Verify the new access token and update the payload
                 payload = await this.jwtStrategy.verify<JwtAccessPayloadDto>(tokens.accessToken);
@@ -74,7 +78,12 @@ export class JwtCookiesGuard implements CanActivate {
                 this.jwtCookieService.hydratateSession(
                     response,
                     tokens,
-                    new ActiveUserDto(payload.username, payload.role, payload.lang, true)
+                    new ActiveUserDto(
+                        payload.username,
+                        payload.role,
+                        payload.lang,
+                        payload.ip,
+                        true)
                 );
             }
 

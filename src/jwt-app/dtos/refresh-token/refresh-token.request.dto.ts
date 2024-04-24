@@ -6,8 +6,12 @@ export class RefreshTokenRequestDto {
     @IsNotEmpty()
     readonly refreshToken: string;
 
-    constructor(refreshToken: string) {
+    @IsString()
+    readonly ipClient: string;
+
+    constructor(refreshToken: string, ipClient: string) {
         this.refreshToken = refreshToken;
+        this.ipClient = ipClient;
     }
 
 }

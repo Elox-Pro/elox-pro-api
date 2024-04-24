@@ -23,9 +23,10 @@ export class UpdateEmailUC implements IUseCase<UpdateEmailRequestDto, UpdateEmai
 
     async execute(request: UpdateEmailRequestDto): Promise<UpdateEmailResponseDto> {
 
-        const { email, ipClient } = request;
+        const { email } = request;
         const username = request.getUsername();
         const lang = request.getLang();
+        const ip = request.getIp();
 
         const user = await this.prisma.user.findUnique({
             where: { username }
@@ -54,7 +55,7 @@ export class UpdateEmailUC implements IUseCase<UpdateEmailRequestDto, UpdateEmai
         user.email = email;
         user.tfaType = TfaType.EMAIL;
         await this.tfaStrategyQueue.add(new TfaRequestDto(
-            user, ipClient, TfaAction.UPDATE_EMAIL, lang
+            user, ip, TfaAction.UPDATE_EMAIL, lang
         ));
 
         return new UpdateEmailResponseDto(true);

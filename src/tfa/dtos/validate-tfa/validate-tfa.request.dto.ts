@@ -15,6 +15,9 @@ export class ValidateTFARequestDto {
     @IsEnum(UserLang)
     readonly lang: UserLang;
 
+    @IsString()
+    readonly ipClient: string;
+
     private response: Response;
 
     setResponse(response: Response): void {

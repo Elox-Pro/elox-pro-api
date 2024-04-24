@@ -22,7 +22,12 @@ export class JwtAccessPayloadDto {
         /**
          * The language of the user
          */
-        readonly lang: UserLang
+        readonly lang: UserLang,
+
+        /**
+         * The user request ip address
+         */
+        readonly ip: string
 
     ) { }
 }

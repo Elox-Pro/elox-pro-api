@@ -48,7 +48,7 @@ export class RefreshTokenUC implements IUseCase<RefreshTokenRequestDto, RefreshT
         }
 
         const tokens = await this.jwtStrategy.generate(
-            new JwtAccessPayloadDto(user.username, user.role, user.lang),
+            new JwtAccessPayloadDto(user.username, user.role, user.lang, data.ipClient),
         );
 
         return new RefreshTokenResponseDto(tokens);

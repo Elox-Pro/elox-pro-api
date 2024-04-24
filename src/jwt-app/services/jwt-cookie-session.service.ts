@@ -29,18 +29,24 @@ export class JwtCookieSessionService {
      * @param response The Express Response object for setting cookies.
      * @param user The User object representing the user.
      * @param reqLang The user request language.
+     * @param reqIp The user request ip address.
      */
-    async create(response: Response, user: User, reqLang: UserLang): Promise<void> {
+    async create(response: Response, user: User, reqLang: UserLang, reqIp: string): Promise<void> {
         try {
             // Validate the language of the user to handle during the whole session
             const sessionLang = getUserLang(user.lang, reqLang);
 
             // Generate JWT tokens with the user's username and role as payload
-            const payload = new JwtAccessPayloadDto(user.username, user.role, sessionLang);
+            const payload = new JwtAccessPayloadDto(
+                user.username, user.role, sessionLang, reqIp
+            );
+            
             const tokens = await this.jwtStrategy.generate(payload);
 
             // Create an active user object with the user's details
-            const activeUser = new ActiveUserDto(payload.username, payload.role, sessionLang, true);
+            const activeUser = new ActiveUserDto(
+                payload.username, payload.role, sessionLang, reqIp, true
+            );
 
             // Create a session using the JWT cookie service
             this.jwtCookieService.createSession(response, tokens, activeUser);

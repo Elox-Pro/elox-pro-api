@@ -15,14 +15,19 @@ export class ActiveUserDto {
         readonly role: Role,
 
         /**
-         * The user language
+         * The user language (it is setted when the session cookie is created)
          */
         readonly lang: UserLang,
 
         /**
+         * The user request ip address (it is setted when the session cookie is created)
+         */
+        readonly ip: string,
+
+        /**
          * Whether the user is active
          */
-        readonly isAuthenticated: boolean
+        readonly isAuthenticated: boolean,
     ) {
 
     }

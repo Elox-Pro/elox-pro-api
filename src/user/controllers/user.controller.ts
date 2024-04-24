@@ -102,12 +102,9 @@ export class UserController {
 
     @Patch('/profile/email')
     @HttpCode(HttpStatus.OK)
-    @UseInterceptors(IpClientInterceptor)
     updateEmailGender(
-        @UserRequest()
-        userRequest: ActiveUserDto,
-        @Body()
-        dto: UpdateEmailRequestDto):
+        @UserRequest() userRequest: ActiveUserDto,
+        @Body() dto: UpdateEmailRequestDto):
         Promise<UpdateEmailResponseDto> {
         dto.setUserRequest(userRequest);
         return this.updateEmailUC.execute(dto);
