@@ -76,9 +76,8 @@ export class EmailTfaStrategy extends TfaStrategy {
                 case TfaAction.UPDATE_EMAIL:
                     metadata[UPDATE_EMAIL_ACTION_KEY.NEW_EMAIL] = email;
                     break;
-                default:
-                    this.logger.error(`Invalid action: ${action}`);
-                    throw new UnauthorizedException('invalid action');
+                default: break;
+
             }
 
             await this.redis
