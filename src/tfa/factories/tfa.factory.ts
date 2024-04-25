@@ -11,8 +11,6 @@ export class TfaFactory {
 
     createStrategy(type: TfaType): TfaStrategy {
         switch (type) {
-            case TfaType.NONE:
-                return null;
             case TfaType.EMAIL:
                 return this.emailTfa;
             default:
