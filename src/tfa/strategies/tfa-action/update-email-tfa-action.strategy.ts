@@ -46,7 +46,11 @@ export class UpdateEmailTfaActionStrategy extends TfaActionStrategy {
                 email: updateEmail,
             },
         });
-        await this.emailQueue.add(new EmailProcessorRequestDto(EmailType.WELCOME, updatedUser, data.lang));
+
+        await this.emailQueue.add(new EmailProcessorRequestDto(
+            EmailType.UPDATE_EMAIL, updatedUser, data.lang
+        ));
+
         return new ValidateTFAResponseDto(user.tfaType, TfaAction.UPDATE_EMAIL);
     }
 

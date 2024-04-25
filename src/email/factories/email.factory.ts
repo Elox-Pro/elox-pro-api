@@ -5,6 +5,7 @@ import { EmailTemplate } from "../templates/email.template";
 import { TfaEmailTemplate } from "../templates/tfa.email.template";
 import { WelcomeEmailTemplate } from "../templates/welcome.email.template";
 import { RecoverPasswordSuccessEmailTemplate } from "../templates/recover-password-success.email.template";
+import { UpdateEmailTemplate } from "../templates/update-email.email.template";
 
 @Injectable()
 export class EmailFactory {
@@ -22,6 +23,8 @@ export class EmailFactory {
                     return new WelcomeEmailTemplate(this.emailSender);
                 case EmailType.RECOVER_PASSWORD_SUCCESS:
                     return new RecoverPasswordSuccessEmailTemplate(this.emailSender);
+                case EmailType.UPDATE_EMAIL:
+                    return new UpdateEmailTemplate(this.emailSender);
                 default:
                     throw new Error('Invalid email type');
             }
@@ -30,5 +33,4 @@ export class EmailFactory {
             throw error;
         }
     }
-
 }

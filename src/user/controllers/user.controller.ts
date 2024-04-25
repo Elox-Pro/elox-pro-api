@@ -1,4 +1,4 @@
-import { Controller, HttpStatus, HttpCode, Body, Get, Patch, BadRequestException, UseInterceptors } from "@nestjs/common";
+import { Controller, HttpStatus, HttpCode, Body, Get, Patch, BadRequestException, UseInterceptors, UnauthorizedException } from "@nestjs/common";
 import { FindUserByUsernameUC } from "../usecases/find-user-by-username.uc";
 import { FindUserByUsernameRequestDto } from "../dtos/find-user-by-username/find-user-by-username.request.dto";
 import { FindUserByUserNameResponseDto } from "../dtos/find-user-by-username/find-user-by-username.response.dto";
@@ -51,7 +51,6 @@ export class UserController {
         @UserRequest() userRequest: ActiveUserDto,
         @Body() dto: FindUserByUsernameRequestDto):
         Promise<FindUserByUserNameResponseDto> {
-        console.log("userRequest", userRequest);
         dto.setUserRequest(userRequest);
         return this.findUserByUsernameUC.execute(dto);
     }
