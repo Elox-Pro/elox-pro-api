@@ -3,8 +3,9 @@ import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { EventGatewayDto } from '@app/common/dto/event-gateway.dto';
 import { EventGatewayService } from './event-gateway.service';
+import { WS_ORIGIN, WS_PORT } from '@app/common/constants/common.constants';
 
-@WebSocketGateway(4025, { cors: { origin: '*' } })
+@WebSocketGateway(WS_PORT, { cors: { origin: WS_ORIGIN } })
 export class EventGatewayCommonService extends EventGatewayService {
     private readonly logger = new Logger(EventGatewayCommonService.name);
 

@@ -8,4 +8,5 @@ export class CommonConfig {
     public readonly WEB_CLIENT_ORIGIN = process.env.WEB_CLIENT_ORIGIN || 'http://localhost:3001'
     public readonly DOMAIN = process.env.DOMAIN || '.localhost'
     public readonly GOOGLE_RECAPTCHA_SECRET_KEY = process.env.GOOGLE_RECAPTCHA_SECRET_KEY || null;
+    public readonly WS_PORT = parseInt(process.env.WS_PORT || '3001');
 }
