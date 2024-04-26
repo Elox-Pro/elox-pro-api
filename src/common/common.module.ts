@@ -4,7 +4,8 @@ import { HashingStrategy } from "./strategies/hashing/hashing.strategy";
 import { BCryptStategy } from "./strategies/hashing/bcrypt.strategy";
 import { SessionCookieService } from "./services/session-cookie.service";
 import { TranslatorService } from "./services/translator.service";
-import { EventsGateway } from "./events/events-gateway";
+import { EventGatewayService } from "./services/event-gateway/event-gateway.service";
+import { EventGatewayCommonService } from "./services/event-gateway/event-gateway-common.service";
 @Global()
 @Module({
     exports: [
@@ -12,13 +13,16 @@ import { EventsGateway } from "./events/events-gateway";
         HashingStrategy,
         SessionCookieService,
         TranslatorService,
-        EventsGateway
+        EventGatewayService
     ],
     providers: [
         CommonConfig,
         SessionCookieService,
         TranslatorService,
-        EventsGateway,
+        {
+            provide: EventGatewayService,
+            useClass: EventGatewayCommonService
+        },
         {
             provide: HashingStrategy,
             useClass: BCryptStategy,
