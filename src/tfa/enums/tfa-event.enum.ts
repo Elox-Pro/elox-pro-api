@@ -1,5 +1,5 @@
 export enum TfaEvent {
-    SENT = 'job-sent',
-    FAILED = 'job-failed',
-    SUCCEEDED = 'job-succeeded'
+    SENT = 'tfa-sent',
+    FAILED = 'tfa-failed',
+    SUCCEEDED = 'tfa-succeeded'
 }
