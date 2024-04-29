@@ -15,5 +15,6 @@
     "username-not-found": "Usuario no encontrado",
     "user-already-has-email": "El usuario ya tiene un correo electrónico",
     "email-not-found": "Correo electrónico no encontrado",
-    "ip-request-not-found": "Ip solicitud no encontrada"
+    "ip-request-not-found": "Ip solicitud no encontrada",
+    "user-already-has-phone": "El usuario ya tiene un teléfono"
 }

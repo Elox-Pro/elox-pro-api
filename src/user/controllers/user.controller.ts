@@ -1,4 +1,4 @@
-import { Controller, HttpStatus, HttpCode, Body, Get, Patch, BadRequestException, UseInterceptors, UnauthorizedException } from "@nestjs/common";
+import { Controller, HttpStatus, HttpCode, Body, Get, Patch } from "@nestjs/common";
 import { FindUserByUsernameUC } from "../usecases/find-user-by-username.uc";
 import { FindUserByUsernameRequestDto } from "../dtos/find-user-by-username/find-user-by-username.request.dto";
 import { FindUserByUserNameResponseDto } from "../dtos/find-user-by-username/find-user-by-username.response.dto";
@@ -19,8 +19,9 @@ import { UpdateGenderRequestDto } from "../dtos/update-gender/update-gender.requ
 import { UpdateEmailUC } from "../usecases/update-email.uc";
 import { UpdateEmailRequestDto } from "../dtos/update-email/update-email-request.dto";
 import { UpdateEmailResponseDto } from "../dtos/update-email/update-email-response.dto";
-import { IpClientInterceptor } from "@app/common/interceptors/ip-client.interceptor";
-import { LangClientInterceptor } from "@app/common/interceptors/lang-client.interceptor";
+import { UpdatePhoneUC } from "../usecases/update-phone.uc";
+import { UpdatePhoneRequestDto } from "../dtos/update-phone/update-phone.request.dto";
+import { UpdatePhoneResponseDto } from "../dtos/update-phone/update-phone.response.dto";
 
 /**
  * Controller for managing users.
@@ -37,7 +38,8 @@ export class UserController {
         private readonly updateAvatarUC: UpdateAvatarUC,
         private readonly updateNameUC: UpdateNameUC,
         private readonly updateGenderUC: UpdateGenderUC,
-        private readonly updateEmailUC: UpdateEmailUC
+        private readonly updateEmailUC: UpdateEmailUC,
+        private readonly updatePhoneUC: UpdatePhoneUC
     ) { }
 
     /**
@@ -107,6 +109,16 @@ export class UserController {
         Promise<UpdateEmailResponseDto> {
         dto.setUserRequest(userRequest);
         return this.updateEmailUC.execute(dto);
+    }
+
+    @Patch('/profile/phone')
+    @HttpCode(HttpStatus.OK)
+    updateProfilePhone(
+        @UserRequest() userRequest: ActiveUserDto,
+        @Body() dto: UpdatePhoneRequestDto):
+        Promise<UpdatePhoneResponseDto> {
+        dto.setUserRequest(userRequest);
+        return this.updatePhoneUC.execute(dto);
     }
 
 }

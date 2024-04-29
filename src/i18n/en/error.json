@@ -15,5 +15,6 @@
     "username-not-found": "Username not found",
     "user-already-has-email": "User already has email",
     "email-not-found": "Email not found",
-    "ip-request-not-found": "IP request not found"
+    "ip-request-not-found": "IP request not found",
+    "user-already-has-phone": "User already has phone"
 }
