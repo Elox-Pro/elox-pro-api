@@ -9,6 +9,7 @@ import { Queue } from "bull";
 import { TfaRequestDto } from "@app/tfa/dtos/tfa/tfa.request.dto";
 import { TfaType } from "@prisma/client";
 import { TfaAction } from "@app/tfa/enums/tfa-action.enum";
+import { TfaActionKey } from "@app/tfa/enums/tfa-action-key.enum";
 
 @Injectable()
 export class UpdateEmailUC implements IUseCase<UpdateEmailRequestDto, UpdateEmailResponseDto> {
@@ -54,8 +55,13 @@ export class UpdateEmailUC implements IUseCase<UpdateEmailRequestDto, UpdateEmai
         // Change the user email and tfa-type to send the two factor authentication code by email
         user.email = email;
         user.tfaType = TfaType.EMAIL;
+
+        const metadata = {
+            [TfaActionKey.NEW_EMAIL]: email,
+        } as Record<TfaActionKey, string>;
+
         await this.tfaStrategyQueue.add(new TfaRequestDto(
-            user, ip, TfaAction.UPDATE_EMAIL, lang
+            user, ip, TfaAction.UPDATE_EMAIL, lang, metadata
         ));
 
         return new UpdateEmailResponseDto(true);

@@ -5,7 +5,7 @@ import { RedisService } from "redis/redis.service";
 import { EmailFactory } from "@app/email/factories/email.factory";
 import { EmailType } from "@app/email/enums/email-type.enum";
 import { EmailAddressDto } from "@app/email/dtos/email-address.dto";
-import { EMAIL_TFA_STRATEGY_KEY, UPDATE_EMAIL_ACTION_KEY } from "../../constants/tfa.constants";
+import { EMAIL_TFA_STRATEGY_KEY} from "../../constants/tfa.constants";
 import { TfaRequestDto } from "../../dtos/tfa/tfa.request.dto";
 import { TfaAction } from "../../enums/tfa-action.enum";
 import { TFADto } from "@app/tfa/dtos/tfa/tfa.dto";
@@ -28,7 +28,7 @@ export class EmailTfaStrategy extends TfaStrategy {
         super();
     }
 
-    async execute({ user, ipClient, action, lang }: TfaRequestDto): Promise<boolean> {
+    async execute({ user, ipClient, action, lang, metadata }: TfaRequestDto): Promise<boolean> {
 
         const { email, username, emailVerified } = user;
 
@@ -67,19 +67,8 @@ export class EmailTfaStrategy extends TfaStrategy {
                 return true;
             }
 
-            let ttl = this.DEFAUT_TTL;
-            const metadata: Record<string, string> = {};
-            switch (action) {
-                case TfaAction.SIGN_UP:
-                    ttl = this.SIGNUP_TTL;
-                    break;
-                case TfaAction.UPDATE_EMAIL:
-                    metadata[UPDATE_EMAIL_ACTION_KEY.NEW_EMAIL] = email;
-                    break;
-                default: break;
-
-            }
-
+            const ttl = this.getTTL(action);
+            
             await this.redis
                 .getClient()
                 .set(key, JSON.stringify(new TFADto(hash, action, metadata)), {
@@ -149,5 +138,9 @@ export class EmailTfaStrategy extends TfaStrategy {
 
     private generateKey(username: string): string {
         return `${EMAIL_TFA_STRATEGY_KEY}:${username}`
+    }
+
+    private getTTL(action: TfaAction): number {
+        return action === TfaAction.SIGN_UP ? this.SIGNUP_TTL : this.DEFAUT_TTL
     }
 }

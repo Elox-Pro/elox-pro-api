@@ -8,6 +8,7 @@ import { UpdateNameUC } from "./usecases/update-name.uc";
 import { UpdateGenderUC } from "./usecases/update-gender.uc";
 import { UpdateEmailUC } from "./usecases/update-email.uc";
 import { UpdatePhoneUC } from "./usecases/update-phone.uc";
+import { UpdatePasswordUC } from "./usecases/update-password.uc";
 
 @Module({
     controllers: [UserController],
@@ -19,7 +20,8 @@ import { UpdatePhoneUC } from "./usecases/update-phone.uc";
         UpdateNameUC,
         UpdateGenderUC,
         UpdateEmailUC,
-        UpdatePhoneUC
+        UpdatePhoneUC,
+        UpdatePasswordUC
     ]
 })
 export class UserModule { }

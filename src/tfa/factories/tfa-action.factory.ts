@@ -5,6 +5,7 @@ import { RecoverPasswordTfaActionStrategy } from "../strategies/tfa-action/recov
 import { TfaAction } from "../enums/tfa-action.enum";
 import { TfaActionStrategy } from "../strategies/tfa-action/tfa-action.strategy";
 import { UpdateEmailTfaActionStrategy } from "../strategies/tfa-action/update-email-tfa-action.strategy";
+import { UpdatePasswordTfaActionStrategy } from "../strategies/tfa-action/update-password-action.strategy";
 
 @Injectable()
 export class TfaActionFactory {
@@ -13,6 +14,7 @@ export class TfaActionFactory {
         private readonly loginStrategy: LoginTfaActionStrategy,
         private readonly recoverPasswordStrategy: RecoverPasswordTfaActionStrategy,
         private readonly updateEmailStrategy: UpdateEmailTfaActionStrategy,
+        private readonly updatePasswordStrategy: UpdatePasswordTfaActionStrategy,
     ) { }
 
     createStrategy(action: TfaAction): TfaActionStrategy {
@@ -25,6 +27,8 @@ export class TfaActionFactory {
                 return this.recoverPasswordStrategy;
             case TfaAction.UPDATE_EMAIL:
                 return this.updateEmailStrategy;
+            case TfaAction.UPDATE_PASSWORD:
+                return this.updatePasswordStrategy;
             default:
                 throw new Error('Invalid action');
         }

@@ -22,6 +22,7 @@ export class EmailFactory {
                 case EmailType.WELCOME:
                     return new WelcomeEmailTemplate(this.emailSender);
                 case EmailType.RECOVER_PASSWORD_SUCCESS:
+                case EmailType.UPDATE_PASSWORD:
                     return new RecoverPasswordSuccessEmailTemplate(this.emailSender);
                 case EmailType.UPDATE_EMAIL:
                     return new UpdateEmailTemplate(this.emailSender);

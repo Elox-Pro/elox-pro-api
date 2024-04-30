@@ -22,6 +22,9 @@ import { UpdateEmailResponseDto } from "../dtos/update-email/update-email-respon
 import { UpdatePhoneUC } from "../usecases/update-phone.uc";
 import { UpdatePhoneRequestDto } from "../dtos/update-phone/update-phone.request.dto";
 import { UpdatePhoneResponseDto } from "../dtos/update-phone/update-phone.response.dto";
+import { UpdatePasswordRequestDto } from "../dtos/update-password/update-password-request.dto";
+import { UpdatePasswordResponseDto } from "../dtos/update-password/update-password-response.dto";
+import { UpdatePasswordUC } from "../usecases/update-password.uc";
 
 /**
  * Controller for managing users.
@@ -39,7 +42,8 @@ export class UserController {
         private readonly updateNameUC: UpdateNameUC,
         private readonly updateGenderUC: UpdateGenderUC,
         private readonly updateEmailUC: UpdateEmailUC,
-        private readonly updatePhoneUC: UpdatePhoneUC
+        private readonly updatePhoneUC: UpdatePhoneUC,
+        private readonly updatePasswordUC: UpdatePasswordUC
     ) { }
 
     /**
@@ -119,6 +123,16 @@ export class UserController {
         Promise<UpdatePhoneResponseDto> {
         dto.setUserRequest(userRequest);
         return this.updatePhoneUC.execute(dto);
+    }
+
+    @Patch('/profile/password')
+    @HttpCode(HttpStatus.OK)
+    updateProfilePassword(
+        @UserRequest() userRequest: ActiveUserDto,
+        @Body() dto: UpdatePasswordRequestDto):
+        Promise<UpdatePasswordResponseDto> {
+        dto.setUserRequest(userRequest);
+        return this.updatePasswordUC.execute(dto);
     }
 
 }

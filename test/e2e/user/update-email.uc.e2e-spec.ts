@@ -46,8 +46,7 @@ describe("Update email use case", () => {
                 .patch(url)
                 .set('Cookie', cookies)
                 .send({
-                    email: `yhonax.qrz+${ramdon}@gmail.com`,
-                    ipClient: `127.0.0.1`
+                    email: `yhonax.qrz+${ramdon}@gmail.com`
                 } as UpdateEmailRequestDto);
 
             expect(res.status).toBe(HttpStatus.OK);
@@ -62,8 +61,7 @@ describe("Update email use case", () => {
                 .patch(url)
                 .set('Cookie', cookies)
                 .send({
-                    email: "yhonax.qrz@gmail.com",
-                    ipClient: `127.0.0.1`
+                    email: "yhonax.qrz@gmail.com"
                 } as UpdateEmailRequestDto);
 
             expect(res.status).toBe(HttpStatus.BAD_REQUEST);

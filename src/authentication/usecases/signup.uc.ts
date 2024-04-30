@@ -19,7 +19,7 @@ export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto>{
         @InjectQueue(TFA_STRATEGY_QUEUE)
         private readonly tfaStrategyQueue: Queue,
         private readonly prisma: PrismaService,
-        private readonly hashingStrategy: HashingStrategy,
+        private readonly hashingStrategy: HashingStrategy
     ) { }
 
     async execute(data: SignupRequestDto): Promise<SignupResponseDto> {

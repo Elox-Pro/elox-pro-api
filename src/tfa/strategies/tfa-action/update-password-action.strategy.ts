@@ -13,7 +13,7 @@ import { TfaAction } from "@app/tfa/enums/tfa-action.enum";
 import { TfaActionKey } from "@app/tfa/enums/tfa-action-key.enum";
 
 @Injectable()
-export class UpdateEmailTfaActionStrategy extends TfaActionStrategy {
+export class UpdatePasswordTfaActionStrategy extends TfaActionStrategy {
 
     constructor(
         private readonly prisma: PrismaService,
@@ -33,25 +33,24 @@ export class UpdateEmailTfaActionStrategy extends TfaActionStrategy {
             throw new Error('Missing metadata');
         }
 
-        const updateEmail = metadata[TfaActionKey.NEW_EMAIL];
+        const newPassword = metadata[TfaActionKey.NEW_HASHED_PASSWORD];
 
-        if (!updateEmail) {
+        if (!newPassword) {
             throw new Error('Missing update-email metadata');
         }
 
         const updatedUser = await this.prisma.user.update({
             where: { id: user.id },
             data: {
-                emailVerified: true,
-                email: updateEmail,
+                password: newPassword
             },
         });
 
         await this.emailQueue.add(new EmailProcessorRequestDto(
-            EmailType.UPDATE_EMAIL, updatedUser, data.lang
+            EmailType.UPDATE_PASSWORD, updatedUser, data.lang
         ));
 
-        return new ValidateTFAResponseDto(user.tfaType, TfaAction.UPDATE_EMAIL);
+        return new ValidateTFAResponseDto(user.tfaType, TfaAction.UPDATE_PASSWORD);
     }
 
 }
