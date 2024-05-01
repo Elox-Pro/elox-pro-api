@@ -11,6 +11,9 @@ import { UpdatePasswordRequestDto } from "../dtos/update-password/update-passwor
 import { UpdatePasswordResponseDto } from "../dtos/update-password/update-password-response.dto";
 import { HashingStrategy } from "@app/common/strategies/hashing/hashing.strategy";
 import { TfaActionKey } from "@app/tfa/enums/tfa-action-key.enum";
+import { EMAIL_QUEUE } from "@app/email/constants/email.constants";
+import { EmailProcessorRequestDto } from "@app/email/dtos/email-processor/email-processor.request.dto";
+import { EmailType } from "@app/email/enums/email-type.enum";
 
 @Injectable()
 export class UpdatePasswordUC implements IUseCase<UpdatePasswordRequestDto, UpdatePasswordResponseDto> {
@@ -18,8 +21,8 @@ export class UpdatePasswordUC implements IUseCase<UpdatePasswordRequestDto, Upda
     private readonly logger = new Logger(UpdatePasswordUC.name);
 
     constructor(
-        @InjectQueue(TFA_STRATEGY_QUEUE)
-        private readonly tfaStrategyQueue: Queue,
+        @InjectQueue(TFA_STRATEGY_QUEUE) private readonly tfaStrategyQueue: Queue,
+        @InjectQueue(EMAIL_QUEUE) private readonly emailQueue: Queue,
         private readonly prisma: PrismaService,
         private readonly hashingStrategy: HashingStrategy
     ) { }
@@ -58,6 +61,11 @@ export class UpdatePasswordUC implements IUseCase<UpdatePasswordRequestDto, Upda
                 where: { username },
                 data: { password: hashedPassword }
             });
+
+            await this.emailQueue.add(new EmailProcessorRequestDto(
+                EmailType.UPDATE_PASSWORD, user, lang
+            ));
+
             return new UpdatePasswordResponseDto(false);
         }
 
