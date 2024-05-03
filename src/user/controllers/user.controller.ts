@@ -25,6 +25,9 @@ import { UpdatePhoneResponseDto } from "../dtos/update-phone/update-phone.respon
 import { UpdatePasswordRequestDto } from "../dtos/update-password/update-password-request.dto";
 import { UpdatePasswordResponseDto } from "../dtos/update-password/update-password-response.dto";
 import { UpdatePasswordUC } from "../usecases/update-password.uc";
+import { UpdateTfaUC } from "../usecases/update-tfa.uc";
+import { UpdateTfaRequestDto } from "../dtos/update-tfa/update-tfa.request.dto";
+import { UpdateTfaResponseDto } from "../dtos/update-tfa/update-tfa.response.dto";
 
 /**
  * Controller for managing users.
@@ -43,7 +46,8 @@ export class UserController {
         private readonly updateGenderUC: UpdateGenderUC,
         private readonly updateEmailUC: UpdateEmailUC,
         private readonly updatePhoneUC: UpdatePhoneUC,
-        private readonly updatePasswordUC: UpdatePasswordUC
+        private readonly updatePasswordUC: UpdatePasswordUC,
+        private readonly updateTfaUC: UpdateTfaUC,
     ) { }
 
     /**
@@ -53,7 +57,7 @@ export class UserController {
      */
     @Get('/profile/')
     @HttpCode(HttpStatus.OK)
-    getProfile(
+    async getProfile(
         @UserRequest() userRequest: ActiveUserDto,
         @Body() dto: FindUserByUsernameRequestDto):
         Promise<FindUserByUserNameResponseDto> {
@@ -133,6 +137,15 @@ export class UserController {
         Promise<UpdatePasswordResponseDto> {
         dto.setUserRequest(userRequest);
         return this.updatePasswordUC.execute(dto);
+    }
+
+    @Patch('/profile/tfa')
+    @HttpCode(HttpStatus.OK)
+    updateProfileTfa(
+        @UserRequest() userRequest: ActiveUserDto,
+        @Body() dto: UpdateTfaRequestDto): Promise<UpdateTfaResponseDto> {
+        dto.setUserRequest(userRequest);
+        return this.updateTfaUC.execute(dto);
     }
 
 }

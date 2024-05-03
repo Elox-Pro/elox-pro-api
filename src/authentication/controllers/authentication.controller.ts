@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Post, Res, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, HttpCode, HttpStatus, Post, Res, UseInterceptors } from "@nestjs/common";
 import { LoginUC } from "../usecases/login.uc";
 import { LoginRequestDto } from "../dtos/login/login.request.dto";
 import { IpClientInterceptor } from "../../common/interceptors/ip-client.interceptor";
@@ -50,12 +50,8 @@ export class AuthenticationController {
     @Post('logout')
     @HttpCode(HttpStatus.OK)
     @Authentication(AuthenticationType.JwtCookies)
-    logout(
-        @Res({ passthrough: true }) response: Response
-    ): void {
-
+    logout(@Res({ passthrough: true }) response: Response): void {
         this.logoutUC.execute(response);
-
     }
 
 }
