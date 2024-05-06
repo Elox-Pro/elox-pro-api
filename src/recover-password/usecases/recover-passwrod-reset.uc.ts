@@ -19,7 +19,7 @@ import { EmailType } from "@app/email/enums/email-type.enum";
  * @date 2024-04-01
  */
 @Injectable()
-export class RecoverPasswordResetUC implements IUseCase<RecoverPasswordResetRequestDto, RecoverPasswordResetResponseDto>{
+export class RecoverPasswordResetUC implements IUseCase<RecoverPasswordResetRequestDto, RecoverPasswordResetResponseDto> {
 
     private readonly logger = new Logger(RecoverPasswordResetUC.name);
 
@@ -37,8 +37,7 @@ export class RecoverPasswordResetUC implements IUseCase<RecoverPasswordResetRequ
      * Send the email notification to the user.
      * @param data The recover password reset request data.
      * @returns A promise resolving to a RecoverPasswordResetResponseDto.
-     * @throws UnauthorizedException if the token is invalid or missing.
-     * @throws BadRequestException if the passwords do not match.
+     * @throws BadRequestException if the token not found, is invalid token passwords do not match.
      */
     async execute(data: RecoverPasswordResetRequestDto): Promise<RecoverPasswordResetResponseDto> {
 
@@ -48,14 +47,14 @@ export class RecoverPasswordResetUC implements IUseCase<RecoverPasswordResetRequ
 
         if (!token) {
             this.logger.error("Token not found: " + username);
-            throw new UnauthorizedException("error.invalid-credentials");
+            throw new BadRequestException("error.invalid-credentials");
         }
 
         const isValid = await this.hashingStrategy.compare(username, token);
 
         if (!isValid) {
             this.logger.error("Invalid token: " + username);
-            throw new UnauthorizedException("error.invalid-credentials");
+            throw new BadRequestException("error.invalid-credentials");
         }
 
         this.sessionCookieService.delete(data.getResponse());

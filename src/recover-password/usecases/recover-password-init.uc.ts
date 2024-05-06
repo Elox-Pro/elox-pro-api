@@ -1,5 +1,5 @@
 import { IUseCase } from "@app/common/usecase/usecase.interface";
-import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { RecoverPasswordInitRequestDto } from "../dtos/recover-password-init/recover-password-init.request.dto";
 import { RecoverPasswordInitResponseDto } from "../dtos/recover-password-init/recover-password-init.response.dto";
 import { PrismaService } from "@app/prisma/prisma.service";
@@ -30,12 +30,12 @@ export class RecoverPasswordInitUC implements IUseCase<RecoverPasswordInitReques
 
         if (!user) {
             this.logger.error(`User ${username} not found`);
-            throw new UnauthorizedException('error.username-not-found');
+            throw new BadRequestException('error.username-not-found');
         }
 
         if (!isVerifiedUser(user)) {
             this.logger.error(`User ${username} not verified`);
-            throw new UnauthorizedException('error.user-not-verified');
+            throw new BadRequestException('error.user-not-verified');
         }
 
         await this.tfaStrategyQueue.add(new TfaRequestDto(
