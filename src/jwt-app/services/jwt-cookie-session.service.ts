@@ -29,19 +29,19 @@ export class JwtCookieSessionService {
      * @param user The User object representing the user.
      * @param reqIp The user request ip address.
      */
-    async create(response: Response, user: User, reqIp: string): Promise<void> {
+    async create(response: Response, user: User): Promise<void> {
         try {
 
             // Generate JWT tokens with the user's username and role as payload
             const payload = new JwtAccessPayloadDto(
-                user.username, user.role, reqIp
+                user.username, user.role, true
             );
 
             const tokens = await this.jwtStrategy.generate(payload);
 
             // Create an active user object with the user's details
             const activeUser = new ActiveUserDto(
-                payload.username, payload.role, reqIp, true
+                payload.username, payload.role, true
             );
 
             // Create a session using the JWT cookie service

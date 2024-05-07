@@ -4,7 +4,6 @@ import { FindUserByUserNameResponseDto } from "../dtos/find-user-by-username/fin
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "@app/prisma/prisma.service";
 import { UserTranslator } from "../translators/user.translator";
-import { getUserLang } from "@app/common/helpers/get-user-lang.helper";
 
 /**
  * Use case for finding a user by username.

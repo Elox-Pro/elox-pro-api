@@ -20,9 +20,8 @@ export class JwtAccessPayloadDto {
         readonly role: Role,
 
         /**
-         * The user request ip address
+         * Whether the user is active
          */
-        readonly ip: string
-
+        readonly isAuthenticated: boolean,
     ) { }
 }

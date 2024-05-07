@@ -27,12 +27,8 @@ export class AuthenticationController {
     @UseInterceptors(IpClientInterceptor, LangClientInterceptor)
     @Recaptcha()
     @HttpCode(HttpStatus.CREATED)
-    signup(
-        @Body() dto: SignupRequestDto
-    ): Promise<SignupResponseDto> {
-
+    signup(@Body() dto: SignupRequestDto): Promise<SignupResponseDto> {
         return this.signupUC.execute(dto);
-
     }
 
     @Post('login')

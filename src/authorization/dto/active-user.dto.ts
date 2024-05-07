@@ -4,6 +4,7 @@ import { Role } from "@prisma/client";
 export class ActiveUserDto {
 
     private lang: RequestLang;
+    private ip: string;
 
     constructor(
 
@@ -17,18 +18,12 @@ export class ActiveUserDto {
          */
         readonly role: Role,
 
-        /**
-         * The user request ip address (it is setted when the session cookie is created)
-         */
-        readonly ip: string,
 
         /**
          * Whether the user is active
          */
         readonly isAuthenticated: boolean,
-    ) {
-
-    }
+    ) { }
 
     setLang(lang: RequestLang) {
         this.lang = lang;
@@ -36,5 +31,13 @@ export class ActiveUserDto {
 
     getLang(): RequestLang {
         return this.lang;
+    }
+
+    setIp(ip: string) {
+        this.ip = ip;
+    }
+
+    getIp(): string {
+        return this.ip;
     }
 }

@@ -1,5 +1,3 @@
-import { Role } from "@prisma/client";
-
 export class JwtRefreshPayloadDto {
     constructor(
         /**

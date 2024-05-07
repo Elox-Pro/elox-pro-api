@@ -23,7 +23,7 @@ export class UserRequestDto {
     }
 
     getIp(): string {
-        return this.userRequest.ip;
+        return this.userRequest.getIp();
     }
 
     isAuthenticated(): boolean {
