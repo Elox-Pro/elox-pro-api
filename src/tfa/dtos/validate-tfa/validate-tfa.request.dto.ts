@@ -1,4 +1,4 @@
-import { UserLang } from "@prisma/client";
+import { RequestLang } from "@app/common/enums/request-lang.enum";
 import { IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { Response } from "express";
 
@@ -12,8 +12,8 @@ export class ValidateTFARequestDto {
     @IsNotEmpty()
     public readonly username: string;
 
-    @IsEnum(UserLang)
-    readonly lang: UserLang;
+    @IsEnum(RequestLang)
+    readonly lang: RequestLang;
 
     @IsString()
     readonly ipClient: string;

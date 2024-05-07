@@ -5,7 +5,6 @@ import { Job } from "bull";
 import { EmailFactory } from "../factories/email.factory";
 import { EmailProcessorRequestDto } from "../dtos/email-processor/email-processor.request.dto";
 import { EmailAddressDto } from "../dtos/email-address.dto";
-import { getUserLang } from "@app/common/helpers/get-user-lang.helper";
 
 @Processor(EMAIL_QUEUE)
 export class EmailProcessor {
@@ -31,12 +30,10 @@ export class EmailProcessor {
         }
 
         const { email, username } = data.user;
-        // Update user language(optional, based on logic in getUserLang)
-        const lang = getUserLang(data.user.lang, data.lang);
 
         try {
             await template.send(new EmailAddressDto(email, username), new Map<string, string>([
-                ['lang', lang],
+                ['lang', data.lang],
                 ['username', username],
             ]));
 
@@ -48,5 +45,4 @@ export class EmailProcessor {
 
         this.logger.log(`EmailProcessor complete for job: ${job.id}`);
     }
-
 }

@@ -1,5 +1,5 @@
-import { UserLang } from "@prisma/client";
 import { IsEmail, IsString } from "class-validator";
+import { RequestLang } from "@app/common/enums/request-lang.enum";
 
 export class SignupRequestDto {
 
@@ -19,7 +19,7 @@ export class SignupRequestDto {
     readonly grecaptchaToken: string;
 
     @IsString()
-    readonly lang: UserLang;
+    readonly lang: RequestLang;
 
     @IsString()
     readonly ipClient: string;

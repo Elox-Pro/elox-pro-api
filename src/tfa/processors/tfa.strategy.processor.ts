@@ -7,13 +7,15 @@ import { getDefaultTfaType } from "@app/common/helpers/get-default-tfa-type";
 import { EventGatewayDto } from "@app/common/dto/event-gateway.dto";
 import { EventGatewayService } from "@app/common/services/event-gateway/event-gateway.service";
 import { TfaEvent } from "../enums/tfa-event.enum";
+import { I18nService } from "nestjs-i18n";
 
 @Processor(TFA_STRATEGY_QUEUE)
 export class TfaStrategyProcessor {
 
     constructor(
         private readonly tfaFactory: TfaFactory,
-        private readonly eventGatewayService: EventGatewayService
+        private readonly eventGatewayService: EventGatewayService,
+        private readonly i18n: I18nService
     ) { }
 
     /**
@@ -35,9 +37,9 @@ export class TfaStrategyProcessor {
             const strategy = this.tfaFactory.createStrategy(type);
             await strategy.execute(data);
 
-            this.handleSuccess(job, data, user.username);
+            await this.handleSuccess(job, data, user.username);
         } catch (error) {
-            this.handleError(job, data, user.username, error);
+            await this.handleError(job, data, user.username, error);
         }
     }
 
@@ -48,9 +50,13 @@ export class TfaStrategyProcessor {
      * @param {TfaRequestDto} data - The TFA request data.
      * @param {string} username - The username associated with the TFA request.
      */
-    private handleSuccess(job: Job<TfaRequestDto>, data: TfaRequestDto, username: string) {
-        const logMessage = `TFA strategy ${data.action} succeeded - Job id: ${job.id}`;
-        this.emitWebSocketEvent(job, username, TfaEvent.SUCCEEDED, logMessage);
+    private async handleSuccess(job: Job<TfaRequestDto>, data: TfaRequestDto, username: string) {
+
+        const message = await this.i18n.t("tfa.succeeded", {
+            lang: data.lang.toLocaleLowerCase()
+        });
+
+        this.emitWebSocketEvent(job, username, TfaEvent.SUCCEEDED, message);
     }
 
     /**
@@ -61,9 +67,12 @@ export class TfaStrategyProcessor {
      * @param {string} username - The username associated with the TFA request.
      * @param {any} error - The error encountered during execution.
      */
-    private handleError(job: Job<TfaRequestDto>, data: TfaRequestDto, username: string, error: any) {
-        const logMessage = `TFA strategy ${data.action} failed - Job id: ${job.id}`;
-        this.emitWebSocketEvent(job, username, TfaEvent.FAILED, logMessage, error.message);
+    private async handleError(job: Job<TfaRequestDto>, data: TfaRequestDto, username: string, error: any) {
+        const message = await this.i18n.t("tfa.failed", {
+            lang: data.lang.toLocaleLowerCase()
+        });
+
+        this.emitWebSocketEvent(job, username, TfaEvent.FAILED, message, error.message);
     }
 
     /**

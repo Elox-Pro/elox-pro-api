@@ -5,12 +5,11 @@ import { RedisService } from "redis/redis.service";
 import { EmailFactory } from "@app/email/factories/email.factory";
 import { EmailType } from "@app/email/enums/email-type.enum";
 import { EmailAddressDto } from "@app/email/dtos/email-address.dto";
-import { EMAIL_TFA_STRATEGY_KEY} from "../../constants/tfa.constants";
+import { EMAIL_TFA_STRATEGY_KEY } from "../../constants/tfa.constants";
 import { TfaRequestDto } from "../../dtos/tfa/tfa.request.dto";
 import { TfaAction } from "../../enums/tfa-action.enum";
 import { TFADto } from "@app/tfa/dtos/tfa/tfa.dto";
 import { TfaResponseDto } from "@app/tfa/dtos/tfa/tfa.response.dto";
-import { getUserLang } from "@app/common/helpers/get-user-lang.helper";
 
 @Injectable()
 export class EmailTfaStrategy extends TfaStrategy {
@@ -31,9 +30,6 @@ export class EmailTfaStrategy extends TfaStrategy {
     async execute({ user, ipClient, action, lang, metadata }: TfaRequestDto): Promise<boolean> {
 
         const { email, username, emailVerified } = user;
-
-        // Update user language(optional, based on logic in getUserLang)
-        const userLang = getUserLang(user.lang, lang);
 
         if (!username) {
             this.logger.error(`Username not found: ${username}`);
@@ -68,7 +64,7 @@ export class EmailTfaStrategy extends TfaStrategy {
             }
 
             const ttl = this.getTTL(action);
-            
+
             await this.redis
                 .getClient()
                 .set(key, JSON.stringify(new TFADto(hash, action, metadata)), {
@@ -78,7 +74,7 @@ export class EmailTfaStrategy extends TfaStrategy {
             const emailTemplate = this.emailFactory.getEmail(EmailType.TFA);
 
             await emailTemplate.send(new EmailAddressDto(email, username), new Map<string, string>([
-                ['lang', userLang],
+                ['lang', lang],
                 ['code', code.toString()],
                 ['username', username],
                 ['ipClient', ipClient],

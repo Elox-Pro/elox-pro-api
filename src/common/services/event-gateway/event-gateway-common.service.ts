@@ -15,6 +15,6 @@ export class EventGatewayCommonService extends EventGatewayService {
     emit(event: EventGatewayDto): void {
         const { message, data } = event;
         this.server.emit(event.to(), { message, data });
-        this.logger.log(message, EventGatewayCommonService.name);
+        this.logger.log(message, JSON.stringify(data));
     }
 }

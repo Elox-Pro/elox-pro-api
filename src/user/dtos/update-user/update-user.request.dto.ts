@@ -1,5 +1,5 @@
 import { UserRequestDto } from "@app/authorization/dto/user.request.dto";
-import { Gender, TfaType, UserLang, UserTheme } from "@prisma/client";
+import { Gender } from "@prisma/client";
 import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 
 export class UpdateUserRequestDto extends UserRequestDto {
@@ -16,11 +16,4 @@ export class UpdateUserRequestDto extends UserRequestDto {
     @IsNotEmpty()
     readonly gender: Gender;
 
-    @IsEnum(UserLang)
-    @IsNotEmpty()
-    readonly lang: UserLang;
-
-    @IsEnum(UserTheme)
-    @IsNotEmpty()
-    readonly theme: UserTheme;
 }

@@ -1,5 +1,6 @@
-import { Role, UserLang } from "@prisma/client";
+import { Role } from "@prisma/client";
 import { ActiveUserDto } from "./active-user.dto";
+import { RequestLang } from "@app/common/enums/request-lang.enum";
 
 export class UserRequestDto {
 
@@ -17,8 +18,8 @@ export class UserRequestDto {
         return this.userRequest.role;
     }
 
-    getLang(): UserLang {
-        return this.userRequest.lang;
+    getLang(): RequestLang {
+        return this.userRequest.getLang();
     }
 
     getIp(): string {

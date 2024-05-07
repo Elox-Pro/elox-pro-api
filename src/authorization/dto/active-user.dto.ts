@@ -1,6 +1,9 @@
-import { Role, UserLang } from "@prisma/client";
+import { RequestLang } from "@app/common/enums/request-lang.enum";
+import { Role } from "@prisma/client";
 
 export class ActiveUserDto {
+
+    private lang: RequestLang;
 
     constructor(
 
@@ -15,11 +18,6 @@ export class ActiveUserDto {
         readonly role: Role,
 
         /**
-         * The user language (it is setted when the session cookie is created)
-         */
-        readonly lang: UserLang,
-
-        /**
          * The user request ip address (it is setted when the session cookie is created)
          */
         readonly ip: string,
@@ -30,5 +28,13 @@ export class ActiveUserDto {
         readonly isAuthenticated: boolean,
     ) {
 
+    }
+
+    setLang(lang: RequestLang) {
+        this.lang = lang;
+    }
+
+    getLang(): RequestLang {
+        return this.lang;
     }
 }

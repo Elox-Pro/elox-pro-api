@@ -37,7 +37,6 @@ export class LoginTfaActionStrategy extends TfaActionStrategy {
         await this.jwtCookieSessionService.create(
             data.getResponse(),
             user,
-            data.lang,
             data.ipClient
         );
         // Return a response with the TFA action set to SIGN_IN

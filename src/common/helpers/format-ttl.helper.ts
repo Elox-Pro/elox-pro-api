@@ -1,4 +1,4 @@
-import { UserLang } from "@prisma/client";
+import { RequestLang } from "../enums/request-lang.enum";
 
 /**
  * An enumeration of supported time unit keys.
@@ -36,9 +36,9 @@ const TIME_UNITS_ES = {
 /**
  * A Map that associates a user language (@prisma/client.UserLang) with its corresponding time unit translation object.
  */
-const timeUnitMap = new Map<UserLang, Object>([
-    [UserLang.EN, TIME_UNITS_EN],
-    [UserLang.ES, TIME_UNITS_ES]
+const timeUnitMap = new Map<RequestLang, Object>([
+    [RequestLang.EN, TIME_UNITS_EN],
+    [RequestLang.ES, TIME_UNITS_ES]
 ]);
 
 /**
@@ -59,20 +59,16 @@ const timeUnits = [
  * Formats a duration in seconds into a human-readable string based on the provided user language.
  *
  * @param {number} seconds - The duration in seconds.
- * @param {UserLang} lang - The user's preferred language (@prisma/client.UserLang).
+ * @param {RequestLang} lang - The user's request language.
  * @returns {string} The formatted duration string.
  * @throws {Error} If the provided duration is negative.
  */
-export function formatTTL(seconds: number, lang: UserLang): string {
+export function formatTTL(seconds: number, lang: RequestLang): string {
 
     try {
         // Validate input
         if (seconds < 0) {
             throw new Error("Duration cannot be negative");
-        }
-
-        if (lang === UserLang.DEFAULT) {
-            throw new Error("User language cannot be default");
         }
 
         // Retrieve the time unit translations for the user's language

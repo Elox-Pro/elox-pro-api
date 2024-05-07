@@ -1,6 +1,6 @@
-import { UserLang } from "@prisma/client";
 import { IsEnum, IsString } from "class-validator";
 import { Response } from "express";
+import { RequestLang } from "@app/common/enums/request-lang.enum";
 
 export class LoginRequestDto {
 
@@ -16,8 +16,8 @@ export class LoginRequestDto {
     @IsString()
     readonly grecaptchaToken: string
 
-    @IsEnum(UserLang)
-    readonly lang: UserLang;
+    @IsEnum(RequestLang)
+    readonly lang: RequestLang;
 
     private response: Response;
 

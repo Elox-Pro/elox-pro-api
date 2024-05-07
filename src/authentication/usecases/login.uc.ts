@@ -67,7 +67,6 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
             await this.jwtCookieSessionService.create(
                 data.getResponse(),
                 savedUser,
-                data.lang,
                 data.ipClient
             );
             return new LoginResponseDto(false); // Indicates no further action needed

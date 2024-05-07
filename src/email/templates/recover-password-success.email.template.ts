@@ -1,4 +1,4 @@
-import { UserLang } from "@prisma/client";
+import { RequestLang } from "@app/common/enums/request-lang.enum";
 import { EmailAddressDto } from "../dtos/email-address.dto";
 import { EmailDTO } from "../dtos/email.dto";
 import { EmailSender } from "../senders/email.sender";
@@ -12,14 +12,14 @@ import { EmailTemplate } from "./email.template";
  */
 export class RecoverPasswordSuccessEmailTemplate extends EmailTemplate {
 
-    private readonly subjects = new Map<UserLang, string>([
-        [UserLang.EN, 'Password Recovery Successful'],
-        [UserLang.ES, 'Recuperación de contraseña exitosa'],
+    private readonly subjects = new Map<RequestLang, string>([
+        [RequestLang.EN, 'Password Recovery Successful'],
+        [RequestLang.ES, 'Recuperación de contraseña exitosa'],
     ]);
 
-    private readonly filePaths = new Map<UserLang, string>([
-        [UserLang.EN, 'recover-password-success/en/recover-password-success.template.ejs'],
-        [UserLang.ES, 'recover-password-success/es/recover-password-success.template.ejs']
+    private readonly filePaths = new Map<RequestLang, string>([
+        [RequestLang.EN, 'recover-password-success/en/recover-password-success.template.ejs'],
+        [RequestLang.ES, 'recover-password-success/es/recover-password-success.template.ejs']
     ]);
 
     constructor(readonly sender: EmailSender) {
@@ -39,15 +39,22 @@ export class RecoverPasswordSuccessEmailTemplate extends EmailTemplate {
             throw new Error("Username not found in params");
         }
 
-        const lang = params.get("lang") as UserLang || UserLang.EN;
+        const lang = params.get("lang") as RequestLang;
+        if (!lang) {
+            throw new Error("Language not found in params");
+        }
 
-        return await this.sender.send(new EmailDTO(
-            this.noReply,
-            to,
-            this.subjects.get(lang),
-            this.buildPath(this.filePaths.get(lang)),
-            new Map<string, string>([...params, ...this.defaultParams])
-        ));
-
+        try {
+            return await this.sender.send(new EmailDTO(
+                this.noReply,
+                to,
+                this.subjects.get(lang),
+                this.buildPath(this.filePaths.get(lang)),
+                new Map<string, string>([...params, ...this.defaultParams])
+            ));
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
     }
 }

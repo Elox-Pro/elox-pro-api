@@ -1,0 +1,4 @@
+{
+    "succeeded": "Two factor authentication was sent successfully",
+    "failed": "Error sending two factor authentication"
+}
