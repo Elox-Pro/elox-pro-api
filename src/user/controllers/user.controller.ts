@@ -61,7 +61,7 @@ export class UserController {
         @UserRequest() userRequest: ActiveUserDto,
         @Body() dto: FindUserByUsernameRequestDto):
         Promise<FindUserByUserNameResponseDto> {
-        dto.setUserRequest(userRequest);
+        dto.setActiveUser(userRequest);
         return this.findUserByUsernameUC.execute(dto);
     }
 
@@ -77,7 +77,7 @@ export class UserController {
         @UserRequest() userRequest: ActiveUserDto,
         @Body() dto: UpdateUserRequestDto
     ): Promise<UpdateUserResponseDto> {
-        dto.setUserRequest(userRequest);
+        dto.setActiveUser(userRequest);
         return this.updateUserUC.execute(dto);
     }
 
@@ -87,7 +87,7 @@ export class UserController {
         @UserRequest() userRequest: ActiveUserDto,
         @Body() dto: UpdateAvatarRequestDto
     ): Promise<UpdateAvatarResponseDto> {
-        dto.setUserRequest(userRequest);
+        dto.setActiveUser(userRequest);
         return this.updateAvatarUC.execute(dto);
     }
 
@@ -96,7 +96,7 @@ export class UserController {
     updateProfileName(
         @UserRequest() userRequest: ActiveUserDto,
         @Body() dto: UpdateNameRequestDto) {
-        dto.setUserRequest(userRequest);
+        dto.setActiveUser(userRequest);
         return this.updateNameUC.execute(dto);
     }
 
@@ -105,7 +105,7 @@ export class UserController {
     updateProfileGender(
         @UserRequest() userRequest: ActiveUserDto,
         @Body() dto: UpdateGenderRequestDto) {
-        dto.setUserRequest(userRequest);
+        dto.setActiveUser(userRequest);
         return this.updateGenderUC.execute(dto);
     }
 
@@ -115,7 +115,7 @@ export class UserController {
         @UserRequest() userRequest: ActiveUserDto,
         @Body() dto: UpdateEmailRequestDto):
         Promise<UpdateEmailResponseDto> {
-        dto.setUserRequest(userRequest);
+        dto.setActiveUser(userRequest);
         return this.updateEmailUC.execute(dto);
     }
 
@@ -125,7 +125,7 @@ export class UserController {
         @UserRequest() userRequest: ActiveUserDto,
         @Body() dto: UpdatePhoneRequestDto):
         Promise<UpdatePhoneResponseDto> {
-        dto.setUserRequest(userRequest);
+        dto.setActiveUser(userRequest);
         return this.updatePhoneUC.execute(dto);
     }
 
@@ -135,7 +135,7 @@ export class UserController {
         @UserRequest() userRequest: ActiveUserDto,
         @Body() dto: UpdatePasswordRequestDto):
         Promise<UpdatePasswordResponseDto> {
-        dto.setUserRequest(userRequest);
+        dto.setActiveUser(userRequest);
         return this.updatePasswordUC.execute(dto);
     }
 
@@ -144,7 +144,7 @@ export class UserController {
     updateProfileTfa(
         @UserRequest() userRequest: ActiveUserDto,
         @Body() dto: UpdateTfaRequestDto): Promise<UpdateTfaResponseDto> {
-        dto.setUserRequest(userRequest);
+        dto.setActiveUser(userRequest);
         return this.updateTfaUC.execute(dto);
     }
 

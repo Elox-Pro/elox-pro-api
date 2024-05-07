@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { RecoverPasswordResetRequestDto } from "../dtos/recover-password-reset/recover-password-reset.request.dto";
 import { RecoverPasswordResetResponseDto } from "../dtos/recover-password-reset/recover-password-reset.response.dto";
 import { IUseCase } from "@app/common/usecase/usecase.interface";
@@ -35,15 +35,16 @@ export class RecoverPasswordResetUC implements IUseCase<RecoverPasswordResetRequ
      * Executes the password recovery and reset use case.
      * Verifies the reset token, updates the password, and deletes the session cookie.
      * Send the email notification to the user.
-     * @param data The recover password reset request data.
+     * @param request The recover password reset request data.
      * @returns A promise resolving to a RecoverPasswordResetResponseDto.
      * @throws BadRequestException if the token not found, is invalid token passwords do not match.
      */
-    async execute(data: RecoverPasswordResetRequestDto): Promise<RecoverPasswordResetResponseDto> {
+    async execute(request: RecoverPasswordResetRequestDto): Promise<RecoverPasswordResetResponseDto> {
 
-        const { username, password1, password2, lang } = data;
+        const lang = request.getLang();
+        const { username, password1, password2 } = request;
 
-        const token = this.sessionCookieService.get(data.getRequest());
+        const token = this.sessionCookieService.get(request.getRequest());
 
         if (!token) {
             this.logger.error("Token not found: " + username);
@@ -57,7 +58,7 @@ export class RecoverPasswordResetUC implements IUseCase<RecoverPasswordResetRequ
             throw new BadRequestException("error.invalid-credentials");
         }
 
-        this.sessionCookieService.delete(data.getResponse());
+        this.sessionCookieService.delete(request.getResponse());
 
         if (password1 !== password2) {
             this.logger.error('Passwords do not match: ' + username);

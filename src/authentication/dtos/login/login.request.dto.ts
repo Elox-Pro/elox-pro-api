@@ -1,8 +1,7 @@
-import { IsEnum, IsString } from "class-validator";
-import { Response } from "express";
-import { RequestLang } from "@app/common/enums/request-lang.enum";
+import { GuestRequestDto } from "@app/authorization/dto/guest.request.dto";
+import { IsString } from "class-validator";
 
-export class LoginRequestDto {
+export class LoginRequestDto extends GuestRequestDto {
 
     @IsString()
     readonly username: string;
@@ -11,22 +10,6 @@ export class LoginRequestDto {
     readonly password: string;
 
     @IsString()
-    readonly ipClient: string;
-
-    @IsString()
     readonly grecaptchaToken: string
-
-    @IsEnum(RequestLang)
-    readonly lang: RequestLang;
-
-    private response: Response;
-
-    setResponse(response: Response): void {
-        this.response = response;
-    }
-
-    getResponse(): Response {
-        return this.response;
-    }
 
 }

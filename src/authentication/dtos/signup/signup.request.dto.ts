@@ -1,7 +1,7 @@
+import { GuestRequestDto } from "@app/authorization/dto/guest.request.dto";
 import { IsEmail, IsString } from "class-validator";
-import { RequestLang } from "@app/common/enums/request-lang.enum";
 
-export class SignupRequestDto {
+export class SignupRequestDto extends GuestRequestDto {
 
     @IsString()
     readonly username: string;
@@ -17,10 +17,4 @@ export class SignupRequestDto {
 
     @IsString()
     readonly grecaptchaToken: string;
-
-    @IsString()
-    readonly lang: RequestLang;
-
-    @IsString()
-    readonly ipClient: string;
 }

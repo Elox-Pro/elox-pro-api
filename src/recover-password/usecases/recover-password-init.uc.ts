@@ -21,9 +21,11 @@ export class RecoverPasswordInitUC implements IUseCase<RecoverPasswordInitReques
         private readonly prisma: PrismaService,
     ) { }
 
-    async execute(data: RecoverPasswordInitRequestDto): Promise<RecoverPasswordInitResponseDto> {
+    async execute(request: RecoverPasswordInitRequestDto): Promise<RecoverPasswordInitResponseDto> {
 
-        const { username } = data;
+        const ip = request.getIp();
+        const lang = request.getLang();
+        const { username } = request;
         const user = await this.prisma.user.findUnique({
             where: { username }
         });
@@ -39,7 +41,7 @@ export class RecoverPasswordInitUC implements IUseCase<RecoverPasswordInitReques
         }
 
         await this.tfaStrategyQueue.add(new TfaRequestDto(
-            user, data.ipClient, TfaAction.RECOVER_PASSWORD, data.lang
+            user, ip, TfaAction.RECOVER_PASSWORD, lang
         ));
 
         return new RecoverPasswordInitResponseDto(true);

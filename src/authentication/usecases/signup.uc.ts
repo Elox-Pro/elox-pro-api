@@ -11,7 +11,7 @@ import { TfaRequestDto } from "../../tfa/dtos/tfa/tfa.request.dto";
 import { TfaAction } from "../../tfa/enums/tfa-action.enum";
 
 @Injectable()
-export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto>{
+export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto> {
 
     private readonly logger = new Logger(SignupUC.name);
 
@@ -22,37 +22,40 @@ export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto>{
         private readonly hashingStrategy: HashingStrategy
     ) { }
 
-    async execute(data: SignupRequestDto): Promise<SignupResponseDto> {
+    async execute(request: SignupRequestDto): Promise<SignupResponseDto> {
 
-        const usernameCount = await this.prisma.user.count({ where: { username: data.username } });
+        const ip = request.getIp();
+        const lang = request.getLang();
+
+        const usernameCount = await this.prisma.user.count({ where: { username: request.username } });
         if (usernameCount > 0) {
-            this.logger.error(`Username already exists: ${data.username}`);
+            this.logger.error(`Username already exists: ${request.username}`);
             throw new BadRequestException('error.username-already-exists');
         }
 
-        const emailCount = await this.prisma.user.count({ where: { email: data.email } });
+        const emailCount = await this.prisma.user.count({ where: { email: request.email } });
         if (emailCount > 0) {
-            this.logger.error(`Email already exists: ${data.email}`);
+            this.logger.error(`Email already exists: ${request.email}`);
             throw new BadRequestException('error.email-already-exists');
         }
 
-        if (data.password1 !== data.password2) {
+        if (request.password1 !== request.password2) {
             this.logger.error('Passwords do not match');
             throw new BadRequestException('error.passwords-do-not-match');
         }
 
-        const hashedPassword = await this.hashingStrategy.hash(data.password1);
+        const hashedPassword = await this.hashingStrategy.hash(request.password1);
 
         const savedUser = await this.prisma.user.create({
             data: {
-                username: data.username,
-                email: data.email,
+                username: request.username,
+                email: request.email,
                 password: hashedPassword,
             }
         });
 
         await this.tfaStrategyQueue.add(new TfaRequestDto(
-            savedUser, data.ipClient, TfaAction.SIGN_UP, data.lang
+            savedUser, ip, TfaAction.SIGN_UP, lang
         ));
 
         return new SignupResponseDto(true);

@@ -18,14 +18,14 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
         private readonly tfaActionFactory: TfaActionFactory
     ) { }
 
-    async execute(data: ValidateTFARequestDto): Promise<ValidateTFAResponseDto> {
+    async execute(request: ValidateTFARequestDto): Promise<ValidateTFAResponseDto> {
 
         const savedUser = await this.prisma.user.findUnique({
-            where: { username: data.username }
+            where: { username: request.username }
         });
 
         if (!savedUser) {
-            this.logger.error(`Username not found: ${data.username}`);
+            this.logger.error(`Username not found: ${request.username}`);
             throw new UnauthorizedException('error.invalid-credentials');
         }
 
@@ -34,7 +34,7 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
 
         const { result, action, metadata } = await strategy.verify(
             savedUser.username,
-            data.code.toString()
+            request.code.toString()
         );
 
         if (!result) {
@@ -43,6 +43,6 @@ export class ValidateTfaUC implements IUseCase<ValidateTFARequestDto, ValidateTF
         }
 
         const actionStrategy = this.tfaActionFactory.createStrategy(action);
-        return await actionStrategy.execute(data, savedUser, metadata);
+        return await actionStrategy.execute(request, savedUser, metadata);
     }
 }

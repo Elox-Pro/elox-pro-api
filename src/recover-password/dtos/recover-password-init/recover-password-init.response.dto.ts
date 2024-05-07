@@ -1,5 +1,3 @@
-export class RecoverPasswordInitResponseDto {
-    constructor(
-        readonly isTFAPending: boolean
-    ) { }
-}
+import { TfaResponseDto } from "@app/common/dto/tfa.response.dto";
+
+export class RecoverPasswordInitResponseDto extends TfaResponseDto { }

@@ -1,5 +1,3 @@
-export class RecoverPasswordResetResponseDto {
-    constructor(
-        readonly isOK: boolean
-    ) { }
-}
+import { SuccessResponseDto } from "@app/common/dto/success.response.dto";
+
+export class RecoverPasswordResetResponseDto extends SuccessResponseDto { }

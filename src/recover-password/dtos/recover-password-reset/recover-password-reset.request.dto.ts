@@ -1,7 +1,6 @@
-import { RequestLang } from "@app/common/enums/request-lang.enum";
+import { GuestRequestDto } from "@app/authorization/dto/guest.request.dto";
 import { IsString } from "class-validator";
-import { Request, Response } from "express";
-export class RecoverPasswordResetRequestDto {
+export class RecoverPasswordResetRequestDto extends GuestRequestDto {
 
     @IsString()
     readonly username: string;
@@ -14,27 +13,4 @@ export class RecoverPasswordResetRequestDto {
 
     @IsString()
     readonly grecaptchaToken: string;
-
-    @IsString()
-    readonly lang: RequestLang;
-
-    private request: Request;
-
-    private response: Response;
-
-    setRequest(request: Request): void {
-        this.request = request;
-    }
-
-    getRequest(): Request {
-        return this.request;
-    }
-
-    setResponse(response: Response): void {
-        this.response = response;
-    }
-
-    getResponse(): Response {
-        return this.response;
-    }
 }

@@ -24,7 +24,7 @@ export class UpdatePasswordTfaActionStrategy extends TfaActionStrategy {
     }
 
     async execute(
-        data: ValidateTFARequestDto,
+        request: ValidateTFARequestDto,
         user: User,
         metadata: Record<string, string>
     ): Promise<ValidateTFAResponseDto> {
@@ -47,7 +47,7 @@ export class UpdatePasswordTfaActionStrategy extends TfaActionStrategy {
         });
 
         await this.emailQueue.add(new EmailProcessorRequestDto(
-            EmailType.UPDATE_PASSWORD, updatedUser, data.lang
+            EmailType.UPDATE_PASSWORD, updatedUser, request.getLang()
         ));
 
         return new ValidateTFAResponseDto(user.tfaType, TfaAction.UPDATE_PASSWORD);

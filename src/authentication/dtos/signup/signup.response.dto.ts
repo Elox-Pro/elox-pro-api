@@ -1,6 +1,3 @@
-export class SignupResponseDto {
+import { TfaResponseDto } from "@app/common/dto/tfa.response.dto";
 
-    constructor(
-        readonly isTFAPending: boolean
-    ) { }
-}
+export class SignupResponseDto extends TfaResponseDto { }

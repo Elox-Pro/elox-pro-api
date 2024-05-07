@@ -4,29 +4,29 @@ import { RequestLang } from "@app/common/enums/request-lang.enum";
 
 export class UserRequestDto {
 
-    private userRequest: ActiveUserDto;
+    private activeUser: ActiveUserDto;
 
-    setUserRequest(userRequest: ActiveUserDto) {
-        this.userRequest = userRequest;
+    setActiveUser(activeUser: ActiveUserDto) {
+        this.activeUser = activeUser;
     }
 
     getUsername(): string {
-        return this.userRequest.username;
+        return this.activeUser.username;
     }
 
     getRole(): Role {
-        return this.userRequest.role;
+        return this.activeUser.role;
     }
 
     getLang(): RequestLang {
-        return this.userRequest.getLang();
+        return this.activeUser.getLang();
     }
 
     getIp(): string {
-        return this.userRequest.getIp();
+        return this.activeUser.getIp();
     }
 
     isAuthenticated(): boolean {
-        return this.userRequest.isAuthenticated;
+        return this.activeUser.isAuthenticated;
     }
 }

@@ -1,17 +1,11 @@
-import { RequestLang } from "@app/common/enums/request-lang.enum";
-import { IsEnum, IsString } from "class-validator";
+import { GuestRequestDto } from "@app/authorization/dto/guest.request.dto";
+import { IsString } from "class-validator";
 
-export class RecoverPasswordInitRequestDto {
+export class RecoverPasswordInitRequestDto extends GuestRequestDto {
 
     @IsString()
     readonly username: string;
 
     @IsString()
-    readonly ipClient: string;
-
-    @IsString()
     readonly grecaptchaToken: string
-
-    @IsEnum(RequestLang)
-    readonly lang: RequestLang;
 }

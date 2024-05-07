@@ -24,7 +24,7 @@ export class UpdateEmailTfaActionStrategy extends TfaActionStrategy {
     }
 
     async execute(
-        data: ValidateTFARequestDto,
+        request: ValidateTFARequestDto,
         user: User,
         metadata: Record<string, string>
     ): Promise<ValidateTFAResponseDto> {
@@ -48,7 +48,7 @@ export class UpdateEmailTfaActionStrategy extends TfaActionStrategy {
         });
 
         await this.emailQueue.add(new EmailProcessorRequestDto(
-            EmailType.UPDATE_EMAIL, updatedUser, data.lang
+            EmailType.UPDATE_EMAIL, updatedUser, request.getLang()
         ));
 
         return new ValidateTFAResponseDto(user.tfaType, TfaAction.UPDATE_EMAIL);

@@ -22,7 +22,7 @@ export class SignUpTfaActionStrategy extends TfaActionStrategy {
         super();
     }
 
-    async execute(data: ValidateTFARequestDto, user: User): Promise<ValidateTFAResponseDto> {
+    async execute(request: ValidateTFARequestDto, user: User): Promise<ValidateTFAResponseDto> {
         const type = user.tfaType;
         await this.prisma.user.update({
             where: { id: user.id },
@@ -31,7 +31,7 @@ export class SignUpTfaActionStrategy extends TfaActionStrategy {
                 phoneVerified: type === TfaType.SMS,
             },
         });
-        await this.emailQueue.add(new EmailProcessorRequestDto(EmailType.WELCOME, user, data.lang));
+        await this.emailQueue.add(new EmailProcessorRequestDto(EmailType.WELCOME, user, request.getLang()));
         return new ValidateTFAResponseDto(type, TfaAction.SIGN_UP);
     }
 

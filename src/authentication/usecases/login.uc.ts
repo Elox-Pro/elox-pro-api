@@ -37,25 +37,28 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
      * Executes the login use case.
      * Verifies user credentials, generates JWT tokens, and manages session cookies.
      * If TFA is enabled, adds a job to the TFA strategy queue.
-     * @param data The login request data.
+     * @param request The login request data.
      * @returns A promise resolving to a LoginResponseDto.
      * @throws BadRequestException if login credentials are invalid.
      */
-    async execute(data: LoginRequestDto): Promise<LoginResponseDto> {
+    async execute(request: LoginRequestDto): Promise<LoginResponseDto> {
+
+        const ip = request.getIp();
+        const lang = request.getLang();
 
         // 1. Find the user by username
         const savedUser = await this.prisma.user.findUnique({
-            where: { username: data.username },
+            where: { username: request.username },
         });
 
         // 2. Check if user exists
         if (!savedUser) {
-            this.logger.error(`username not found: ${data.username}`);
+            this.logger.error(`username not found: ${request.username}`);
             throw new BadRequestException('error.invalid-credentials');
         }
 
         // 3. Validate password
-        if (!await this.hashingStrategy.compare(data.password, savedUser.password)) {
+        if (!await this.hashingStrategy.compare(request.password, savedUser.password)) {
             this.logger.error('Invalid password');
             throw new BadRequestException('error.invalid-credentials');
         }
@@ -65,7 +68,7 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
 
             // 4.1 No TFA required, generate access tokens and set session cookie
             await this.jwtCookieSessionService.create(
-                data.getResponse(),
+                request.getResponse(),
                 savedUser
             );
             return new LoginResponseDto(false); // Indicates no further action needed
@@ -77,7 +80,7 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
             this.logger.warn(`User not verified: ${savedUser.username}`);
 
             await this.tfaStrategyQueue.add(new TfaRequestDto(
-                savedUser, data.ipClient, TfaAction.SIGN_UP, data.lang // Treat login like a sign-up for verification
+                savedUser, ip, TfaAction.SIGN_UP, lang // Treat login like a sign-up for verification
             ));
 
             return new LoginResponseDto(true); // Indicates verification required
@@ -85,7 +88,7 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
 
         // 6. Queue a TFA request for sign-in verification (assuming TFA is enabled)
         await this.tfaStrategyQueue.add(new TfaRequestDto(
-            savedUser, data.ipClient, TfaAction.SIGN_IN, data.lang
+            savedUser, ip, TfaAction.SIGN_IN, lang
         ));
 
         // 7. Login successful, TFA verification will be handled separately
