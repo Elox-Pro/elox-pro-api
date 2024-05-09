@@ -78,6 +78,7 @@ export class JwtCookiesGuard implements CanActivate {
                     new ActiveUserDto(
                         payload.username,
                         payload.role,
+                        payload.avatarUrl,
                         true)
                 );
             }

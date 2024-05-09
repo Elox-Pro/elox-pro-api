@@ -20,6 +20,11 @@ export class JwtAccessPayloadDto {
         readonly role: Role,
 
         /**
+         * The user avatar URL
+         */
+        readonly avatarUrl: string,
+
+        /**
          * Whether the user is active
          */
         readonly isAuthenticated: boolean,

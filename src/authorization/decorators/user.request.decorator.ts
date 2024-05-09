@@ -9,7 +9,7 @@ export const UserRequest = createParamDecorator((field: keyof ActiveUserDto, ctx
     const auxUser: ActiveUserDto = request[USER_REQUEST_KEY];
     const lang = getRequestLang(request);
     const ip = getClientIp(request);
-    const user = new ActiveUserDto(auxUser.username, auxUser.role, auxUser.isAuthenticated);
+    const user = new ActiveUserDto(auxUser.username, auxUser.role, auxUser.avatarUrl, auxUser.isAuthenticated);
     user.setLang(lang);
     user.setIp(ip);
     return field ? user?.[field] : user;

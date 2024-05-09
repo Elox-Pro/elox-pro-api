@@ -18,6 +18,10 @@ export class ActiveUserDto {
          */
         readonly role: Role,
 
+        /**
+         * Avatar url
+         */
+        readonly avatarUrl: string,
 
         /**
          * Whether the user is active

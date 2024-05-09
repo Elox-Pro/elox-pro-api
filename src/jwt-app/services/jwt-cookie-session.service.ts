@@ -34,14 +34,14 @@ export class JwtCookieSessionService {
 
             // Generate JWT tokens with the user's username and role as payload
             const payload = new JwtAccessPayloadDto(
-                user.username, user.role, true
+                user.username, user.role, user.avatarUrl, true
             );
 
             const tokens = await this.jwtStrategy.generate(payload);
 
             // Create an active user object with the user's details
             const activeUser = new ActiveUserDto(
-                payload.username, payload.role, true
+                payload.username, payload.role, user.avatarUrl, true
             );
 
             // Create a session using the JWT cookie service
