@@ -7,10 +7,15 @@ import { getClientIp } from 'request-ip';
 export const UserRequest = createParamDecorator((field: keyof ActiveUserDto, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
     const auxUser: ActiveUserDto = request[USER_REQUEST_KEY];
-    const lang = getRequestLang(request);
-    const ip = getClientIp(request);
-    const user = new ActiveUserDto(auxUser.username, auxUser.role, auxUser.avatarUrl, auxUser.isAuthenticated);
-    user.setLang(lang);
-    user.setIp(ip);
+
+    const user = new ActiveUserDto(
+        auxUser.username,
+        auxUser.role,
+        auxUser.avatarUrl,
+        auxUser.isAuthenticated);
+
+    user.setLang(getRequestLang(request));
+    user.setIp(getClientIp(request));
+
     return field ? user?.[field] : user;
 });

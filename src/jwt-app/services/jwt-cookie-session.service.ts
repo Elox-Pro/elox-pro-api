@@ -41,7 +41,10 @@ export class JwtCookieSessionService {
 
             // Create an active user object with the user's details
             const activeUser = new ActiveUserDto(
-                payload.username, payload.role, user.avatarUrl, true
+                payload.username,
+                payload.role,
+                user.avatarUrl,
+                true
             );
 
             // Create a session using the JWT cookie service

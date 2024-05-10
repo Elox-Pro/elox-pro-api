@@ -12,6 +12,7 @@ import { SignupUC } from "../usecases/signup.uc";
 import { SignupResponseDto } from "../dtos/signup/signup.response.dto";
 import { GuestRequest } from "@app/authorization/decorators/guest.request.decorator";
 import { GuestUserDto } from "@app/authorization/dto/guest-user.dto";
+import { SuccessResponseDto } from "@app/common/dto/success.response.dto";
 
 @Controller('authentication')
 @Authentication(AuthenticationType.None)
@@ -45,6 +46,18 @@ export class AuthenticationController {
         guestUserDto.setResponse(response);
         dto.setGuestUser(guestUserDto);
         return this.loginUC.execute(dto);
+    }
+
+    /**
+     * Check if the user is authenticated.
+     * The user is authenticated if the request has valid JWT tokens in cookies.
+     * @returns true
+     */
+    @Post("check")
+    @HttpCode(HttpStatus.OK)
+    @Authentication(AuthenticationType.JwtCookies)
+    check(): SuccessResponseDto {
+        return new SuccessResponseDto(true);
     }
 
     @Post('logout')

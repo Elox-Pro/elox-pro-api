@@ -1,5 +1,6 @@
 import { Authentication } from "@app/authentication/decorators/authentication.decorator";
 import { AuthenticationType } from "@app/authentication/enums/authentication-type.enum";
+import { SuccessResponseDto } from "@app/common/dto/success.response.dto";
 import { Controller, Get } from "@nestjs/common";
 
 @Authentication(AuthenticationType.None)
@@ -7,8 +8,8 @@ import { Controller, Get } from "@nestjs/common";
 export class HealthController {
 
     @Get()
-    getHealth(): string {
-        return 'OK';
+    getHealth(): SuccessResponseDto {
+        return new SuccessResponseDto(true)
     }
 
 }

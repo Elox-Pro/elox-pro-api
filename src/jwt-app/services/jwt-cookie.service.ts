@@ -52,9 +52,11 @@ export class JwtCookieService {
      * @param ttl Time-to-live for the cookie.
      */
     setActiveUser(response: Response, activeUser: ActiveUserDto, ttl: number): void {
+        const expires = new Date(Date.now() + ttl * 1000)
+        activeUser.setExp(expires.getTime());
         response.cookie(this.ACTIVE_USER_KEY, btoa(JSON.stringify(activeUser)), {
             secure: this.SECURE,
-            expires: new Date(Date.now() + ttl * 1000),
+            expires: expires,
             domain: this.config.DOMAIN
         })
     }

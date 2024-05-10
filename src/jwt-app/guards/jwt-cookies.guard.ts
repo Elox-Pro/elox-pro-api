@@ -51,12 +51,11 @@ export class JwtCookiesGuard implements CanActivate {
 
             // Calculate the buffer time based on the JWT configuration
             const bufferTime = this.jwtConfig.BUFFER_TIME * 1000;
-
+            
             // Check if the access token is about to expire
             if ((payload.exp * 1000) <= Date.now() + bufferTime) {
                 // Retrieve the refresh token from the request using the JwtCookieService
                 const refreshToken = this.jwtCookieService.getRefreshToken(request);
-
                 // Check if the refresh token is missing
                 if (!refreshToken) {
                     this.logger.error('Refresh token not found');

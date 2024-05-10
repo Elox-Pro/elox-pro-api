@@ -5,6 +5,7 @@ export class ActiveUserDto {
 
     private lang: RequestLang;
     private ip: string;
+    private exp: number;
 
     constructor(
 
@@ -43,5 +44,13 @@ export class ActiveUserDto {
 
     getIp(): string {
         return this.ip;
+    }
+
+    setExp(exp: number) {
+        this.exp = exp;
+    }
+
+    getExp(): number {
+        return this.exp;
     }
 }
