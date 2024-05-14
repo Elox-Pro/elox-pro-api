@@ -4,7 +4,7 @@ import { Response, Request } from "express";
 
 /**
  * Service to handle session in cookies for temporary sessions with a short expiration time.
- * @author yonax73@gmail.com
+ * @author Yonatan A Quintero R
  * @date 2024-04-01
  */
 @Injectable()

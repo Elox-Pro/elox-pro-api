@@ -8,6 +8,7 @@ import { UpdatePasswordRequestDto } from "@app/user/dtos/update-password/update-
 import { UpdatePasswordResponseDto } from "@app/user/dtos/update-password/update-password-response.dto";
 import { PrismaService } from "@app/prisma/prisma.service";
 import { TfaType, User } from "@prisma/client";
+import { HashingStrategy } from "@app/common/strategies/hashing/hashing.strategy";
 
 describe("Update password use case", () => {
 
@@ -19,6 +20,7 @@ describe("Update password use case", () => {
     let cookies: string;
     let user: User;
     let prisma: PrismaService;
+    let hashingStrategy: HashingStrategy;
 
     beforeAll(async () => {
         app = await bootstrapTest([

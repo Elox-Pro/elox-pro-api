@@ -10,6 +10,8 @@ import { TfaRequestDto } from "../../dtos/tfa/tfa.request.dto";
 import { TfaAction } from "../../enums/tfa-action.enum";
 import { TFADto } from "@app/tfa/dtos/tfa/tfa.dto";
 import { TfaResponseDto } from "@app/tfa/dtos/tfa/tfa.response.dto";
+import { CommonConfig } from "@app/common/config/common.config";
+import { Enviroment } from "@app/common/enums/enviroment.enum";
 
 @Injectable()
 export class EmailTfaStrategy extends TfaStrategy {
@@ -22,7 +24,8 @@ export class EmailTfaStrategy extends TfaStrategy {
     constructor(
         private readonly hashingStrategy: HashingStrategy,
         private readonly redis: RedisService,
-        private readonly emailFactory: EmailFactory
+        private readonly emailFactory: EmailFactory,
+        private readonly config: CommonConfig
     ) {
         super();
     }
@@ -128,6 +131,11 @@ export class EmailTfaStrategy extends TfaStrategy {
     }
 
     private generateCode(digits: number): number {
+
+        if (this.config.ENVIRONMENT === Enviroment.TEST) {
+            return 123456;
+        }
+
         const value = Math.pow(10, digits - 1);
         return Math.floor(Math.random() * (9 * value) + value);
     }
