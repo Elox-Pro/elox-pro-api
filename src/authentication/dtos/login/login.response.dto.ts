@@ -5,8 +5,9 @@ export class LoginResponseDto extends TfaResponseDto {
 
     constructor(
         readonly isTFAPending: boolean,
+        readonly jobId?: string,
         readonly tokens?: JwtTokensDto
     ) {
-        super(isTFAPending);
+        super(isTFAPending, jobId);
     }
 }

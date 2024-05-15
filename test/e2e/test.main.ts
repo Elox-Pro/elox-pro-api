@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { TestModule } from "./test.module";
-import { ValidationPipe } from "@nestjs/common";
+import { Logger, ValidationPipe } from "@nestjs/common";
 import * as cookieParser from 'cookie-parser';
 
 export async function bootstrapTest(localModules = []) {
@@ -24,6 +24,7 @@ export async function bootstrapTest(localModules = []) {
         origin: "*",
     });
     app.use(cookieParser());
+    app.useLogger(new Logger());
 
     await app.init();
 

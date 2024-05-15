@@ -7,6 +7,10 @@ import { getTestUser } from '../test-helpers/get-test-user.test-helper';
 import { PrismaService } from '@app/prisma/prisma.service';
 import { resetUser } from '../test-helpers/reset-user.test-helper';
 import { createPost } from '../test-helpers/create-request.test-helper';
+import { TfaType } from '@prisma/client';
+import { TfaStatusService } from '@app/tfa/services/tfa-status.service';
+import { TfaModule } from '@app/tfa/tfa.module';
+import { pollJobStatus } from '../test-helpers/poll-job-status.test-helper';
 
 describe('Login Use Case', () => {
     const url = '/authentication/login';
@@ -19,7 +23,8 @@ describe('Login Use Case', () => {
     beforeAll(async () => {
 
         app = await bootstrapTest([
-            AuthenticationModule
+            AuthenticationModule,
+            TfaModule
         ]);
 
         prisma = app.get(PrismaService);
@@ -73,24 +78,44 @@ describe('Login Use Case', () => {
             });
         });
 
-        // describe('tfa - Type: EMAIL', () => {
-        //     it('should return HTTP status OK', async () => {
-        //         const res = await request(app.getHttpServer()).post(url).send({
-        //             "username": "brazil",
-        //             "password": "098lkj!",
-        //             "ipClient": "127.0.01",
-        //             "grecaptchaToken": "<TOKEN>"
-        //         });
+        describe('tfa - Type: EMAIL', () => {
+            it('should return HTTP status OK', async () => {
 
-        //         expect(res.status).toBe(HttpStatus.OK);
-        //         expect(res.body).toBeDefined();
+                await prisma.user.update({
+                    where: { username: user.username },
+                    data: {
+                        tfaType: TfaType.EMAIL
+                    }
+                });
 
-        //         const body = res.body as LoginResponseDto;
+                const res = await post({
+                    "username": user.username,
+                    "password": user.password,
+                    "grecaptchaToken": "<TOKEN>"
+                });
 
-        //         expect(body.tokens).toBeUndefined();
-        //         expect(body.isTFAPending).toBeTruthy();
-        //     });
-        // });
+
+                expect(res.status).toBe(HttpStatus.OK);
+                expect(res.body).toBeDefined();
+
+                const body = res.body as LoginResponseDto;
+
+                expect(body.tokens).toBeUndefined();
+                expect(body.isTFAPending).toBeTruthy();
+                expect(body.jobId).toBeDefined();
+
+                const tfaStatusService = app.get(TfaStatusService);
+                const jobStatus = await pollJobStatus({
+                    statusService: tfaStatusService,
+                    jobId: body.jobId
+                });
+
+                expect(jobStatus).toBe("completed");
+
+            });
+        });
+
+        //TODO: // 5. User requires TFA but hasn't verified email or phone (applicable for EMAIL or SMS TFA)
     });
 
 });

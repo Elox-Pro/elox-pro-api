@@ -29,7 +29,7 @@ export class TfaStrategyProcessor {
         const user = data.user;
 
         try {
-
+          
             // Wait for a moment before sending the TFA request.
             await new Promise(resolve => setTimeout(resolve, 500));
 

@@ -27,7 +27,7 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
 
     constructor(
         @InjectQueue(TFA_STRATEGY_QUEUE)
-        private readonly tfaStrategyQueue: Queue,
+        private readonly tfaQueue: Queue,
         private readonly prisma: PrismaService,
         private readonly hashingStrategy: HashingStrategy,
         private readonly jwtCookieSessionService: JwtCookieSessionService,
@@ -79,20 +79,20 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
         if (!isVerifiedUser(savedUser)) {
             this.logger.warn(`User not verified: ${savedUser.username}`);
 
-            await this.tfaStrategyQueue.add(new TfaRequestDto(
+            const job = await this.tfaQueue.add(new TfaRequestDto(
                 savedUser, ip, TfaAction.SIGN_UP, lang // Treat login like a sign-up for verification
             ));
 
-            return new LoginResponseDto(true); // Indicates verification required
+            return new LoginResponseDto(true, job.id.toString()); // Indicates verification required
         }
 
         // 6. Queue a TFA request for sign-in verification (assuming TFA is enabled)
-        await this.tfaStrategyQueue.add(new TfaRequestDto(
+        const job = await this.tfaQueue.add(new TfaRequestDto(
             savedUser, ip, TfaAction.SIGN_IN, lang
         ));
 
         // 7. Login successful, TFA verification will be handled separately
-        return new LoginResponseDto(true); // Indicates TFA verification required
+        return new LoginResponseDto(true, job.id.toString()); // Indicates TFA verification required
     }
 
 }

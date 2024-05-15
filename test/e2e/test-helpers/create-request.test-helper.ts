@@ -25,7 +25,6 @@ type Args = {
  */
 export function createPost({ app, url, meta }: Args) {
     return async (data: any): Promise<request.Response> => {
-        console.log(data);
         return await request(app.getHttpServer())
             .post(url)
             .set(Key.AcceptLanguage, meta?.[Key.AcceptLanguage] || 'en')

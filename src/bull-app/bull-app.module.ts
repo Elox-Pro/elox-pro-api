@@ -13,7 +13,8 @@ import { Global, Module } from "@nestjs/common";
             useFactory: async (config: RedisConfig) => ({
                 redis: {
                     port: config.PORT,
-                    host: config.HOST
+                    host: config.HOST,
+                    db: config.DB,
                 },
             }),
             inject: [RedisConfig],

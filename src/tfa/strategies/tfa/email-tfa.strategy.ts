@@ -88,8 +88,8 @@ export class EmailTfaStrategy extends TfaStrategy {
 
             return true;
         } catch (error) {
-            await this.redis.getClient().del(this.generateKey(username));
             this.logger.error(error);
+            await this.redis.getClient().del(this.generateKey(username));
             throw error;
         }
     }
