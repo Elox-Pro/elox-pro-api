@@ -29,7 +29,7 @@ type Args = {
 export async function pollJobStatus({
     statusService,
     jobId,
-    retries = 10,
+    retries = 5,
     delay = 1000
 }: Args): Promise<string> {
     let attempt = 0;

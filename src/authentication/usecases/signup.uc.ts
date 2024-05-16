@@ -54,10 +54,10 @@ export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto> {
             }
         });
 
-        await this.tfaStrategyQueue.add(new TfaRequestDto(
+        const job = await this.tfaStrategyQueue.add(new TfaRequestDto(
             savedUser, ip, TfaAction.SIGN_UP, lang
         ));
 
-        return new SignupResponseDto(true);
+        return new SignupResponseDto(true, job.id.toString());
     }
 }
