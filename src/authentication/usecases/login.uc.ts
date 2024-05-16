@@ -5,13 +5,11 @@ import { LoginResponseDto } from "../dtos/login/login.response.dto";
 import { PrismaService } from "prisma//prisma.service";
 import { HashingStrategy } from "../../common/strategies/hashing/hashing.strategy";
 import { TfaRequestDto } from "../../tfa/dtos/tfa/tfa.request.dto";
-import { TFA_STRATEGY_QUEUE } from "@app/tfa/constants/tfa.constants";
-import { Queue } from "bull";
-import { InjectQueue } from "@nestjs/bull";
 import { TfaType } from "@prisma/client";
 import { TfaAction } from "../../tfa/enums/tfa-action.enum";
 import { isVerifiedUser } from "../../common/helpers/is-verified-user";
 import { JwtCookieSessionService } from "../../jwt-app/services/jwt-cookie-session.service";
+import { TfaService } from "@app/tfa/services/tfa.service";
 
 /**
  * Use case for handling user login.
@@ -26,8 +24,7 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
     private readonly logger = new Logger(LoginUC.name);
 
     constructor(
-        @InjectQueue(TFA_STRATEGY_QUEUE)
-        private readonly tfaQueue: Queue,
+        private readonly tfaService: TfaService,
         private readonly prisma: PrismaService,
         private readonly hashingStrategy: HashingStrategy,
         private readonly jwtCookieSessionService: JwtCookieSessionService,
@@ -79,7 +76,7 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
         if (!isVerifiedUser(savedUser)) {
             this.logger.warn(`User not verified: ${savedUser.username}`);
 
-            const job = await this.tfaQueue.add(new TfaRequestDto(
+            const job = await this.tfaService.add(new TfaRequestDto(
                 savedUser, ip, TfaAction.SIGN_UP, lang // Treat login like a sign-up for verification
             ));
 
@@ -87,7 +84,7 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
         }
 
         // 6. Queue a TFA request for sign-in verification (assuming TFA is enabled)
-        const job = await this.tfaQueue.add(new TfaRequestDto(
+        const job = await this.tfaService.add(new TfaRequestDto(
             savedUser, ip, TfaAction.SIGN_IN, lang
         ));
 

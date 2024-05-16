@@ -5,6 +5,8 @@ export function getTestUser(): User {
         username: 'alaska',
         email: "yhonax.qrz@gmail.com",
         tfaType: 'NONE',
-        password: '098lkj!'
+        password: '098lkj!',
+        emailVerified: true,
+        role: "SYSTEM_ADMIN"
     } as User;
 }

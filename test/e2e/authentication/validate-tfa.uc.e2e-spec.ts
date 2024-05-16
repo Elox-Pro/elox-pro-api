@@ -1,79 +1,91 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import { bootstrapTest } from "../test.main";
 import * as request from "supertest";
+import { TfaModule } from "@app/tfa/tfa.module";
+import { getTestUser } from "../test-helpers/get-test-user.test-helper";
+import { createPost } from "../test-helpers/create-request.test-helper";
+import { TfaService } from "@app/tfa/services/tfa.service";
+import { TfaRequestDto } from "@app/tfa/dtos/tfa/tfa.request.dto";
+import { TfaAction } from "@app/tfa/enums/tfa-action.enum";
+import { RequestLang } from "@app/common/enums/request-lang.enum";
+import { pollJobStatus } from "../test-helpers/poll-job-status.test-helper";
+import { getTfaCode } from "../test-helpers/get-tfa-code.test-helper";
 
 describe('Validate TFA Use Case', () => {
+    const url = '/tfa/validate';
+    const user = getTestUser();
+
     let app: INestApplication;
+    let post: (data: any) => Promise<request.Response>;
 
     beforeAll(async () => {
-        app = await bootstrapTest();
+        // Setting up the NestJS application and dependencies for testing
+        app = await bootstrapTest([
+            TfaModule
+        ]);
+        post = createPost({ app, url });
     });
 
     afterAll(async () => {
         await app.close();
     });
 
-    describe('POST: authentication/validate-tfa', () => {
-
-        const url = '/authentication/validate-tfa';
-
+    describe('POST: tfa/validate', () => {
         describe('username not found', () => {
-            it('should return HTTP status Unauthorized', async () => {
-                return await request(app.getHttpServer()).post(url).send({
+            // Test to check that the username is not found
+            it('should return HTTP status bad request', async () => {
+                const res = await post({
                     "username": "idontknow",
                     "code": 123,
-                }).expect(HttpStatus.UNAUTHORIZED);
-            });
-        });
-
-        describe('tfa strategy is required', () => {
-            it('should return HTTP status Unauthorized', async () => {
-                return await request(app.getHttpServer()).post(url).send({
-                    "username": "alaska",
-                    "code": 123,
-                }).expect(HttpStatus.UNAUTHORIZED);
-            });
-        });
-
-        describe('Hash not found', () => {
-            it('should return HTTP status Unauthorized', async () => {
-                return await request(app.getHttpServer()).post(url).send({
-                    "username": "brazil",
-                    "code": 123,
-                }).expect(HttpStatus.UNAUTHORIZED);
-            });
-        })
-
-        describe('Invalid code', () => {
-
-            it('should generate TFA code by email', async () => {
-                const res = await request(app.getHttpServer()).post('/authentication/login').send({
-                    "username": "brazil",
-                    "password": "098lkj!",
-                    "ipClient": "127.0.01"
                 });
-
-                expect(res.status).toBe(HttpStatus.OK);
+                expect(res.status).toBe(HttpStatus.BAD_REQUEST);
             });
-
-            it('should return HTTP status Unauthorized', async () => {
-
-                // Wait for 500ms to make sure that code is saved in redis
-                await new Promise((resolve) => setTimeout(resolve, 500));
-
-                return await request(app.getHttpServer()).post(url).send({
-                    "username": "brazil",
-                    "code": 123,
-                }).expect(HttpStatus.UNAUTHORIZED);
+        });
+        describe('check code', () => {
+            let jobId: string = null;
+            // Test to check that the job is created
+            it("should create TFA job", async () => {
+                const tfaService = app.get(TfaService);
+                const job = await tfaService.add(new TfaRequestDto(
+                    user,
+                    '127.0.0.1',
+                    TfaAction.RECOVER_PASSWORD,
+                    RequestLang.EN
+                ));
+                expect(job).toBeDefined();
+                expect(job.id).toBeDefined();
+                jobId = job.id.toString();
             });
-
+            // Test to check TFA job completion status
+            it("should complete the job", async () => {
+                const tfaService = app.get(TfaService);
+                const jobStatus = await pollJobStatus({
+                    service: tfaService,
+                    jobId: jobId
+                });
+                expect(jobStatus).toBe("completed");
+            });
+            describe('invalid code', () => {
+                // Test to check the invalid TFA code
+                it('should return HTTP status bad request', async () => {
+                    const res = await post({
+                        "username": user.username,
+                        "code": 123,
+                    });
+                    expect(res.status).toBe(HttpStatus.BAD_REQUEST);
+                });
+            });
+            describe('valid code', () => {
+                // Test to check the valid TFA code
+                it('should return HTTP status OK', async () => {
+                    const res = await post({
+                        "username": user.username,
+                        "code": getTfaCode(),
+                    });
+                    expect(res.status).toBe(HttpStatus.OK);
+                    expect(res.body).toBeDefined();
+                });
+            });
         });
-
-        // I could not find a way to test this because the code send via email is hashing into the redis database
-        // To test this, you can use insomia or postman to send a request to the server
-        describe('Valid code', () => {
-            expect(true).toBeTruthy();
-        });
-
     })
-})
+});

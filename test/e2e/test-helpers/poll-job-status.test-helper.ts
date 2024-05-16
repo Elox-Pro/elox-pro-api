@@ -1,4 +1,4 @@
-import { TfaStatusService } from "@app/tfa/services/tfa-status.service";
+import { TfaService } from "@app/tfa/services/tfa.service";
 
 /**
  * Possible statuses for a job to be considered completed or failed.
@@ -9,7 +9,7 @@ const PollJobStatus = ["completed", "failed"];
  * Arguments type for polling job status.
  */
 type Args = {
-    statusService: TfaStatusService;
+    service: TfaService;
     jobId: string;
     retries?: number; // Number of retries before giving up
     delay?: number;   // Delay in milliseconds between retries
@@ -19,7 +19,7 @@ type Args = {
  * Polls the status of a job until it is either completed or failed, or until the maximum number of retries is reached.
  *
  * @param {Args} args - The arguments for polling the job status.
- * @param {TfaStatusService} args.statusService - The service to check the job status.
+ * @param {TfaStatusService} args.service - The service to check the job status.
  * @param {string} args.jobId - The ID of the job to check.
  * @param {number} [args.retries=10] - The maximum number of retries.
  * @param {number} [args.delay=1000] - The delay in milliseconds between retries.
@@ -27,15 +27,18 @@ type Args = {
  * @throws {Error} - Throws an error if the job status check times out.
  */
 export async function pollJobStatus({
-    statusService,
+    service,
     jobId,
-    retries = 5,
+    retries = 10,
     delay = 1000
 }: Args): Promise<string> {
+
+    if (!jobId) throw new Error('Job ID is required');
+
     let attempt = 0;
 
     do {
-        const jobStatus = await statusService.getJobStatus(jobId);
+        const jobStatus = await service.getJobStatus(jobId);
         if (PollJobStatus.includes(jobStatus)) {
             return jobStatus;
         }

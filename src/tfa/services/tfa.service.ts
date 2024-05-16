@@ -1,16 +1,26 @@
 import { Injectable } from "@nestjs/common";
 import { TFA_STRATEGY_QUEUE } from "../constants/tfa.constants";
 import { InjectQueue } from "@nestjs/bull";
-import { Queue } from "bull";
+import Bull, { Queue } from "bull";
 import { TfaRequestDto } from "../dtos/tfa/tfa.request.dto";
 
 @Injectable()
-export class TfaStatusService {
+export class TfaService {
 
     constructor(
         @InjectQueue(TFA_STRATEGY_QUEUE)
         private readonly tfaQueue: Queue,
     ) { }
+
+    /**
+     * Add a job to the TFA strategy queue.
+     *
+     * @param {TfaRequestDto} tfaRequest - The TFA request data.
+     * @returns {Promise<Bull.Job<any>>} - The job that was added to the queue.
+     */
+    async add(tfaRequest: TfaRequestDto): Promise<Bull.Job<any>> {
+        return this.tfaQueue.add(tfaRequest);
+    }
 
     /**
      * Get the status of a job by its ID.

@@ -5,7 +5,7 @@ import { AuthenticationModule } from "@app/authentication/authentication.module"
 import { TfaModule } from "@app/tfa/tfa.module";
 import { createPost } from "../test-helpers/create-request.test-helper";
 import { getTestUser } from "../test-helpers/get-test-user.test-helper";
-import { TfaStatusService } from "@app/tfa/services/tfa-status.service";
+import { TfaService } from "@app/tfa/services/tfa.service";
 import { pollJobStatus } from "../test-helpers/poll-job-status.test-helper";
 import { getTfaCode } from "../test-helpers/get-tfa-code.test-helper";
 import { ValidateTFAResponseDto } from "@app/tfa/dtos/validate-tfa/validate-tfa.response.dto";
@@ -92,9 +92,9 @@ describe('Signup Use Case', () => {
             });
             // Test to check TFA job completion status
             it("should complete the job", async () => {
-                const tfaStatusService = app.get(TfaStatusService);
+                const tfaService = app.get(TfaService);
                 const jobStatus = await pollJobStatus({
-                    statusService: tfaStatusService,
+                    service: tfaService,
                     jobId: jobId
                 });
                 expect(jobStatus).toBe("completed");

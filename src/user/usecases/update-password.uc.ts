@@ -1,7 +1,6 @@
 import { IUseCase } from "@app/common/usecase/usecase.interface";
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "@app/prisma/prisma.service";
-import { TFA_STRATEGY_QUEUE } from "@app/tfa/constants/tfa.constants";
 import { InjectQueue } from "@nestjs/bull";
 import { Queue } from "bull";
 import { TfaRequestDto } from "@app/tfa/dtos/tfa/tfa.request.dto";
@@ -14,6 +13,7 @@ import { TfaActionKey } from "@app/tfa/enums/tfa-action-key.enum";
 import { EMAIL_QUEUE } from "@app/email/constants/email.constants";
 import { EmailProcessorRequestDto } from "@app/email/dtos/email-processor/email-processor.request.dto";
 import { EmailType } from "@app/email/enums/email-type.enum";
+import { TfaService } from "@app/tfa/services/tfa.service";
 
 @Injectable()
 export class UpdatePasswordUC implements IUseCase<UpdatePasswordRequestDto, UpdatePasswordResponseDto> {
@@ -21,7 +21,7 @@ export class UpdatePasswordUC implements IUseCase<UpdatePasswordRequestDto, Upda
     private readonly logger = new Logger(UpdatePasswordUC.name);
 
     constructor(
-        @InjectQueue(TFA_STRATEGY_QUEUE) private readonly tfaStrategyQueue: Queue,
+        private readonly tfaService: TfaService,
         @InjectQueue(EMAIL_QUEUE) private readonly emailQueue: Queue,
         private readonly prisma: PrismaService,
         private readonly hashingStrategy: HashingStrategy
@@ -73,7 +73,7 @@ export class UpdatePasswordUC implements IUseCase<UpdatePasswordRequestDto, Upda
             [TfaActionKey.NEW_HASHED_PASSWORD]: hashedPassword
         } as Record<TfaActionKey, string>;
 
-        await this.tfaStrategyQueue.add(new TfaRequestDto(
+        await this.tfaService.add(new TfaRequestDto(
             user, ip, TfaAction.UPDATE_PASSWORD, lang, metadata
         ));
 

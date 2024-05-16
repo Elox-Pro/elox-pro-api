@@ -3,13 +3,11 @@ import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { UpdateEmailRequestDto } from "../dtos/update-email/update-email-request.dto";
 import { UpdateEmailResponseDto } from "../dtos/update-email/update-email-response.dto";
 import { PrismaService } from "@app/prisma/prisma.service";
-import { TFA_STRATEGY_QUEUE } from "@app/tfa/constants/tfa.constants";
-import { InjectQueue } from "@nestjs/bull";
-import { Queue } from "bull";
 import { TfaRequestDto } from "@app/tfa/dtos/tfa/tfa.request.dto";
 import { TfaType } from "@prisma/client";
 import { TfaAction } from "@app/tfa/enums/tfa-action.enum";
 import { TfaActionKey } from "@app/tfa/enums/tfa-action-key.enum";
+import { TfaService } from "@app/tfa/services/tfa.service";
 
 @Injectable()
 export class UpdateEmailUC implements IUseCase<UpdateEmailRequestDto, UpdateEmailResponseDto> {
@@ -17,8 +15,7 @@ export class UpdateEmailUC implements IUseCase<UpdateEmailRequestDto, UpdateEmai
     private readonly logger = new Logger(UpdateEmailUC.name);
 
     constructor(
-        @InjectQueue(TFA_STRATEGY_QUEUE)
-        private readonly tfaStrategyQueue: Queue,
+        private readonly tfaService: TfaService,
         private readonly prisma: PrismaService,
     ) { }
 
@@ -60,7 +57,7 @@ export class UpdateEmailUC implements IUseCase<UpdateEmailRequestDto, UpdateEmai
             [TfaActionKey.NEW_EMAIL]: email,
         } as Record<TfaActionKey, string>;
 
-        await this.tfaStrategyQueue.add(new TfaRequestDto(
+        await this.tfaService.add(new TfaRequestDto(
             user, ip, TfaAction.UPDATE_EMAIL, lang, metadata
         ));
 

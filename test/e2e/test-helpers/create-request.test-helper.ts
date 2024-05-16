@@ -1,3 +1,4 @@
+import { RequestLang } from "@app/common/enums/request-lang.enum";
 import { INestApplication } from "@nestjs/common";
 import * as request from "supertest";
 
@@ -27,7 +28,7 @@ export function createPost({ app, url, meta }: Args) {
     return async (data: any): Promise<request.Response> => {
         return await request(app.getHttpServer())
             .post(url)
-            .set(Key.AcceptLanguage, meta?.[Key.AcceptLanguage] || 'en')
+            .set(Key.AcceptLanguage, meta?.[Key.AcceptLanguage] || RequestLang.EN)
             .send(data);
     };
 }
@@ -42,7 +43,7 @@ export function createPatch({ app, url, meta }: Args) {
     return async (data: any): Promise<request.Response> => {
         return await request(app.getHttpServer())
             .patch(url)
-            .set(Key.AcceptLanguage, meta?.[Key.AcceptLanguage] || 'en')
+            .set(Key.AcceptLanguage, meta?.[Key.AcceptLanguage] || RequestLang.EN)
             .send(data);
     };
 }

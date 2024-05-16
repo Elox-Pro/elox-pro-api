@@ -1,4 +1,4 @@
-import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { TfaStrategy } from "./tfa.strategy";
 import { HashingStrategy } from "@app/common/strategies/hashing/hashing.strategy";
 import { RedisService } from "redis/redis.service";
@@ -36,22 +36,22 @@ export class EmailTfaStrategy extends TfaStrategy {
 
         if (!username) {
             this.logger.error(`Username not found: ${username}`);
-            throw new UnauthorizedException('error.username-not-found');
+            throw new BadRequestException('error.username-not-found');
         }
 
         if (!email) {
             this.logger.error(`Email not found: ${email}`);
-            throw new UnauthorizedException('error.email-not-found');
+            throw new BadRequestException('error.email-not-found');
         }
 
         if (action !== TfaAction.SIGN_UP && !emailVerified) {
             this.logger.error(`Email not verified: ${email}`);
-            throw new UnauthorizedException('error.email-not-verified');
+            throw new BadRequestException('error.email-not-verified');
         }
 
         if (!ipClient) {
             this.logger.error(`Ip request not found: ${ipClient}`);
-            throw new UnauthorizedException('error.ip-request-not-found');
+            throw new BadRequestException('error.ip-request-not-found');
         }
 
         try {
@@ -100,7 +100,7 @@ export class EmailTfaStrategy extends TfaStrategy {
 
         if (!serializedTFA) {
             this.logger.error(`Code not found: ${username}`);
-            throw new UnauthorizedException('error.invalid-credentials');
+            throw new BadRequestException('error.invalid-credentials');
         }
 
         const tfa = JSON.parse(serializedTFA);
@@ -108,17 +108,17 @@ export class EmailTfaStrategy extends TfaStrategy {
 
         if (!username) {
             this.logger.error(`Username not found: ${username}`);
-            throw new UnauthorizedException('error.invalid-credentials');
+            throw new BadRequestException('error.invalid-credentials');
         }
 
         if (!code) {
             this.logger.error(`Code not found: ${code}`);
-            throw new UnauthorizedException('error.invalid-credentials');
+            throw new BadRequestException('error.invalid-credentials');
         }
 
         if (!hash) {
             this.logger.error(`Hash not found: ${hash}`);
-            throw new UnauthorizedException('error.invalid-credentials');
+            throw new BadRequestException('error.invalid-credentials');
         }
 
         const result = await this.hashingStrategy.compare(code, hash);

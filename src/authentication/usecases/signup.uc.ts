@@ -4,11 +4,9 @@ import { SignupRequestDto } from "../dtos/signup/signup.request.dto";
 import { SignupResponseDto } from "../dtos/signup/signup.response.dto";
 import { PrismaService } from "@app/prisma/prisma.service";
 import { HashingStrategy } from "../../common/strategies/hashing/hashing.strategy";
-import { Queue } from "bull";
-import { TFA_STRATEGY_QUEUE } from "@app/tfa/constants/tfa.constants";
-import { InjectQueue } from "@nestjs/bull";
 import { TfaRequestDto } from "../../tfa/dtos/tfa/tfa.request.dto";
 import { TfaAction } from "../../tfa/enums/tfa-action.enum";
+import { TfaService } from "@app/tfa/services/tfa.service";
 
 @Injectable()
 export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto> {
@@ -16,8 +14,7 @@ export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto> {
     private readonly logger = new Logger(SignupUC.name);
 
     constructor(
-        @InjectQueue(TFA_STRATEGY_QUEUE)
-        private readonly tfaStrategyQueue: Queue,
+        private readonly tfaService: TfaService,
         private readonly prisma: PrismaService,
         private readonly hashingStrategy: HashingStrategy
     ) { }
@@ -54,7 +51,7 @@ export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto> {
             }
         });
 
-        const job = await this.tfaStrategyQueue.add(new TfaRequestDto(
+        const job = await this.tfaService.add(new TfaRequestDto(
             savedUser, ip, TfaAction.SIGN_UP, lang
         ));
 

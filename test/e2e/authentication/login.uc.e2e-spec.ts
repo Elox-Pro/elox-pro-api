@@ -8,7 +8,7 @@ import { PrismaService } from '@app/prisma/prisma.service';
 import { resetUser } from '../test-helpers/reset-user.test-helper';
 import { createPost } from '../test-helpers/create-request.test-helper';
 import { TfaType } from '@prisma/client';
-import { TfaStatusService } from '@app/tfa/services/tfa-status.service';
+import { TfaService } from '@app/tfa/services/tfa.service';
 import { TfaModule } from '@app/tfa/tfa.module';
 import { pollJobStatus } from '../test-helpers/poll-job-status.test-helper';
 import { TfaAction } from '@app/tfa/enums/tfa-action.enum';
@@ -118,9 +118,9 @@ describe('Login Use Case', () => {
             // Test to check TFA job completion status
             it("should complete the job", async () => {
 
-                const tfaStatusService = app.get(TfaStatusService);
+                const tfaService = app.get(TfaService);
                 const jobStatus = await pollJobStatus({
-                    statusService: tfaStatusService,
+                    service: tfaService,
                     jobId: jobId
                 });
 
@@ -146,7 +146,7 @@ describe('Login Use Case', () => {
 
         describe("Email not verified", () => {
             let jobId: string = null;
-            let tfaStatusService: TfaStatusService;
+            let tfaService: TfaService;
             // Test to check login initiation when email is not verified
             it("should return HTTP status OK", async () => {
 
@@ -174,9 +174,9 @@ describe('Login Use Case', () => {
 
             // Test to check TFA job completion status when email is not verified
             it("should complete the job", async () => {
-                tfaStatusService = app.get(TfaStatusService);
+                tfaService = app.get(TfaService);
                 const jobStatus = await pollJobStatus({
-                    statusService: tfaStatusService,
+                    service: tfaService,
                     jobId: jobId
                 });
 
@@ -185,7 +185,7 @@ describe('Login Use Case', () => {
 
             // Test to check TFA job details action for SIGN_UP
             it("should return TFA SIGN_UP action", async () => {
-                const jobDetails = await tfaStatusService.getJobDetails(jobId);
+                const jobDetails = await tfaService.getJobDetails(jobId);
                 expect(jobDetails).toBeDefined();
                 expect(jobDetails.action).toBe(TfaAction.SIGN_UP);
             });

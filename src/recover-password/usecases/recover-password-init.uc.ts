@@ -1,14 +1,12 @@
 import { IUseCase } from "@app/common/usecase/usecase.interface";
-import { BadRequestException, Injectable, Logger, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { RecoverPasswordInitRequestDto } from "../dtos/recover-password-init/recover-password-init.request.dto";
 import { RecoverPasswordInitResponseDto } from "../dtos/recover-password-init/recover-password-init.response.dto";
 import { PrismaService } from "@app/prisma/prisma.service";
 import { isVerifiedUser } from "@app/common/helpers/is-verified-user";
-import { TFA_STRATEGY_QUEUE } from "@app/tfa/constants/tfa.constants";
-import { InjectQueue } from "@nestjs/bull";
-import { Queue } from "bull";
 import { TfaRequestDto } from "@app/tfa/dtos/tfa/tfa.request.dto";
 import { TfaAction } from "@app/tfa/enums/tfa-action.enum";
+import { TfaService } from "@app/tfa/services/tfa.service";
 
 @Injectable()
 export class RecoverPasswordInitUC implements IUseCase<RecoverPasswordInitRequestDto, RecoverPasswordInitResponseDto> {
@@ -16,8 +14,8 @@ export class RecoverPasswordInitUC implements IUseCase<RecoverPasswordInitReques
     private readonly logger = new Logger(RecoverPasswordInitUC.name);
 
     constructor(
-        @InjectQueue(TFA_STRATEGY_QUEUE)
-        private readonly tfaStrategyQueue: Queue,
+
+        private readonly tfaService: TfaService,
         private readonly prisma: PrismaService,
     ) { }
 
@@ -40,7 +38,7 @@ export class RecoverPasswordInitUC implements IUseCase<RecoverPasswordInitReques
             throw new BadRequestException('error.user-not-verified');
         }
 
-        await this.tfaStrategyQueue.add(new TfaRequestDto(
+        await this.tfaService.add(new TfaRequestDto(
             user, ip, TfaAction.RECOVER_PASSWORD, lang
         ));
 
