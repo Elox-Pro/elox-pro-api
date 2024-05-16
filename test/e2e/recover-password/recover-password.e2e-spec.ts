@@ -123,7 +123,7 @@ describe('Recover Password Use Case', () => {
                     app,
                     url: '/recover-password/reset',
                     meta: {
-                        cookie: cookies
+                        "cookie": cookies
                     }
                 });
                 const res = await resetPasswordPost({
