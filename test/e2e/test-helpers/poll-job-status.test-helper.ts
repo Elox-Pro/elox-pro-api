@@ -29,8 +29,8 @@ type Args = {
 export async function pollJobStatus({
     statusService,
     jobId,
-    retries = 10,  // Default to 10 retries if not provided
-    delay = 1000   // Default to 1000ms delay if not provided
+    retries = 10,
+    delay = 1000
 }: Args): Promise<string> {
     let attempt = 0;
 
@@ -39,10 +39,9 @@ export async function pollJobStatus({
         if (PollJobStatus.includes(jobStatus)) {
             return jobStatus;
         }
-        // Wait for the specified delay before the next attempt
         await new Promise(resolve => setTimeout(resolve, delay));
         attempt++;
     } while (attempt < retries);
 
-    throw new Error('Job status check timed out'); // Throw an error if the job status is not resolved in given retries
+    throw new Error('Job status check timed out');
 }
