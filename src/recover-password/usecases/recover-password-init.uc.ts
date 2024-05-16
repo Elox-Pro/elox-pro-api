@@ -14,7 +14,6 @@ export class RecoverPasswordInitUC implements IUseCase<RecoverPasswordInitReques
     private readonly logger = new Logger(RecoverPasswordInitUC.name);
 
     constructor(
-
         private readonly tfaService: TfaService,
         private readonly prisma: PrismaService,
     ) { }
@@ -38,10 +37,10 @@ export class RecoverPasswordInitUC implements IUseCase<RecoverPasswordInitReques
             throw new BadRequestException('error.user-not-verified');
         }
 
-        await this.tfaService.add(new TfaRequestDto(
+        const job = await this.tfaService.add(new TfaRequestDto(
             user, ip, TfaAction.RECOVER_PASSWORD, lang
         ));
 
-        return new RecoverPasswordInitResponseDto(true);
+        return new RecoverPasswordInitResponseDto(true, job.id.toString());
     }
 }

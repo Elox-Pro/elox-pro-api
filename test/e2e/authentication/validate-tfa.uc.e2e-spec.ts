@@ -1,9 +1,8 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import { bootstrapTest } from "../test.main";
-import * as request from "supertest";
 import { TfaModule } from "@app/tfa/tfa.module";
 import { getTestUser } from "../test-helpers/get-test-user.test-helper";
-import { createPost } from "../test-helpers/create-request.test-helper";
+import { CreateRequestFN, createPost } from "../test-helpers/create-request.test-helper";
 import { TfaService } from "@app/tfa/services/tfa.service";
 import { TfaRequestDto } from "@app/tfa/dtos/tfa/tfa.request.dto";
 import { TfaAction } from "@app/tfa/enums/tfa-action.enum";
@@ -16,7 +15,7 @@ describe('Validate TFA Use Case', () => {
     const user = getTestUser();
 
     let app: INestApplication;
-    let post: (data: any) => Promise<request.Response>;
+    let post: CreateRequestFN;
 
     beforeAll(async () => {
         // Setting up the NestJS application and dependencies for testing

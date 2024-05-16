@@ -1,15 +1,13 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
 import { bootstrapTest } from '../test.main';
 import { LoginResponseDto } from '@app/authentication/dtos/login/login.response.dto';
 import { AuthenticationModule } from '@app/authentication/authentication.module';
 import { getTestUser } from '../test-helpers/get-test-user.test-helper';
 import { PrismaService } from '@app/prisma/prisma.service';
 import { resetUser } from '../test-helpers/reset-user.test-helper';
-import { createPost } from '../test-helpers/create-request.test-helper';
+import { CreateRequestFN, createPost } from '../test-helpers/create-request.test-helper';
 import { TfaType } from '@prisma/client';
 import { TfaService } from '@app/tfa/services/tfa.service';
-import { TfaModule } from '@app/tfa/tfa.module';
 import { pollJobStatus } from '../test-helpers/poll-job-status.test-helper';
 import { TfaAction } from '@app/tfa/enums/tfa-action.enum';
 import { getTfaCode } from '../test-helpers/get-tfa-code.test-helper';
@@ -21,13 +19,12 @@ describe('Login Use Case', () => {
 
     let app: INestApplication;
     let prisma: PrismaService;
-    let post: (data: any) => Promise<request.Response>;
+    let post: CreateRequestFN;
 
     beforeAll(async () => {
         // Setting up the NestJS application and dependencies for testing
         app = await bootstrapTest([
-            AuthenticationModule,
-            TfaModule
+            AuthenticationModule
         ]);
         prisma = app.get(PrismaService);
         post = createPost({ app, url });

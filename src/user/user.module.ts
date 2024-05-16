@@ -10,8 +10,12 @@ import { UpdatePhoneUC } from "./usecases/update-phone.uc";
 import { UpdatePasswordUC } from "./usecases/update-password.uc";
 import { UpdateTfaUC } from "./usecases/update-tfa.uc";
 import { ProfileController } from "./controllers/profile.controller";
+import { TfaModule } from "@app/tfa/tfa.module";
 
 @Module({
+    imports:[
+        TfaModule,
+    ],
     controllers: [ProfileController],
     providers: [
         FindUserByUsernameUC,

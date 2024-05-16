@@ -1,9 +1,7 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import { bootstrapTest } from "../test.main";
-import * as request from "supertest";
 import { AuthenticationModule } from "@app/authentication/authentication.module";
-import { TfaModule } from "@app/tfa/tfa.module";
-import { createPost } from "../test-helpers/create-request.test-helper";
+import { CreateRequestFN, createPost } from "../test-helpers/create-request.test-helper";
 import { getTestUser } from "../test-helpers/get-test-user.test-helper";
 import { TfaService } from "@app/tfa/services/tfa.service";
 import { pollJobStatus } from "../test-helpers/poll-job-status.test-helper";
@@ -17,13 +15,12 @@ describe('Signup Use Case', () => {
     const user = getTestUser();
 
     let app: INestApplication;
-    let post: (data: any) => Promise<request.Response>;
+    let post: CreateRequestFN;
 
     beforeAll(async () => {
         // Setting up the NestJS application and dependencies for testing
         app = await bootstrapTest([
-            AuthenticationModule,
-            TfaModule
+            AuthenticationModule
         ]);
         post = createPost({ app, url });
     });

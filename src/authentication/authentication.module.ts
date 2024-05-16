@@ -6,10 +6,12 @@ import { AuthenticationGuard } from './guards/authentication.guard';
 import { LogoutUC } from './usecases/logout.uc';
 import { SignupUC } from './usecases/signup.uc';
 import { JwtAppModule } from '@app/jwt-app/jwt-app.module';
+import { TfaModule } from '@app/tfa/tfa.module';
 
 @Module({
     imports: [
-        JwtAppModule
+        JwtAppModule,
+        TfaModule,
     ],
     controllers: [
         AuthenticationController

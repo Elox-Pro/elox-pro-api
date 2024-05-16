@@ -30,6 +30,9 @@ import { TfaService } from './services/tfa.service';
         UpdateEmailTfaActionStrategy,
         UpdatePasswordTfaActionStrategy
     ],
+    exports:[
+        TfaService
+    ],
     controllers: [
         TfaController
     ],
