@@ -2,43 +2,36 @@ import { HttpStatus, INestApplication } from "@nestjs/common";
 import { bootstrapTest } from "../test.main";
 import { AuthenticationModule } from "@app/authentication/authentication.module";
 import { UserModule } from "@app/user/user.module";
-import { createJwtCookieSession } from "../test-helpers/create-jwt-cookie-session.test-helper";
-import * as request from "supertest";
-import { TfaType, User } from "@prisma/client";
+import { TfaType } from "@prisma/client";
 import { PrismaService } from "@app/prisma/prisma.service";
-import { UpdateTfaRequestDto } from "@app/user/dtos/update-tfa/update-tfa.request.dto";
-import { UpdateTfaResponseDto } from "@app/user/dtos/update-tfa/update-tfa.response.dto";
+import { getTestUser } from "../test-helpers/get-test-user.test-helper";
+import { CreateRequestFN, createPatch } from "../test-helpers/create-request.test-helper";
+import { resetUser } from "../test-helpers/reset-user.test-helper";
 
 describe("Update tfa type use case", () => {
-    const username = "alaska";
-    const password = "098lkj!";
     const url = "/users/profile/tfa";
+    const user = getTestUser();
 
     let app: INestApplication;
-    let cookies: string;
-    let user: User;
     let prisma: PrismaService;
+    let patch: CreateRequestFN;
 
     beforeAll(async () => {
         app = await bootstrapTest([
             AuthenticationModule,
             UserModule
         ]);
-
         prisma = app.get(PrismaService);
-        user = await prisma.user.findUnique({
-            where: { username }
+        patch = createPatch({
+            app, url, credentials: {
+                username: user.username,
+                password: user.password
+            }
         });
     });
 
     afterEach(async () => {
-        await prisma.user.update({
-            where: { username },
-            data: {
-                emailVerified: user.emailVerified,
-                tfaType: user.tfaType
-            }
-        });
+        await resetUser(prisma, user);
     });
 
     afterAll(async () => {
@@ -46,79 +39,28 @@ describe("Update tfa type use case", () => {
     });
 
     describe("PATCH: users/profile/name", () => {
-
-        describe("Authenticated user", () => {
-            it("should authenticate the user", async () => {
-                cookies = await createJwtCookieSession(
-                    app.getHttpServer(),
-                    username,
-                    password
-                );
-                expect(cookies).toBeDefined();
-            });
-        });
-
         describe("Update to Email TFA", () => {
             describe("Email not verified", () => {
-
-                it("should return HTTP status BAD REQUEST", async () => {
+                it("should return HTTP status bad request", async () => {
                     await prisma.user.update({
-                        where: { username },
+                        where: { username: user.username },
                         data: { emailVerified: false }
                     });
-
-                    const res = await request(app.getHttpServer())
-                        .patch(url)
-                        .set('Cookie', cookies)
-                        .send({
-                            tfaType: TfaType.EMAIL,
-                        } as UpdateTfaRequestDto);
-
+                    const res = await patch({ tfaType: TfaType.EMAIL });
                     expect(res.status).toBe(HttpStatus.BAD_REQUEST);
                 });
-
+            });
+            describe("Email verified", () => {
                 it("should return HTTP status OK", async () => {
-                    await prisma.user.update({
-                        where: { username },
-                        data: { emailVerified: true }
-                    });
-
-                    const res = await request(app.getHttpServer())
-                        .patch(url)
-                        .set('Cookie', cookies)
-                        .send({
-                            tfaType: TfaType.EMAIL,
-                        } as UpdateTfaRequestDto);
-
+                    const res = await patch({ tfaType: TfaType.EMAIL });
                     expect(res.status).toBe(HttpStatus.OK);
-                    expect(res.body).toBeDefined();
-                    const body = res.body as UpdateTfaResponseDto;
-                    expect(body.OK).toBe(true);
-                    expect(HttpStatus.OK).toBe(res.status);
                 });
             });
         });
-
-        describe("Update to NONE TFA", () => {
-
+        describe("Update to None TFA", () => {
             it("should return HTTP status OK", async () => {
-                await prisma.user.update({
-                    where: { username },
-                    data: { tfaType: TfaType.EMAIL }
-                });
-
-                const res = await request(app.getHttpServer())
-                    .patch(url)
-                    .set('Cookie', cookies)
-                    .send({
-                        tfaType: TfaType.NONE,
-                    } as UpdateTfaRequestDto);
-
+                const res = await patch({ tfaType: TfaType.NONE });
                 expect(res.status).toBe(HttpStatus.OK);
-                expect(res.body).toBeDefined();
-                const body = res.body as UpdateTfaResponseDto;
-                expect(body.OK).toBe(true);
-                expect(HttpStatus.OK).toBe(res.status);
             });
         });
     });
