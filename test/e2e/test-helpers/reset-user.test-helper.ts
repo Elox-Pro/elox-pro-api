@@ -6,7 +6,8 @@ export async function resetUser(prisma: PrismaService, user: User) {
         where: { username: user.username },
         data: {
             tfaType: TfaType.NONE,
-            emailVerified: true
+            emailVerified: true,
+            email: user.email
         }
     });
 }

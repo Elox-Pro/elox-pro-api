@@ -10,3 +10,14 @@ export function getTestUser(): User {
         role: "SYSTEM_ADMIN"
     } as User;
 }
+
+export function getTestUser2(): User {
+    return {
+        username: 'brazil',
+        email: "yhonax.qrz+1@gmail.com",
+        tfaType: 'EMAIL',
+        password: '098lkj!',
+        emailVerified: true,
+        role: "COMPANY_OWNER"
+    } as User;
+}

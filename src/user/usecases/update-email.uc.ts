@@ -31,12 +31,12 @@ export class UpdateEmailUC implements IUseCase<UpdateEmailRequestDto, UpdateEmai
         });
 
         if (!user) {
-            this.logger.error(`User with username ${username} not found`);
+            this.logger.error(`User ${username} not found`);
             throw new BadRequestException('error.user-not-found');
         }
 
         if (user.email === email) {
-            this.logger.error(`User with username ${username} already has email ${email}`);
+            this.logger.error(`User ${username} already has email ${email}`);
             throw new BadRequestException('error.user-already-has-email');
         }
 
@@ -57,10 +57,10 @@ export class UpdateEmailUC implements IUseCase<UpdateEmailRequestDto, UpdateEmai
             [TfaActionKey.NEW_EMAIL]: email,
         } as Record<TfaActionKey, string>;
 
-        await this.tfaService.add(new TfaRequestDto(
+        const job = await this.tfaService.add(new TfaRequestDto(
             user, ip, TfaAction.UPDATE_EMAIL, lang, metadata
         ));
 
-        return new UpdateEmailResponseDto(true);
+        return new UpdateEmailResponseDto(true, job.id.toString());
     }
 }
