@@ -97,7 +97,7 @@ describe("Update password use case", () => {
             let body: UpdatePasswordResponseDto;
             it("should return HTTP status OK", async () => {
                 // Create the auth cookie for use in the auxpatch to avoid use the tfa code when the tfa type is updated
-                const authCookies = await createJwtCookieSession(app.getHttpServer(), username, password);
+                const authCookies = await createJwtCookieSession(app, username, password);
                 // Create the request with authentcation without make use the tfa code
                 const auxPatch = createPatch({
                     app, url, meta: { "cookie": authCookies }

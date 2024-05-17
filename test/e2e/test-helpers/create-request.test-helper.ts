@@ -123,7 +123,7 @@ async function getAuthCookies(app: INestApplication, credentials: Credentials): 
         return null;
     }
     const { username, password } = credentials;
-    return await createJwtCookieSession(app.getHttpServer(), username, password);
+    return await createJwtCookieSession(app, username, password);
 }
 
 

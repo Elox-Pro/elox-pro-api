@@ -1,11 +1,11 @@
 import { RequestLang } from '@app/common/enums/request-lang.enum';
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-// TODO: Change server for app: INestApplication
-export async function createJwtCookieSession(server: any, username: string, password: string): Promise<string> {
+export async function createJwtCookieSession(
+    app: INestApplication, username: string, password: string): Promise<string> {
 
     const url = '/authentication/login';
-    const res = await request(server)
+    const res = await request(app.getHttpServer())
         .post(url)
         .set("accept-language", RequestLang.EN)
         .send({
