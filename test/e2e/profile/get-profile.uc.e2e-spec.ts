@@ -1,45 +1,42 @@
-    import { HttpStatus, INestApplication } from "@nestjs/common";
+import { HttpStatus, INestApplication } from "@nestjs/common";
 import { bootstrapTest } from "../test.main";
 import { UserModule } from "@app/user/user.module";
-import * as request from "supertest";
-import { createJwtCookieSession } from "../test-helpers/create-jwt-cookie-session.test-helper";
 import { FindUserByUserNameResponseDto } from "@app/user/dtos/find-user-by-username/find-user-by-username.response.dto";
 import { AuthenticationModule } from "@app/authentication/authentication.module";
+import { getTestUser } from "../test-helpers/get-test-user.test-helper";
+import { CreateRequestFN, createGet } from "../test-helpers/create-request.test-helper";
 
+describe("Get authenticated profile endpoint", () => {
+    const url = "/users/profile";
+    const user = getTestUser();
 
-describe("Find User By Username Use Case", () => {
     let app: INestApplication;
+    let get: CreateRequestFN;
 
     beforeAll(async () => {
         app = await bootstrapTest([
             AuthenticationModule,
             UserModule
         ]);
-
+        get = createGet({
+            app, url, credentials: {
+                username: user.username,
+                password: user.password
+            }
+        });
     });
 
     afterAll(async () => {
         await app.close();
     });
 
-    describe("GET: users/current", () => {
-
-        const username = "alaska";
-        const password = "098lkj!";
-
+    describe("GET: users/profile", () => {
         it("should return HTTP status OK", async () => {
-
-            const cookies = await createJwtCookieSession(app.getHttpServer(), username, password);
-            const url = "/users/current";
-            const res = await request(app.getHttpServer())
-                .get(url)
-                .set('Cookie', cookies)
-                .send();
-
+            const res = await get();
             expect(res.status).toBe(HttpStatus.OK);
             expect(res.body).toBeDefined();
             const body = res.body as FindUserByUserNameResponseDto;
-            expect(body.user.username).toBe(username);
+            expect(body.user.username).toBe(user.username);
         });
     });
 });

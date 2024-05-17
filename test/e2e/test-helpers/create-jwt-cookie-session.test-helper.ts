@@ -1,6 +1,7 @@
 import { RequestLang } from '@app/common/enums/request-lang.enum';
 import { HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
+// TODO: Change server for app: INestApplication
 export async function createJwtCookieSession(server: any, username: string, password: string): Promise<string> {
 
     const url = '/authentication/login';
