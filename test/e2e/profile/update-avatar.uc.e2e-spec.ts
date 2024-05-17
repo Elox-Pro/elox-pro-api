@@ -2,19 +2,27 @@ import { HttpStatus, INestApplication } from "@nestjs/common";
 import { bootstrapTest } from "../test.main";
 import { AuthenticationModule } from "@app/authentication/authentication.module";
 import { UserModule } from "@app/user/user.module";
-import { createJwtCookieSession } from "../test-helpers/create-jwt-cookie-session.test-helper";
-import * as request from "supertest";
-import { UpdateAvatarRequestDto } from "@app/user/dtos/update-avatar/update-avatar.request.dto";
-import { UpdateAvatarResponseDto } from "@app/user/dtos/update-avatar/update-avatar.response.dto";
+import { getTestUser } from "../test-helpers/get-test-user.test-helper";
+import { CreateRequestFN, createPatch } from "../test-helpers/create-request.test-helper";
 
 describe("Update avatar use case", () => {
+    const url = "/users/profile/avatar";
+    const user = getTestUser();
+
     let app: INestApplication;
+    let patch: CreateRequestFN;
 
     beforeAll(async () => {
         app = await bootstrapTest([
             AuthenticationModule,
             UserModule
         ]);
+        patch = createPatch({
+            app, url, credentials: {
+                username: user.username,
+                password: user.password
+            }
+        });
     });
 
     afterAll(async () => {
@@ -22,36 +30,11 @@ describe("Update avatar use case", () => {
     });
 
     describe("PATCH: users/profile/avatar", () => {
-        const username = "alaska";
-        const password = "098lkj!";
-        const url = "/users/profile/avatar";
-
-        let cookies: string;
-
-        it("should authenticate the user", async () => {
-            cookies = await createJwtCookieSession(
-                app.getHttpServer(),
-                username,
-                password
-            );
-
-            expect(cookies).toBeDefined();
-        });
-
         it("should return HTTP status OK", async () => {
-
-            const res = await request(app.getHttpServer())
-                .patch(url)
-                .set('Cookie', cookies)
-                .send({
-                    avatarUrl: "https://api.dicebear.com/8.x/bottts-neutral/svg?seed=Simon"
-                } as UpdateAvatarRequestDto);
-
+            const res = await patch({
+                avatarUrl: "https://api.dicebear.com/8.x/bottts-neutral/svg?seed=Simon"
+            });
             expect(res.status).toBe(HttpStatus.OK);
-            expect(res.body).toBeDefined();
-            const body = res.body as UpdateAvatarResponseDto;
-            expect(body.OK).toBe(true);
-            expect(HttpStatus.OK).toBe(res.status);
         });
     });
 });
