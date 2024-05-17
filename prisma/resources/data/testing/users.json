@@ -4,7 +4,8 @@
         "username": "alaska",
         "email": "yhonax.qrz@gmail.com",
         "password": "098lkj!",
-        "emailVerified": true
+        "emailVerified": true,
+        "phone": "1234567890"
     },
     {
         "role": "COMPANY_OWNER",
@@ -12,6 +13,7 @@
         "email": "yhonax.qrz+1@gmail.com",
         "password": "098lkj!",
         "emailVerified": true,
-        "tfaType": "EMAIL"
+        "tfaType": "EMAIL",
+        "phone": "1234567891"
     }
 ]

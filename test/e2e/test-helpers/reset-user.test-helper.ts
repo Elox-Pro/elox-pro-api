@@ -7,7 +7,8 @@ export async function resetUser(prisma: PrismaService, user: User) {
         data: {
             tfaType: TfaType.NONE,
             emailVerified: true,
-            email: user.email
+            email: user.email,
+            phone: user.phone
         }
     });
 }

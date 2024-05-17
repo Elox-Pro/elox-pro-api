@@ -7,7 +7,8 @@ export function getTestUser(): User {
         tfaType: 'NONE',
         password: '098lkj!',
         emailVerified: true,
-        role: "SYSTEM_ADMIN"
+        role: "SYSTEM_ADMIN",
+        phone: "1234567890"
     } as User;
 }
 
@@ -18,6 +19,7 @@ export function getTestUser2(): User {
         tfaType: 'EMAIL',
         password: '098lkj!',
         emailVerified: true,
-        role: "COMPANY_OWNER"
+        role: "COMPANY_OWNER",
+        phone: "1234567891"
     } as User;
 }
