@@ -73,10 +73,10 @@ export class UpdatePasswordUC implements IUseCase<UpdatePasswordRequestDto, Upda
             [TfaActionKey.NEW_HASHED_PASSWORD]: hashedPassword
         } as Record<TfaActionKey, string>;
 
-        await this.tfaService.add(new TfaRequestDto(
+        const job = await this.tfaService.add(new TfaRequestDto(
             user, ip, TfaAction.UPDATE_PASSWORD, lang, metadata
         ));
 
-        return new UpdatePasswordResponseDto(true);
+        return new UpdatePasswordResponseDto(true, job.id.toString());
     }
 }

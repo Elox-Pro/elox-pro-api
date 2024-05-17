@@ -3,6 +3,8 @@ import { INestApplication } from "@nestjs/common";
 import * as request from "supertest";
 import { createJwtCookieSession } from "./create-jwt-cookie-session.test-helper";
 
+type MetaType = "cookie" | "accept-language";
+
 /**
  * Credentials type for creating HTTP requests.
  */
@@ -22,7 +24,7 @@ export type CreateRequestFN = (data?: any) => Promise<request.Response>;
 type Args = {
     app: INestApplication;
     url: string;
-    meta?: Record<string, string>;
+    meta?: Partial<Record<MetaType, string>>;
     credentials?: Credentials;
 };
 
@@ -148,7 +150,7 @@ async function getAuthCookies(app: INestApplication, credentials: Credentials): 
  */
 function mergeCookies(cookies1: string | null, cookies2: string | null): string | null {
     // Check if both inputs are null
-    if (!cookies1 &&!cookies2) return null;
+    if (!cookies1 && !cookies2) return null;
 
     // Extract cookie arrays from the input strings
     const getCookiesArray = (cookieString: string | null): string[] => {
@@ -171,7 +173,7 @@ function mergeCookies(cookies1: string | null, cookies2: string | null): string 
     }
 
     // Merge the cookie arrays
-    const mergedCookiesArray = [...cookiesArray1,...cookiesArray2];
+    const mergedCookiesArray = [...cookiesArray1, ...cookiesArray2];
 
     // Join the merged array and add the prefix and suffix
     return `${mergedCookiesArray.join(', ')}`;
