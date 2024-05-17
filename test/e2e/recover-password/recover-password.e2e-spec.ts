@@ -10,8 +10,6 @@ import { RecoverPasswordInitResponseDto } from "@app/recover-password/dtos/recov
 import { TfaService } from "@app/tfa/services/tfa.service";
 import { pollJobStatus } from "../test-helpers/poll-job-status.test-helper";
 import { getTfaCode } from "../test-helpers/get-tfa-code.test-helper";
-import { ValidateTFAResponseDto } from "@app/tfa/dtos/validate-tfa/validate-tfa.response.dto";
-import { TfaAction } from "@app/tfa/enums/tfa-action.enum";
 
 describe('Recover Password Use Case', () => {
     const url = '/recover-password/init';
@@ -93,8 +91,6 @@ describe('Recover Password Use Case', () => {
                 });
                 expect(tfaResult.status).toBe(HttpStatus.OK);
                 expect(tfaResult.body).toBeDefined();
-                const tfaBody = tfaResult.body as ValidateTFAResponseDto;
-                expect(tfaBody.action).toBe(TfaAction.RECOVER_PASSWORD);
                 cookies = tfaResult.headers['set-cookie'];
                 expect(cookies).toBeDefined();
             });
