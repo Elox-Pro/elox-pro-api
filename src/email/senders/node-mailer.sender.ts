@@ -3,7 +3,7 @@ import { EmailDTO as EmailDto } from "../dtos/email.dto";
 import { EmailSender } from "./email.sender";
 import * as nodemailer from "nodemailer";
 import { EmailConfig } from "../email.config";
-import Mail, { Address } from "nodemailer/lib/mailer";
+import Mail from "nodemailer/lib/mailer";
 import { EmailRender } from "../renders/email.render";
 
 @Injectable()
@@ -30,6 +30,13 @@ export class NodeMailerSender extends EmailSender {
     }
 
     public send(emailDto: EmailDto): Promise<Boolean> {
+
+        if (!this.config.ENABLED) {
+            this.logger.warn("Email sender is disabled");
+            this.logger.warn(`Email not sent to ${emailDto.to.email}, subject: ${emailDto.subject}`);
+            return Promise.resolve(true);
+        }
+
         return new Promise(async (resolve, reject) => {
             const mailOptions = await this.mapper(emailDto);
             this.transporter.sendMail(mailOptions, (error) => {

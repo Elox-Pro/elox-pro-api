@@ -89,6 +89,8 @@ describe('Recover Password Use Case', () => {
                     code: getTfaCode(),
                     username: user.username
                 });
+                // wait while the cookies are setting
+                await new Promise(resolve => setTimeout(resolve, 500));
                 expect(tfaResult.status).toBe(HttpStatus.OK);
                 expect(tfaResult.body).toBeDefined();
                 cookies = tfaResult.headers['set-cookie'];
