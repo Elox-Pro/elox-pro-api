@@ -9,7 +9,7 @@ import { PrismaService } from "@app/prisma/prisma.service";
 import { TfaType, User } from "@prisma/client";
 import { getTestUser } from "../test-helpers/get-test-user.test-helper";
 import { CreateRequestFN, createPatch, createPost } from "../test-helpers/create-request.test-helper";
-import { TfaService } from "@app/tfa/services/tfa.service";
+import { TfaQueueService } from "@app/tfa/services/tfa-queue.service";
 import { pollJobStatus } from "../test-helpers/poll-job-status.test-helper";
 import { getTfaCode } from "../test-helpers/get-tfa-code.test-helper";
 
@@ -126,7 +126,7 @@ describe("Update password use case", () => {
                 expect(body.jobId).toBeDefined();
             });
             it("should complete job", async () => {
-                const tfaService = app.get(TfaService);
+                const tfaService = app.get(TfaQueueService);
                 const jobStatus = await pollJobStatus({
                     service: tfaService,
                     jobId: body.jobId

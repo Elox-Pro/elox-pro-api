@@ -7,7 +7,7 @@ import { TfaRequestDto } from "@app/tfa/dtos/tfa/tfa.request.dto";
 import { TfaType } from "@prisma/client";
 import { TfaAction } from "@app/tfa/enums/tfa-action.enum";
 import { TfaActionKey } from "@app/tfa/enums/tfa-action-key.enum";
-import { TfaService } from "@app/tfa/services/tfa.service";
+import { TfaQueueService } from "@app/tfa/services/tfa-queue.service";
 
 @Injectable()
 export class UpdateEmailUC implements IUseCase<UpdateEmailRequestDto, UpdateEmailResponseDto> {
@@ -15,7 +15,7 @@ export class UpdateEmailUC implements IUseCase<UpdateEmailRequestDto, UpdateEmai
     private readonly logger = new Logger(UpdateEmailUC.name);
 
     constructor(
-        private readonly tfaService: TfaService,
+        private readonly queue: TfaQueueService,
         private readonly prisma: PrismaService,
     ) { }
 
@@ -57,7 +57,7 @@ export class UpdateEmailUC implements IUseCase<UpdateEmailRequestDto, UpdateEmai
             [TfaActionKey.NEW_EMAIL]: email,
         } as Record<TfaActionKey, string>;
 
-        const job = await this.tfaService.add(new TfaRequestDto(
+        const job = await this.queue.add(new TfaRequestDto(
             user, ip, TfaAction.UPDATE_EMAIL, lang, metadata
         ));
 

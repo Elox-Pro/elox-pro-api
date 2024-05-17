@@ -6,7 +6,7 @@ import { PrismaService } from "@app/prisma/prisma.service";
 import { isVerifiedUser } from "@app/common/helpers/is-verified-user";
 import { TfaRequestDto } from "@app/tfa/dtos/tfa/tfa.request.dto";
 import { TfaAction } from "@app/tfa/enums/tfa-action.enum";
-import { TfaService } from "@app/tfa/services/tfa.service";
+import { TfaQueueService } from "@app/tfa/services/tfa-queue.service";
 
 @Injectable()
 export class RecoverPasswordInitUC implements IUseCase<RecoverPasswordInitRequestDto, RecoverPasswordInitResponseDto> {
@@ -14,7 +14,7 @@ export class RecoverPasswordInitUC implements IUseCase<RecoverPasswordInitReques
     private readonly logger = new Logger(RecoverPasswordInitUC.name);
 
     constructor(
-        private readonly tfaService: TfaService,
+        private readonly queue: TfaQueueService,
         private readonly prisma: PrismaService,
     ) { }
 
@@ -37,7 +37,7 @@ export class RecoverPasswordInitUC implements IUseCase<RecoverPasswordInitReques
             throw new BadRequestException('error.user-not-verified');
         }
 
-        const job = await this.tfaService.add(new TfaRequestDto(
+        const job = await this.queue.add(new TfaRequestDto(
             user, ip, TfaAction.RECOVER_PASSWORD, lang
         ));
 

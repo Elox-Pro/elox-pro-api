@@ -11,7 +11,7 @@ import { SignUpTfaActionStrategy } from './strategies/tfa-action/signup-tfa-acti
 import { RecoverPasswordTfaActionStrategy } from './strategies/tfa-action/recover-password-tfa-action.strategy';
 import { UpdateEmailTfaActionStrategy } from './strategies/tfa-action/update-email-tfa-action.strategy';
 import { UpdatePasswordTfaActionStrategy } from './strategies/tfa-action/update-password-action.strategy';
-import { TfaService } from './services/tfa.service';
+import { TfaQueueService } from './services/tfa-queue.service';
 
 @Module({
     imports: [
@@ -23,7 +23,7 @@ import { TfaService } from './services/tfa.service';
         RecoverPasswordTfaActionStrategy,
         TfaActionFactory,
         TfaFactory,
-        TfaService,
+        TfaQueueService,
         TfaStrategyProcessor,
         SignUpTfaActionStrategy,
         ValidateTfaUC,
@@ -31,7 +31,7 @@ import { TfaService } from './services/tfa.service';
         UpdatePasswordTfaActionStrategy
     ],
     exports:[
-        TfaService
+        TfaQueueService
     ],
     controllers: [
         TfaController

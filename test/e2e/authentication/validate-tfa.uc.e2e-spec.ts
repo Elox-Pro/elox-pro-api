@@ -3,7 +3,7 @@ import { bootstrapTest } from "../test.main";
 import { TfaModule } from "@app/tfa/tfa.module";
 import { getTestUser } from "../test-helpers/get-test-user.test-helper";
 import { CreateRequestFN, createPost } from "../test-helpers/create-request.test-helper";
-import { TfaService } from "@app/tfa/services/tfa.service";
+import { TfaQueueService } from "@app/tfa/services/tfa-queue.service";
 import { TfaRequestDto } from "@app/tfa/dtos/tfa/tfa.request.dto";
 import { TfaAction } from "@app/tfa/enums/tfa-action.enum";
 import { RequestLang } from "@app/common/enums/request-lang.enum";
@@ -44,7 +44,7 @@ describe('Validate TFA Use Case', () => {
             let jobId: string = null;
             // Test to check that the job is created
             it("should create TFA job", async () => {
-                const tfaService = app.get(TfaService);
+                const tfaService = app.get(TfaQueueService);
                 const job = await tfaService.add(new TfaRequestDto(
                     user,
                     '127.0.0.1',
@@ -57,7 +57,7 @@ describe('Validate TFA Use Case', () => {
             });
             // Test to check TFA job completion status
             it("should complete the job", async () => {
-                const tfaService = app.get(TfaService);
+                const tfaService = app.get(TfaQueueService);
                 const jobStatus = await pollJobStatus({
                     service: tfaService,
                     jobId: jobId

@@ -7,7 +7,7 @@ import { resetUser } from "../test-helpers/reset-user.test-helper";
 import { getTestUser } from "../test-helpers/get-test-user.test-helper";
 import { TfaType } from "@prisma/client";
 import { RecoverPasswordInitResponseDto } from "@app/recover-password/dtos/recover-password-init/recover-password-init.response.dto";
-import { TfaService } from "@app/tfa/services/tfa.service";
+import { TfaQueueService } from "@app/tfa/services/tfa-queue.service";
 import { pollJobStatus } from "../test-helpers/poll-job-status.test-helper";
 import { getTfaCode } from "../test-helpers/get-tfa-code.test-helper";
 
@@ -74,7 +74,7 @@ describe('Recover Password Use Case', () => {
                 jobId = body.jobId;
             });
             it("should complete the job", async () => {
-                const tfaService = app.get(TfaService);
+                const tfaService = app.get(TfaQueueService);
                 const jobStatus = await pollJobStatus({
                     service: tfaService,
                     jobId: jobId

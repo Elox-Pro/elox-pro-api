@@ -7,7 +7,7 @@ import { PrismaService } from '@app/prisma/prisma.service';
 import { resetUser } from '../test-helpers/reset-user.test-helper';
 import { CreateRequestFN, createPost } from '../test-helpers/create-request.test-helper';
 import { TfaType } from '@prisma/client';
-import { TfaService } from '@app/tfa/services/tfa.service';
+import { TfaQueueService } from '@app/tfa/services/tfa-queue.service';
 import { pollJobStatus } from '../test-helpers/poll-job-status.test-helper';
 import { TfaAction } from '@app/tfa/enums/tfa-action.enum';
 import { getTfaCode } from '../test-helpers/get-tfa-code.test-helper';
@@ -115,7 +115,7 @@ describe('Login Use Case', () => {
             // Test to check TFA job completion status
             it("should complete the job", async () => {
 
-                const tfaService = app.get(TfaService);
+                const tfaService = app.get(TfaQueueService);
                 const jobStatus = await pollJobStatus({
                     service: tfaService,
                     jobId: jobId
@@ -143,7 +143,7 @@ describe('Login Use Case', () => {
 
         describe("Email not verified", () => {
             let jobId: string = null;
-            let tfaService: TfaService;
+            let tfaService: TfaQueueService;
             // Test to check login initiation when email is not verified
             it("should return HTTP status OK", async () => {
 
@@ -171,7 +171,7 @@ describe('Login Use Case', () => {
 
             // Test to check TFA job completion status when email is not verified
             it("should complete the job", async () => {
-                tfaService = app.get(TfaService);
+                tfaService = app.get(TfaQueueService);
                 const jobStatus = await pollJobStatus({
                     service: tfaService,
                     jobId: jobId

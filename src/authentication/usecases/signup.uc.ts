@@ -6,7 +6,7 @@ import { PrismaService } from "@app/prisma/prisma.service";
 import { HashingStrategy } from "../../common/strategies/hashing/hashing.strategy";
 import { TfaRequestDto } from "../../tfa/dtos/tfa/tfa.request.dto";
 import { TfaAction } from "../../tfa/enums/tfa-action.enum";
-import { TfaService } from "@app/tfa/services/tfa.service";
+import { TfaQueueService } from "@app/tfa/services/tfa-queue.service";
 
 @Injectable()
 export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto> {
@@ -14,7 +14,7 @@ export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto> {
     private readonly logger = new Logger(SignupUC.name);
 
     constructor(
-        private readonly tfaService: TfaService,
+        private readonly queue: TfaQueueService,
         private readonly prisma: PrismaService,
         private readonly hashingStrategy: HashingStrategy
     ) { }
@@ -51,7 +51,7 @@ export class SignupUC implements IUseCase<SignupRequestDto, SignupResponseDto> {
             }
         });
 
-        const job = await this.tfaService.add(new TfaRequestDto(
+        const job = await this.queue.add(new TfaRequestDto(
             savedUser, ip, TfaAction.SIGN_UP, lang
         ));
 

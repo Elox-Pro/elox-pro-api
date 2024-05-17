@@ -3,7 +3,7 @@ import { bootstrapTest } from "../test.main";
 import { AuthenticationModule } from "@app/authentication/authentication.module";
 import { CreateRequestFN, createPost } from "../test-helpers/create-request.test-helper";
 import { getTestUser } from "../test-helpers/get-test-user.test-helper";
-import { TfaService } from "@app/tfa/services/tfa.service";
+import { TfaQueueService } from "@app/tfa/services/tfa-queue.service";
 import { pollJobStatus } from "../test-helpers/poll-job-status.test-helper";
 import { getTfaCode } from "../test-helpers/get-tfa-code.test-helper";
 import { ValidateTFAResponseDto } from "@app/tfa/dtos/validate-tfa/validate-tfa.response.dto";
@@ -89,7 +89,7 @@ describe('Signup Use Case', () => {
             });
             // Test to check TFA job completion status
             it("should complete the job", async () => {
-                const tfaService = app.get(TfaService);
+                const tfaService = app.get(TfaQueueService);
                 const jobStatus = await pollJobStatus({
                     service: tfaService,
                     jobId: jobId

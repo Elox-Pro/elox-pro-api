@@ -1,4 +1,4 @@
-import { TfaService } from "@app/tfa/services/tfa.service";
+import { TfaQueueService } from "@app/tfa/services/tfa-queue.service";
 
 /**
  * Possible statuses for a job to be considered completed or failed.
@@ -9,7 +9,7 @@ const PollJobStatus = ["completed", "failed"];
  * Arguments type for polling job status.
  */
 type Args = {
-    service: TfaService;
+    service: TfaQueueService;
     jobId: string;
     retries?: number; // Number of retries before giving up
     delay?: number;   // Delay in milliseconds between retries

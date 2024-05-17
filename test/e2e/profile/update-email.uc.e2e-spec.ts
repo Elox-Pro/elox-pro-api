@@ -7,7 +7,7 @@ import { CreateRequestFN, createPatch, createPost } from "../test-helpers/create
 import { UpdateEmailResponseDto } from "@app/user/dtos/update-email/update-email-response.dto";
 import { PrismaService } from "@app/prisma/prisma.service";
 import { resetUser } from "../test-helpers/reset-user.test-helper";
-import { TfaService } from "@app/tfa/services/tfa.service";
+import { TfaQueueService } from "@app/tfa/services/tfa-queue.service";
 import { pollJobStatus } from "../test-helpers/poll-job-status.test-helper";
 import { getTfaCode } from "../test-helpers/get-tfa-code.test-helper";
 
@@ -69,7 +69,7 @@ describe("Update email use case", () => {
                 jobId = res.jobId;
             });
             it("should complete job", async () => {
-                const tfaService = app.get(TfaService);
+                const tfaService = app.get(TfaQueueService);
                 const jobStatus = await pollJobStatus({
                     service: tfaService,
                     jobId: jobId

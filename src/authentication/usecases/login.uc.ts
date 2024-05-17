@@ -9,7 +9,7 @@ import { TfaType } from "@prisma/client";
 import { TfaAction } from "../../tfa/enums/tfa-action.enum";
 import { isVerifiedUser } from "../../common/helpers/is-verified-user";
 import { JwtCookieSessionService } from "../../jwt-app/services/jwt-cookie-session.service";
-import { TfaService } from "@app/tfa/services/tfa.service";
+import { TfaQueueService } from "@app/tfa/services/tfa-queue.service";
 
 /**
  * Use case for handling user login.
@@ -24,7 +24,7 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
     private readonly logger = new Logger(LoginUC.name);
 
     constructor(
-        private readonly tfaService: TfaService,
+        private readonly tfaService: TfaQueueService,
         private readonly prisma: PrismaService,
         private readonly hashingStrategy: HashingStrategy,
         private readonly jwtCookieSessionService: JwtCookieSessionService,

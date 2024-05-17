@@ -10,7 +10,7 @@ import { HashingStrategy } from "@app/common/strategies/hashing/hashing.strategy
 import { TfaActionKey } from "@app/tfa/enums/tfa-action-key.enum";
 import { EmailProcessorRequestDto } from "@app/email/dtos/email-processor/email-processor.request.dto";
 import { EmailType } from "@app/email/enums/email-type.enum";
-import { TfaService } from "@app/tfa/services/tfa.service";
+import { TfaQueueService } from "@app/tfa/services/tfa-queue.service";
 import { EmailQueueService } from "@app/email/services/email-queue.service";
 
 @Injectable()
@@ -19,7 +19,7 @@ export class UpdatePasswordUC implements IUseCase<UpdatePasswordRequestDto, Upda
     private readonly logger = new Logger(UpdatePasswordUC.name);
 
     constructor(
-        private readonly tfaService: TfaService,
+        private readonly tfaQueue: TfaQueueService,
         private readonly emailQueue: EmailQueueService,
         private readonly prisma: PrismaService,
         private readonly hashingStrategy: HashingStrategy
@@ -71,7 +71,7 @@ export class UpdatePasswordUC implements IUseCase<UpdatePasswordRequestDto, Upda
             [TfaActionKey.NEW_HASHED_PASSWORD]: hashedPassword
         } as Record<TfaActionKey, string>;
 
-        const job = await this.tfaService.add(new TfaRequestDto(
+        const job = await this.tfaQueue.add(new TfaRequestDto(
             user, ip, TfaAction.UPDATE_PASSWORD, lang, metadata
         ));
 

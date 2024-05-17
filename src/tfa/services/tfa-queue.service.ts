@@ -5,7 +5,7 @@ import Bull, { Queue } from "bull";
 import { TfaRequestDto } from "../dtos/tfa/tfa.request.dto";
 
 @Injectable()
-export class TfaService {
+export class TfaQueueService {
 
     constructor(
         @InjectQueue(TFA_STRATEGY_QUEUE)
