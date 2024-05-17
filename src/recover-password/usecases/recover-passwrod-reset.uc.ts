@@ -5,11 +5,9 @@ import { IUseCase } from "@app/common/usecase/usecase.interface";
 import { HashingStrategy } from "@app/common/strategies/hashing/hashing.strategy";
 import { SessionCookieService } from "@app/common/services/session-cookie.service";
 import { PrismaService } from "@app/prisma/prisma.service";
-import { InjectQueue } from "@nestjs/bull";
-import { Queue } from "bull";
-import { EMAIL_QUEUE } from "@app/email/constants/email.constants";
 import { EmailProcessorRequestDto } from "@app/email/dtos/email-processor/email-processor.request.dto";
 import { EmailType } from "@app/email/enums/email-type.enum";
+import { EmailQueueService } from "@app/email/services/email-queue.service";
 
 /**
  * Use case for recovering and resetting a user's password.
@@ -24,8 +22,7 @@ export class RecoverPasswordResetUC implements IUseCase<RecoverPasswordResetRequ
     private readonly logger = new Logger(RecoverPasswordResetUC.name);
 
     constructor(
-        @InjectQueue(EMAIL_QUEUE)
-        private readonly emailQueue: Queue,
+        private readonly emailQueueService: EmailQueueService,
         private readonly hashingStrategy: HashingStrategy,
         private readonly sessionCookieService: SessionCookieService,
         private readonly prisma: PrismaService,
@@ -74,7 +71,7 @@ export class RecoverPasswordResetUC implements IUseCase<RecoverPasswordResetRequ
             }
         })
 
-        await this.emailQueue.add(new EmailProcessorRequestDto(
+        await this.emailQueueService.add(new EmailProcessorRequestDto(
             EmailType.RECOVER_PASSWORD_SUCCESS, user, lang
         ));
 

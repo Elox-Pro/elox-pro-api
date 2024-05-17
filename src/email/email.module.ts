@@ -6,6 +6,7 @@ import { EJSEmailRender } from './renders/ejs-email.render';
 import { EmailRender } from './renders/email.render';
 import { EmailFactory } from './factories/email.factory';
 import { EmailProcessor } from './processors/email.processor';
+import { EmailQueueService } from './services/email-queue.service';
 
 @Global()
 @Module({
@@ -21,10 +22,12 @@ import { EmailProcessor } from './processors/email.processor';
         EmailFactory,
         EmailConfig,
         EmailProcessor,
+        EmailQueueService
     ],
 
     exports: [
-        EmailFactory
+        EmailFactory,
+        EmailQueueService,
     ]
 })
 export class EmailModule { }
