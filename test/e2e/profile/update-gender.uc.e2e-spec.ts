@@ -33,6 +33,7 @@ describe("Update gender use case", () => {
     afterAll(async () => {
         await app.close();
     });
+    
     describe("PATCH: users/profile/gender", () => {
         it("should return HTTP status OK", async () => {
             const res = await patch({ gender: Gender.MALE });
