@@ -10,7 +10,6 @@ import { FindManyAvatarsResponsetDto } from "../dto/find-many-avatars/find-many-
  * @date 2024-04-15
  */
 @Controller('avatars')
-@Roles(Role.SYSTEM_ADMIN)
 export class AvatarController {
     constructor(
         private readonly findManyAvatarsUC: FindManyAvatarsUC

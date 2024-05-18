@@ -35,7 +35,6 @@ import { UpdateTfaResponseDto } from "../dtos/update-tfa/update-tfa.response.dto
  * @date 2024-04-03
  */
 @Controller('users/profile')
-@Roles(Role.SYSTEM_ADMIN)
 export class ProfileController {
 
     constructor(
