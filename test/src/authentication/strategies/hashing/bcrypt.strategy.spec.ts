@@ -1,4 +1,4 @@
-import { BCryptStategy } from 'authentication/strategies/hashing/bcrypt.strategy';
+import { BCryptStategy } from '@app/common/strategies/hashing/bcrypt.strategy';
 
 describe('BcryptService', () => {
   it('should be defined', () => {

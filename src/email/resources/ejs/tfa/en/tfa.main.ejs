@@ -1,0 +1,37 @@
+<table class="t-main">
+  <tr>
+    <td>
+      <table class="t-section">
+        <tr>
+          <td>
+            <h3 class="text-center">✅</h3>
+            <h1 class="text-center">TFA Code</h1>
+            <p class="text-center box-primary mb-16"><%=code%></p>
+            <p class="text-center">
+              Hello <%=username%>, this email contains your two-factor
+              authentication code to complete your request on <%= companyName %>
+            </p>
+            <ul class="mb-16">
+              <li>This code remains valid for <%=ttlFormatted%>.</li>
+              <li>
+                Do not disclose it to anyone (including staff at <%=companyName
+                %>).
+              </li>
+              <li>
+                The authentication attempt was made from the IP: <%=ipClient%>.
+              </li>
+              <li>
+                If you did not make this authentication attempt, you must change
+                your password to <%= companyName %> immediately, since whoever
+                made this request has your current password.
+              </li>
+            </ul>
+            <p class="text-center">
+              <a href="<%= site %>" class="box-light">Log into your account</a>
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>

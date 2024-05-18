@@ -1,3 +1,3 @@
 export interface IUseCase<T, R> {
-    execute(data: T): Promise<R>;
+    execute(request: T): Promise<R>;
 }

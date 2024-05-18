@@ -1,0 +1,41 @@
+<table class="t-main">
+  <tr>
+    <td>
+      <table class="t-section">
+        <tr>
+          <td>
+            <h3 class="text-center">✅</h3>
+            <h1 class="text-center">Código de 2FA</h1>
+            <p class="text-center box-primary mb-16"><%=code%></p>
+            <p class="text-center">
+              Hola <%=username%>, este correo electrónico contiene tu código de
+              autenticación de dos factores para completar tu solicitud en <%=
+              companyName %>
+            </p>
+            <ul class="mb-16">
+              <li>Este código es válido por <%=ttlFormatted%>.</li>
+              <li>
+                No lo divulgues a nadie (incluido el personal de <%=companyName
+                %>).
+              </li>
+              <li>
+                El intento de autenticación se realizó desde la IP:
+                <%=ipClient%>.
+              </li>
+              <li>
+                Si no realizaste este intento de autenticación, debes cambiar tu
+                contraseña de <%= companyName %> de inmediato, ya que quien hizo
+                esta solicitud tiene tu contraseña actual.
+              </li>
+            </ul>
+            <p class="text-center">
+              <a href="<%= site %>" class="box-light"
+                >Inicia sesión en tu cuenta</a
+              >
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>

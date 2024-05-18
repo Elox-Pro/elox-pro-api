@@ -1,0 +1,19 @@
+[
+    {
+        "role": "SYSTEM_ADMIN",
+        "username": "alaska",
+        "email": "yhonax.qrz@gmail.com",
+        "password": "098lkj!",
+        "emailVerified": true,
+        "phone": "1234567890"
+    },
+    {
+        "role": "COMPANY_OWNER",
+        "username": "brazil",
+        "email": "yhonax.qrz+1@gmail.com",
+        "password": "098lkj!",
+        "emailVerified": true,
+        "tfaType": "EMAIL",
+        "phone": "1234567891"
+    }
+]

@@ -1,0 +1,13 @@
+{
+    "SYSTEM_ADMIN": "Administrador del sistema",
+    "COMPANY_OWNER": "Propietario de la empresa",
+    "COMPANY_ADMIN": "Administrador de la empresa",
+    "COMPANY_CUSTOMER": "Cliente de la empresa",
+    "MALE": "Masculino",
+    "FEMALE": "Femenino",
+    "DEFAULT": "Predeterminado",
+    "EN": "Inglés",
+    "ES": "Español",
+    "LIGHT": "Claro",
+    "DARK": "Oscuro"
+}

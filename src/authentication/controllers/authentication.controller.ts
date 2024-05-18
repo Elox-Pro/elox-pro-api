@@ -1,66 +1,70 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, HttpCode, HttpStatus, Post, Res } from "@nestjs/common";
 import { LoginUC } from "../usecases/login.uc";
-import { LoginRequestDto } from "../dtos/login.request.dto";
-import { IpClientInterceptor } from "../interceptors/ip-client.interceptor";
-import { LoginResponseDto } from "../dtos/login.response.dto";
-import { ValidateTfaUC } from "../usecases/validate-tfa.uc";
-import { ValidateTFARequestDto } from "../dtos/validate-tfa.request.dto";
-import { ValidateTFAResponseDto } from "../dtos/validate-tfa.response.dto";
+import { LoginRequestDto } from "../dtos/login/login.request.dto";
+import { LoginResponseDto } from "../dtos/login/login.response.dto";
 import { Authentication } from "../decorators/authentication.decorator";
 import { AuthenticationType } from "../enums/authentication-type.enum";
-import { RefreshTokenUC } from "../usecases/refresh-token.uc";
-import { RefreshTokenRequestDto } from "../dtos/refresh-token.request.dto";
-import { RefreshTokenResponseDto } from "../dtos/refresh-token.response.dto";
 import { Response } from "express";
 import { LogoutUC } from "../usecases/logout.uc";
 import { Recaptcha } from "@nestlab/google-recaptcha";
-import { LangClientInterceptor } from "../interceptors/lang-client.interceptor";
+import { SignupRequestDto } from "../dtos/signup/signup.request.dto";
+import { SignupUC } from "../usecases/signup.uc";
+import { SignupResponseDto } from "../dtos/signup/signup.response.dto";
+import { GuestRequest } from "@app/authorization/decorators/guest.request.decorator";
+import { GuestUserDto } from "@app/authorization/dto/guest-user.dto";
+import { SuccessResponseDto } from "@app/common/dto/success.response.dto";
 
 @Controller('authentication')
 @Authentication(AuthenticationType.None)
 export class AuthenticationController {
 
     constructor(
+        private readonly signupUC: SignupUC,
         private readonly loginUC: LoginUC,
-        private readonly validateTfaUC: ValidateTfaUC,
-        private readonly refreshTokenUC: RefreshTokenUC,
         private readonly logoutUC: LogoutUC
     ) { }
 
+    @Post("signup")
+    @Recaptcha()
+    @HttpCode(HttpStatus.CREATED)
+    signup(
+        @GuestRequest() guestUserDto: GuestUserDto,
+        @Body() dto: SignupRequestDto
+    ): Promise<SignupResponseDto> {
+        dto.setGuestUser(guestUserDto);
+        return this.signupUC.execute(dto);
+    }
+
     @Post('login')
-    @UseInterceptors(IpClientInterceptor, LangClientInterceptor)
     @Recaptcha()
     @HttpCode(HttpStatus.OK)
     async login(
         @Res({ passthrough: true }) response: Response,
+        @GuestRequest() guestUserDto: GuestUserDto,
         @Body() dto: LoginRequestDto
     ): Promise<LoginResponseDto> {
-
-        dto.setResponse(response);
+        guestUserDto.setResponse(response);
+        dto.setGuestUser(guestUserDto);
         return this.loginUC.execute(dto);
     }
 
-    @HttpCode(HttpStatus.OK)
-    @Post('validate-tfa')
-    validateTfa(
-        @Res({ passthrough: true }) response: Response,
-        @Body() dto: ValidateTFARequestDto): Promise<ValidateTFAResponseDto> {
-        dto.setResponse(response);
-        return this.validateTfaUC.execute(dto);
-    }
-
+    /**
+     * Check if the user is authenticated.
+     * The user is authenticated if the request has valid JWT tokens in cookies.
+     * @returns true
+     */
+    @Post("check")
     @HttpCode(HttpStatus.OK)
     @Authentication(AuthenticationType.JwtCookies)
+    check(): SuccessResponseDto {
+        return new SuccessResponseDto(true);
+    }
+
     @Post('logout')
+    @HttpCode(HttpStatus.OK)
+    @Authentication(AuthenticationType.JwtCookies)
     logout(@Res({ passthrough: true }) response: Response): void {
         this.logoutUC.execute(response);
     }
 
-    // This endpoint is currently disabled due to the cookie server side with http only 
-    // flag implementation
-    @HttpCode(HttpStatus.OK)
-    // @Post('refresh-token')
-    refreshToken(@Body() dto: RefreshTokenRequestDto): Promise<RefreshTokenResponseDto> {
-        return this.refreshTokenUC.execute(dto);
-    }
 }

@@ -1,7 +1,20 @@
 {
+    "access-denied": "Access denied",
+    "account-not-verified": "Account not verified",
+    "email-already-exists": "Email already exists",
+    "email-not-verified": "Email not verified",
     "internal-server": "Internal server error",
     "invalid-credentials": "Invalid credentials",
-    "access-denied": "Access denied",
-    "Unauthorized": "Unauthorized",
-    "Bad Request Exception": "Bad Request Exception"
+    "passwords-do-not-match": "Passwords do not match",
+    "phone-already-exists": "Phone already exists",
+    "phone-not-verified": "Phone not verified",
+    "tfa-type-not-supported": "TFA type not supported",
+    "user-not-found": "User not found",
+    "user-not-verified": "User not verified",
+    "username-already-exists": "Username already exists",
+    "username-not-found": "Username not found",
+    "user-already-has-email": "User already has email",
+    "email-not-found": "Email not found",
+    "ip-request-not-found": "IP request not found",
+    "user-already-has-phone": "User already has phone"
 }

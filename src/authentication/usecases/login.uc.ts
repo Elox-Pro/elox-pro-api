@@ -1,24 +1,21 @@
-import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
-import { LoginRequestDto } from "authentication/dtos/login.request.dto";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
+import { LoginRequestDto } from "authentication/dtos/login/login.request.dto";
 import { IUseCase } from "common/usecase/usecase.interface";
-import { JwtAccessPayloadDto } from "../dtos/jwt-access-payload.dto";
-import { LoginResponseDto } from "../dtos/login.response.dto";
+import { LoginResponseDto } from "../dtos/login/login.response.dto";
 import { PrismaService } from "prisma//prisma.service";
-import { HashingStrategy } from "../strategies/hashing/hashing.strategy";
-import { TFAResponseDto } from "../dtos/tfa.response.dto";
-import { TFA_STRATEGY_QUEUE } from "../constants/authentication.constants";
-import { Queue } from "bull";
-import { InjectQueue } from "@nestjs/bull";
+import { HashingStrategy } from "../../common/strategies/hashing/hashing.strategy";
+import { TfaRequestDto } from "../../tfa/dtos/tfa/tfa.request.dto";
 import { TfaType } from "@prisma/client";
-import { JwtStrategy } from "../strategies/jwt/jwt.strategy";
-import JWTCookieService from "../services/jwt-cookie.service";
-import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
+import { TfaAction } from "../../tfa/enums/tfa-action.enum";
+import { isVerifiedUser } from "../../common/helpers/is-verified-user";
+import { JwtCookieSessionService } from "../../jwt-app/services/jwt-cookie-session.service";
+import { TfaQueueService } from "@app/tfa/services/tfa-queue.service";
 
 /**
  * Use case for handling user login.
  * It verifies credentials, generates JWT tokens, and manages session cookies.
  * If TFA is enabled, it adds a job to the TFA strategy queue.
- * @author yonax73@gmail.com
+ * @author Yonatan A Quintero R
  * @date 2024-02-07
  */
 @Injectable()
@@ -27,50 +24,72 @@ export class LoginUC implements IUseCase<LoginRequestDto, LoginResponseDto> {
     private readonly logger = new Logger(LoginUC.name);
 
     constructor(
-        @InjectQueue(TFA_STRATEGY_QUEUE)
-        private readonly tfaStrategyQueue: Queue,
+        private readonly tfaService: TfaQueueService,
         private readonly prisma: PrismaService,
         private readonly hashingStrategy: HashingStrategy,
-        private readonly jwtStrategy: JwtStrategy,
-        private readonly jwtCookieService: JWTCookieService
+        private readonly jwtCookieSessionService: JwtCookieSessionService,
     ) { }
 
     /**
      * Executes the login use case.
      * Verifies user credentials, generates JWT tokens, and manages session cookies.
      * If TFA is enabled, adds a job to the TFA strategy queue.
-     * @param login The login request data.
+     * @param request The login request data.
      * @returns A promise resolving to a LoginResponseDto.
-     * @throws UnauthorizedException if login credentials are invalid.
+     * @throws BadRequestException if login credentials are invalid.
      */
-    async execute(login: LoginRequestDto): Promise<LoginResponseDto> {
+    async execute(request: LoginRequestDto): Promise<LoginResponseDto> {
 
+        const ip = request.getIp();
+        const lang = request.getLang();
+
+        // 1. Find the user by username
         const savedUser = await this.prisma.user.findUnique({
-            where: { username: login.username }
+            where: { username: request.username },
         });
 
+        // 2. Check if user exists
         if (!savedUser) {
-            this.logger.error(`username not found: ${login.username}`);
-            throw new UnauthorizedException('error.invalid-credentials');
+            this.logger.error(`username not found: ${request.username}`);
+            throw new BadRequestException('error.invalid-credentials');
         }
 
-        if (!await this.hashingStrategy.compare(login.password, savedUser.password)) {
+        // 3. Validate password
+        if (!await this.hashingStrategy.compare(request.password, savedUser.password)) {
             this.logger.error('Invalid password');
-            throw new UnauthorizedException('error.invalid-credentials');
+            throw new BadRequestException('error.invalid-credentials');
         }
 
+        // 4. Check if Two-Factor Authentication (TFA) is required for this user
         if (savedUser.tfaType === TfaType.NONE) {
-            const payload = new JwtAccessPayloadDto(savedUser.username, savedUser.role)
-            const tokens = await this.jwtStrategy.generate(payload);
-            const activeUser = new ActiveUserDto(payload.sub, payload.role, true);
-            this.jwtCookieService.createSession(login.getResponse(), tokens, activeUser);
-            return new LoginResponseDto(false, null);
+
+            // 4.1 No TFA required, generate access tokens and set session cookie
+            await this.jwtCookieSessionService.create(
+                request.getResponse(),
+                savedUser
+            );
+            return new LoginResponseDto(false); // Indicates no further action needed
         }
 
-        // Overwrite the users language with the one from the login request.
-        savedUser.lang = login.lang;
 
-        await this.tfaStrategyQueue.add(new TFAResponseDto(savedUser, login.ipClient));
-        return new LoginResponseDto(true, null);
+        // 5. User requires TFA but hasn't verified email or phone (applicable for EMAIL or SMS TFA)
+        if (!isVerifiedUser(savedUser)) {
+            this.logger.warn(`User not verified: ${savedUser.username}`);
+
+            const job = await this.tfaService.add(new TfaRequestDto(
+                savedUser, ip, TfaAction.SIGN_UP, lang // Treat login like a sign-up for verification
+            ));
+
+            return new LoginResponseDto(true, job.id.toString()); // Indicates verification required
+        }
+
+        // 6. Queue a TFA request for sign-in verification (assuming TFA is enabled)
+        const job = await this.tfaService.add(new TfaRequestDto(
+            savedUser, ip, TfaAction.SIGN_IN, lang
+        ));
+
+        // 7. Login successful, TFA verification will be handled separately
+        return new LoginResponseDto(true, job.id.toString()); // Indicates TFA verification required
     }
+
 }

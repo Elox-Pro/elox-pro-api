@@ -1,9 +1,9 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { AccessTokenGuard } from './access-token.guard';
+import { AccessTokenGuard } from '../../jwt-app/guards/access-token.guard';
 import { AuthenticationType } from '../enums/authentication-type.enum';
 import { AUTHENTICATION_TYPE_KEY } from '../decorators/authentication.decorator';
-import { JWTCookiesGuard } from './jwt-cookies.guard';
+import { JwtCookiesGuard } from '../../jwt-app/guards/jwt-cookies.guard';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
@@ -14,7 +14,7 @@ export class AuthenticationGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly accessTokenGuard: AccessTokenGuard,
-    private readonly jwtCookiesGuard: JWTCookiesGuard,
+    private readonly jwtCookiesGuard: JwtCookiesGuard,
   ) {
     // Initialize the map for different authentication types and their respective guards
     this.authTypeGuardMap = new Map<AuthenticationType, CanActivate | CanActivate[]>();

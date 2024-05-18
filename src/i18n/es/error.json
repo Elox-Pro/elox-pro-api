@@ -1,7 +1,20 @@
 {
+    "access-denied": "Accesso denegado",
+    "account-not-verified": "Cuenta no verificada",
+    "email-already-exists": "El correo electrónico ya existe",
+    "email-not-verified": "Correo electrónico no verificado",
     "internal-server": "Error interno del servidor",
     "invalid-credentials": "Credenciales no válidas",
-    "access-denied": "Accesso denegado",
-    "Unauthorized": "No autorizado",
-    "Bad Request Exception": "Excepción de solicitud incorrecta"
+    "passwords-do-not-match": "Las contraseñas no coinciden",
+    "phone-already-exists": "El número de teléfono ya existe",
+    "phone-not-verified": "Número de teléfono no verificado",
+    "tfa-type-not-supported": "Tipo de autenticación no soportado",
+    "user-not-found": "Usuario no encontrado",
+    "user-not-verified": "Usuario no verificado",
+    "username-already-exists": "El nombre de usuario ya existe",
+    "username-not-found": "Usuario no encontrado",
+    "user-already-has-email": "El usuario ya tiene un correo electrónico",
+    "email-not-found": "Correo electrónico no encontrado",
+    "ip-request-not-found": "Ip solicitud no encontrada",
+    "user-already-has-phone": "El usuario ya tiene un teléfono"
 }

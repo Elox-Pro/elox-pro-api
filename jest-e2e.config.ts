@@ -2,6 +2,7 @@ import type { JestConfigWithTsJest } from 'ts-jest'
 
 const config: JestConfigWithTsJest = {
     testEnvironment: "node",
+    verbose: true,
     moduleFileExtensions: [
         "js",
         "json",

@@ -7,6 +7,338 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Company {
+  id           Int            @id @default(autoincrement())
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  name         String         @unique
+  imageUrl     String?        @map("image_url")
+  loanSettings LoanSettings[]
+  users        User[]
+
+  @@map("companies")
+}
+
+model User {
+  id             Int            @id @default(autoincrement())
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  role           Role           @default(COMPANY_CUSTOMER)
+  username       String         @unique
+  email          String         @unique
+  password       String
+  phone          String?        @unique
+  gender         Gender?
+  avatarUrl      String?        @map("avatar_url")
+  emailVerified  Boolean        @default(false) @map("email_verified")
+  phoneVerified  Boolean        @default(false) @map("phone_verified")
+  tfaType        TfaType        @default(NONE) @map("tfa_type")
+  lastLoginAt    DateTime?      @map("last_login_at")
+  companyId      Int?           @map("company_id")
+  lang           users_lang     @default(DEFAULT)
+  theme          users_theme    @default(DEFAULT)
+  firstName      String?        @map("first_name")
+  lastName       String?        @map("last_name")
+  KYC            KYC?
+  addresses      Address[]
+  auditTrails    AuditTrail[]
+  loans          Loan[]
+  guarantorLoans Loan[]         @relation("loans_as_guarantor")
+  bankAccounts   BankAccount[]
+  contacts       UserContact?
+  customerRank   UserRank?
+  company        Company?       @relation(fields: [companyId], references: [id])
+  documents      UserDocument[]
+
+  @@index([companyId], map: "users_company_id_fkey")
+  @@map("users")
+}
+
+model UserDocument {
+  id               Int              @id @default(autoincrement())
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+  createdAt        DateTime         @default(now()) @map("created_at")
+  type             UserDocumentType
+  value            String?
+  description      String?          @db.Text
+  documentFrontUrl String?          @map("document_front_url")
+  documentBackUrl  String?          @map("document_back_url")
+  userId           Int              @map("user_id")
+  user             User             @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "users_documents_user_id_fkey")
+  @@map("users_documents")
+}
+
+model Address {
+  id               Int         @id @default(autoincrement())
+  updatedAt        DateTime    @updatedAt @map("updated_at")
+  createdAt        DateTime    @default(now()) @map("created_at")
+  streetAddress    String      @map("street_address")
+  apartamentNumber String?     @map("apartament_number")
+  city             String
+  state            String
+  zipCode          String      @map("zip_code")
+  type             AddressType @default(HOME)
+  isDefault        Boolean     @default(false) @map("is_default")
+  userId           Int         @map("user_id")
+  countryId        Int         @map("country_id")
+  country          Country     @relation(fields: [countryId], references: [id])
+  user             User        @relation(fields: [userId], references: [id])
+
+  @@index([countryId], map: "addresses_country_id_fkey")
+  @@index([userId], map: "addresses_user_id_fkey")
+  @@map("addresses")
+}
+
+model Country {
+  id        Int       @id @default(autoincrement())
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  name      String    @unique
+  iso2      String
+  e164      Int
+  ccy       String?
+  lang      String?
+  addresses Address[]
+
+  @@map("countries")
+}
+
+model BankAccount {
+  id            Int         @id @default(autoincrement())
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  bankName      String      @map("bank_name")
+  accountNumber String      @unique @map("account_number")
+  accountType   AccountType @default(SAVINGS) @map("account_type")
+  isActive      Boolean     @default(true) @map("is_active")
+  isPrimary     Boolean     @default(false) @map("is_primary")
+  iban          String?     @unique
+  bic           String?     @unique
+  userId        Int         @map("user_id")
+  user          User        @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "user_bank_accounts_user_id_fkey")
+  @@map("user_bank_accounts")
+}
+
+model KYC {
+  id               Int       @id @default(autoincrement())
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  verified         Boolean   @default(false)
+  rejected         Boolean   @default(false)
+  rejectionReason  String?   @map("rejection_reason")
+  verificationDate DateTime? @map("verification_date")
+  userId           Int       @unique @map("user_id")
+  user             User      @relation(fields: [userId], references: [id])
+
+  @@map("KYCs")
+}
+
+model UserContact {
+  id           Int                 @id @default(autoincrement())
+  updatedAt    DateTime            @updatedAt @map("updated_at")
+  createdAt    DateTime            @default(now()) @map("created_at")
+  type         ContactType
+  relationship ContactRelationship
+  userId       Int                 @unique @map("user_id")
+  user         User                @relation(fields: [userId], references: [id])
+
+  @@map("user_contacts")
+}
+
+model Rank {
+  id            Int        @id @default(autoincrement())
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  name          String     @unique
+  minimumPoints Int        @map("minimum_points")
+  description   String?    @db.Text
+  imageUrl      String?    @map("image_url")
+  userRanks     UserRank[]
+
+  @@map("ranks")
+}
+
+model UserRank {
+  id               Int               @id @default(autoincrement())
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  points           Int
+  userId           Int               @unique @map("user_id")
+  rankId           Int               @map("rank_id")
+  rankTransactions RankTransaction[]
+  rank             Rank              @relation(fields: [rankId], references: [id])
+  user             User              @relation(fields: [userId], references: [id])
+
+  @@index([rankId], map: "user_ranks_rank_id_fkey")
+  @@map("user_ranks")
+}
+
+model RankTransaction {
+  id           Int                 @id @default(autoincrement())
+  updatedAt    DateTime            @updatedAt @map("updated_at")
+  createdAt    DateTime            @default(now()) @map("created_at")
+  type         RankTransactionType
+  pointsEarned Int                 @map("points_earned")
+  description  String?             @db.Text
+  details      Json?
+  userRankId   Int                 @map("user_rank_id")
+  userRank     UserRank            @relation(fields: [userRankId], references: [id])
+
+  @@index([userRankId], map: "rank_transactions_user_rank_id_fkey")
+  @@map("rank_transactions")
+}
+
+model Loan {
+  id                  Int                  @id @default(autoincrement())
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  applicationDate     DateTime             @map("application_date")
+  approvedDate        DateTime?            @map("approved_date")
+  amount              Decimal              @db.Decimal(10, 2)
+  interestRate        Decimal              @map("interest_rate") @db.Decimal(5, 2)
+  monthlyInterestRate Decimal              @map("monthly_interest_rate") @db.Decimal(5, 2)
+  term                Int
+  repaymentFrequency  PaymentFrequency     @default(MONTHLY) @map("repayment_frequency")
+  status              LoanStatus           @default(PENDING)
+  enabledlateFee      Boolean              @default(false) @map("enabled_late_fee")
+  closedDate          DateTime?            @map("closed_date")
+  pastDueStage        PastDueStage?        @map("past_due_stage")
+  collectionStatus    LoanCollectionStatus @map("collection_status")
+  defaultDate         DateTime?            @map("default_date")
+  notes               String?              @map("notes") @db.Text
+  customerId          Int                  @map("customer_id")
+  settingsId          Int                  @map("settings_id")
+  guarantorId         Int                  @map("guarantor_id")
+  collaterals         LoanCollateral[]
+  documents           LoanDocument[]
+  repayments          LoanRepayment[]
+  schedules           LoanSchedule[]
+  customer            User                 @relation(fields: [customerId], references: [id])
+  guarantor           User                 @relation("loans_as_guarantor", fields: [guarantorId], references: [id])
+  settings            LoanSettings         @relation(fields: [settingsId], references: [id])
+
+  @@index([customerId], map: "loans_customer_id_fkey")
+  @@index([guarantorId], map: "loans_guarantor_id_fkey")
+  @@index([settingsId], map: "loans_settings_id_fkey")
+  @@map("loans")
+}
+
+model LoanSettings {
+  id                Int      @id @default(autoincrement())
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  createdAt         DateTime @default(now()) @map("created_at")
+  name              String
+  description       String?  @db.Text
+  loanType          LoanType @default(PERSONAL) @map("loan_type")
+  lateFeePercentage Decimal  @map("late_fee_percentage") @db.Decimal(5, 2)
+  gracePeriodDays   Int      @map("grace_period_days")
+  defaultDatePeriod Int      @map("default_date_period")
+  companyId         Int      @map("company_id")
+  company           Company  @relation(fields: [companyId], references: [id])
+  loan              Loan[]
+
+  @@index([companyId], map: "loan_settings_company_id_fkey")
+  @@map("loan_settings")
+}
+
+model LoanRepayment {
+  id                   Int           @id @default(autoincrement())
+  updatedAt            DateTime      @updatedAt @map("updated_at")
+  createdAt            DateTime      @default(now()) @map("created_at")
+  paymentDate          DateTime      @map("payment_date")
+  amount               Decimal       @db.Decimal(10, 2)
+  principalAmount      Decimal       @map("principal_amount") @db.Decimal(10, 2)
+  interestAmount       Decimal       @map("interest_amount") @db.Decimal(10, 2)
+  lateFeeAmount        Decimal       @map("late_fee_amount") @db.Decimal(10, 2)
+  paymentMethod        PaymentMethod @map("payment_method")
+  transactionReference String        @map("transaction_reference")
+  transactionUrl       String?       @map("transaction_url")
+  notes                String?       @db.Text
+  loanId               Int           @map("loan_id")
+  loan                 Loan          @relation(fields: [loanId], references: [id])
+
+  @@index([loanId], map: "loan_repayments_loan_id_fkey")
+  @@map("loan_repayments")
+}
+
+model LoanSchedule {
+  id                Int           @id @default(autoincrement())
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  installmentNumber Int           @map("installment_number")
+  dueDate           DateTime      @map("due_date")
+  principalAmount   Decimal       @map("principal_amount") @db.Decimal(10, 2)
+  interestAmount    Decimal       @map("interest_amount") @db.Decimal(10, 2)
+  lateFeeAmount     Decimal       @map("late_fee_amount") @db.Decimal(10, 2)
+  totalPayment      Decimal       @map("total_payment") @db.Decimal(10, 2)
+  paymentStatus     PaymentStatus @default(PENDING) @map("payment_status")
+  paidDate          DateTime      @map("paid_date")
+  loanId            Int           @map("loan_id")
+  loan              Loan          @relation(fields: [loanId], references: [id])
+
+  @@index([loanId], map: "loan_schedules_loan_id_fkey")
+  @@map("loan_schedules")
+}
+
+model LoanCollateral {
+  id             Int                @id @default(autoincrement())
+  updatedAt      DateTime           @updatedAt @map("updated_at")
+  createdAt      DateTime           @default(now()) @map("created_at")
+  type           LoanCollateralType
+  description    String?            @db.Text
+  estimatedValue Decimal            @map("estimated_value") @db.Decimal(10, 2)
+  loanId         Int                @map("loan_id")
+  loan           Loan               @relation(fields: [loanId], references: [id])
+
+  @@index([loanId], map: "loan_collaterals_loan_id_fkey")
+  @@map("loan_collaterals")
+}
+
+model LoanDocument {
+  id          Int              @id @default(autoincrement())
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  type        LoanDocumentType
+  value       String
+  documentUrl String
+  description String?          @db.Text
+  loanId      Int              @map("loan_id")
+  loan        Loan             @relation(fields: [loanId], references: [id])
+
+  @@index([loanId], map: "loan_documents_loan_id_fkey")
+  @@map("loan_documents")
+}
+
+model AuditTrail {
+  id          Int              @id @default(autoincrement())
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  action      AuditTrailAction
+  resource    String
+  resource_id Int              @map("resource_id")
+  ipAddress   String           @map("ip_address")
+  userAgent   String           @map("user_agent")
+  details     Json?
+  userId      Int              @map("user_id")
+  user        User             @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "audit_trails_user_id_fkey")
+  @@map("audit_trails")
+}
+
+model Avatar {
+  id        Int      @id @default(autoincrement())
+  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  url       String   @unique
+
+  @@map("avatars")
+}
+
 enum Role {
   SYSTEM_ADMIN
   COMPANY_OWNER
@@ -19,7 +351,6 @@ enum Gender {
   FEMALE
 }
 
-// Two factor authentication types
 enum TfaType {
   NONE
   EMAIL
@@ -130,583 +461,14 @@ enum AuditTrailAction {
   DELETE
 }
 
-enum UserLang {
+enum users_lang {
+  DEFAULT
   EN
   ES
 }
 
-// This model store the information about the company and their relations with users and loan settings
-model Company {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  name         String         @unique()
-  imageUrl     String?        @map("image_url")
-  users        User[]
-  loanSettings LoanSettings[]
-
-  @@map("companies")
-}
-
-// This model defines the core user information for the system
-model User {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  role      Role    @default(COMPANY_CUSTOMER)
-  username  String  @unique
-  email     String  @unique
-  password  String
-  firstName String?
-  lastName  String?
-  phone     String? @unique
-
-  gender Gender @default(MALE)
-
-  avatarUrl String? @map("avatar_url")
-
-  // Flat indication email verification status
-  emailVerified Boolean @default(false) @map("email_verified")
-
-  // Flag indicating phone verification status
-  phoneVerified Boolean @default(false) @map("phone_verified")
-
-  // The TFA authentication type to 
-  tfaType TfaType @default(NONE) @map("tfa_type")
-
-  // Last login timestamp
-  lastLoginAt DateTime? @map("last_login_at")
-
-  // The user language
-  lang UserLang @default(EN)
-
-  // Information related with the customer ranks
-  customerRank UserRank?
-
-  // Information related to Know Your Customer (KYC) checks for users
-  KYC KYC?
-
-  //  User address information
-  addresses Address[]
-
-  // Information related to the user documents and documents uploads
-  documents UserDocument[]
-
-  // Information related to the user contacts (e.g., personal references) 
-  contacts UserContact[]
-
-  // Information related to the user bank accounts
-  bankAccounts BankAccount[]
-
-  // Customer loans
-  loans Loan[]
-
-  // Loans as guarantor
-  guarantorLoans Loan[] @relation(name: "loans_as_guarantor")
-
-  // User activities and system events
-  auditTrails AuditTrail[]
-
-  // Relationships
-
-  // The relationship between the user and the company
-  // the SYSTEM_ADMIN role does not have any relationship with any company
-  companyId Int?     @map("company_id")
-  company   Company? @relation(fields: [companyId], references: [id])
-
-  @@map("users")
-}
-
-// This model stores document information about the user, it’s useful to store kyc information.
-model UserDocument {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  type UserDocumentType
-
-  // Document value (e.g.,document number, address data)
-  value String?
-
-  description String? @db.Text
-
-  // URL of document front image
-  documentFrontUrl String? @map("document_front_url")
-
-  // URL of document back image
-  documentBackUrl String? @map("document_back_url")
-
-  // Relationships
-
-  userId Int  @map("user_id")
-  user   User @relation(fields: [userId], references: [id])
-
-  @@map("users_documents")
-}
-
-// This model stores user address information
-model Address {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  streetAddress    String  @map("street_address")
-  apartamentNumber String? @map("apartament_number")
-  city             String
-  state            String
-
-  // Postal code
-  zipCode String @map("zip_code")
-
-  type AddressType @default(HOME)
-
-  // Flag indicating default address for user
-  isDefault Boolean @default(false) @map("is_default")
-
-  // Relationships
-
-  userId Int  @map("user_id")
-  user   User @relation(fields: [userId], references: [id])
-
-  countryId Int     @map("country_id")
-  country   Country @relation(fields: [countryId], references: [id])
-
-  @@map("addresses")
-}
-
-// This model stores information about different countries in the world.
-model Country {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Country name
-  name String
-
-  // ISO2 Country code
-  iso2 String
-
-  // Internationally-recognized standard phone number format
-  e164 Int
-
-  // Country main currency
-  ccy String?
-
-  // Country main language
-  lang String?
-
-  // List of addresses linked to this country
-  addresses Address[]
-
-  @@map("countries")
-}
-
-// This model stores user account information  for financial transactions
-model BankAccount {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  bankName String @map("bank_name")
-
-  // Unique account number
-  accountNumber String @unique @map("account_number")
-
-  accountType AccountType @default(SAVINGS) @map("account_type")
-
-  //  Flag indicating active account status
-  isActive Boolean @default(true) @map("is_active")
-
-  // Flag indicating the main account
-  isPrimary Boolean @default(false) @map("is_primary")
-
-  // International Bank Account Number
-  iban String? @unique
-
-  // Bank Identifier Code
-  bic String? @unique
-
-  // Relationships
-
-  userId Int  @map("user_id")
-  user   User @relation(fields: [userId], references: [id])
-
-  @@map("user_bank_accounts")
-}
-
-// This model stores  information related to Know Your Customer (KYC) checks for users
-model KYC {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Flag indicating successful KYC verification
-  verified Boolean @default(false)
-
-  // Flag indicating rejected KYC verification
-  rejected Boolean @default(false)
-
-  // Reason for KYC rejection
-  rejectionReason String? @map("rejection_reason")
-
-  // Date of KYC verification
-  verificationDate DateTime? @map("verification_date")
-
-  // Relationships
-
-  userId Int  @unique @map("user_id")
-  user   User @relation(fields: [userId], references: [id])
-
-  @@map("KYCs")
-}
-
-// This model stores  information related to the users contacts
-model UserContact {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  type         ContactType
-  relationship ContactRelationship
-
-  // Relationships
-
-  userId Int  @unique @map("user_id")
-  user   User @relation(fields: [userId], references: [id])
-
-  @@map("user_contacts")
-}
-
-// This model defines the different user ranks within the system, potentially associated with specific privileges and benefits.
-model Rank {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Unique name of the rank (e.g., bronze, silver, gold)
-  name String @unique
-
-  // Minimum number of rank points required to achieve this rank
-  minimumPoints Int @map("minimum_points")
-
-  // Description of the rank and associated benefits
-  description String? @db.Text
-
-  imageUrl  String?    @map("image_url")
-  userRanks UserRank[]
-
-  @@map("ranks")
-}
-
-// This model defines the relationship with users and ranks.
-model UserRank {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // The current user points
-  points Int
-
-  // List of the user rank transactions
-  rankTransactions RankTransaction[]
-
-  // Relationships
-
-  userId Int  @unique @map("user_id")
-  user   User @relation(fields: [userId], references: [id])
-
-  // The current user rank
-  rankId Int  @map("rank_id")
-  rank   Rank @relation(fields: [rankId], references: [id])
-
-  @@map("user_ranks")
-}
-
-// This model stores information about transactions that contribute to or influence user ranks.
-model RankTransaction {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  type RankTransactionType
-
-  // Number of rank points gained or lost from the transaction
-  pointsEarned Int @map("points_earned")
-
-  // Optional description
-  description String? @db.Text
-
-  // Optional JSON object containing additional details about the transaction (e.g., loan amount, referral code)
-  details Json?
-
-  // Relationships
-
-  userRankId Int      @map("user_rank_id")
-  userRank   UserRank @relation(fields: [userRankId], references: [id])
-
-  @@map("rank_transactions")
-}
-
-// This model stores information about individual loan applications and their lifecycle.
-model Loan {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Date loan application was submitted
-  applicationDate DateTime @map("application_date")
-
-  // Date loan application was approved 
-  approvedDate DateTime? @map("approved_date")
-
-  // Approved loan amount
-  amount Decimal @db.Decimal(10, 2)
-
-  // Loan interest rate (APR)
-  interestRate Decimal @map("interest_rate") @db.Decimal(5, 2)
-
-  // Loan interest rate by month
-  monthlyInterestRate Decimal @map("monthly_interest_rate") @db.Decimal(5, 2)
-
-  // Loan term based on repayments frequency
-  term Int
-
-  // Repayment frequency to use with terms
-  repaymentFrequency PaymentFrequency @default(MONTHLY) @map("repayment_frequency")
-
-  // Current status of the loan.
-  status LoanStatus @default(PENDING)
-
-  // Flag indicating if applies late fee to loan. 
-  enabledlateFee Boolean @default(false) @map("enabled_late_fee")
-
-  // Date the loan was fully repaid and closed
-  closedDate DateTime? @map("closed_date")
-
-  // Representing the stage of delinquency
-  pastDueStage PastDueStage? @map("past_due_stage")
-
-  // Status of collection efforts
-  collectionStatus LoanCollectionStatus @map("collection_status")
-
-  // Date the loan was declared in default (if applicable)
-  defaultDate DateTime? @map("default_date")
-
-  // Optional loan notes
-  notes String? @map("notes") @db.Text
-
-  // Information about individual loan repayments made by the customer
-  repayments LoanRepayment[]
-
-  // Details schedule of individual payments for each loan
-  schedules LoanSchedule[]
-
-  // Information about collateral assets pledged by users 
-  collaterals LoanCollateral[]
-
-  // Information and links to various documents related to individual loans and collaterals
-  documents LoanDocument[]
-
-  // Relationships
-
-  customerId Int   @map("customer_id")
-  customer   User? @relation(fields: [customerId], references: [id])
-
-  settingsId Int           @map("settings_id")
-  settings   LoanSettings? @relation(fields: [settingsId], references: [id])
-
-  guarantorId Int   @map("guarantor_id")
-  guarantor   User? @relation(name: "loans_as_guarantor", fields: [guarantorId], references: [id])
-
-  @@map("loans")
-}
-
-// This model stores configuration settings for various  aspects of loans, including late fees.
-model LoanSettings {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Name of the loan settings
-  name String
-
-  // Description of the loan settings
-  description String? @db.Text
-
-  // Loan type name
-  loanType LoanType @default(PERSONAL) @map("loan_type")
-
-  // Percentage of outstanding balance charged as late fee
-  lateFeePercentage Decimal @map("late_fee_percentage") @db.Decimal(5, 2)
-
-  // Number of days after due date before late fee applies
-  gracePeriodDays Int @map("grace_period_days")
-
-  // Number of days after which a loan is considered in default
-  defaultDatePeriod Int @map("default_date_period")
-
-  loan Loan[]
-
-  // Relationship
-
-  // Each compnay has their own loan settings
-  companyId Int     @map("company_id")
-  company   Company @relation(fields: [companyId], references: [id])
-
-  @@map("loan_settings")
-}
-
-//  This model stores information about individual loan repayments made by users.
-model LoanRepayment {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Date the repayment was made
-  paymentDate DateTime @map("payment_date")
-
-  // Amount paid in the repayment
-  amount Decimal @db.Decimal(10, 2)
-
-  // Amount applied towards principal balance
-  principalAmount Decimal @map("principal_amount") @db.Decimal(10, 2)
-
-  // Amount applied towards interest
-  interestAmount Decimal @map("interest_amount") @db.Decimal(10, 2)
-
-  // Amount applied towards late fee
-  lateFeeAmount Decimal @map("late_fee_amount") @db.Decimal(10, 2)
-
-  // Method used for payment
-  paymentMethod PaymentMethod @map("payment_method")
-
-  // Unique reference number for the transaction
-  transactionReference String @map("transaction_reference")
-
-  // Transaction URL of Image or document 
-  transactionUrl String? @map("transaction_url")
-
-  // Notes of the repayment
-  notes String? @db.Text
-
-  // Relationships
-
-  loanId Int   @map("loan_id")
-  loan   Loan? @relation(fields: [loanId], references: [id])
-
-  @@map("loan_repayments")
-}
-
-// This model stores a detailed schedule of individual payments for each loan, including principal, interest, and any applicable fees, over the loan term.
-model LoanSchedule {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Unique identifier for each installment within the schedule
-  installmentNumber Int @map("installment_number")
-
-  // Date the installment is due	
-  dueDate DateTime @map("due_date")
-
-  // Scheduled amount of principal repayment in this installment
-  principalAmount Decimal @map("principal_amount") @db.Decimal(10, 2)
-
-  // Scheduled amount of interest payment in this installment
-  interestAmount Decimal @map("interest_amount") @db.Decimal(10, 2)
-
-  // Scheduled amount of late fee in this installment
-  lateFeeAmount Decimal @map("late_fee_amount") @db.Decimal(10, 2)
-
-  // Total amount due for this installment
-  totalPayment Decimal @map("total_payment") @db.Decimal(10, 2)
-
-  // Status of the installment
-  paymentStatus PaymentStatus @default(PENDING) @map("payment_status")
-
-  // Date the installment was paid
-  paidDate DateTime @map("paid_date")
-
-  // Relationships
-  loanId Int   @map("loan_id")
-  loan   Loan? @relation(fields: [loanId], references: [id])
-
-  @@map("loan_schedules")
-}
-
-// This model stores information about collateral assets pledged by users to secure their loans.
-model LoanCollateral {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Type of collateral asset
-  type LoanCollateralType
-
-  // Description of the collateral asset
-  description String? @db.Text
-
-  // Estimated market value of the collateral asset
-  estimatedValue Decimal @map("estimated_value") @db.Decimal(10, 2)
-
-  // Relationships
-
-  loanId Int   @map("loan_id")
-  loan   Loan? @relation(fields: [loanId], references: [id])
-
-  @@map("loan_collaterals")
-}
-
-// This model stores information and links to various documents related to individual loans and loan collaterals.
-model LoanDocument {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Type of document (e.g., loan agreement, promissory note, collateral documents: ownership, valuation report)
-  type LoanDocumentType
-
-  value       String
-  documentUrl String
-  description String? @db.Text
-
-  // Relationships
-  loanId Int   @map("loan_id")
-  loan   Loan? @relation(fields: [loanId], references: [id])
-
-  @@map("loan_documents")
-}
-
-// This model stores a chronological record of user activities and system events related to various aspects of the platform.
-model AuditTrail {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Description of the performed action
-  action AuditTrailAction
-
-  // Resource or entity affected by the action (e.g., loan, document, user profile)
-  resource String
-
-  // Id to specific model depending on the "resource" field 
-  resource_id Int @map("resource_id")
-
-  // IP address of the user who performed the action
-  ipAddress String @map("ip_address")
-
-  // User agent string identifying the device and browser
-  userAgent String @map("user_agent")
-
-  // Optional JSON object containing additional details about the action
-  details Json?
-
-  // relationship
-
-  userId Int   @map("user_id")
-  user   User? @relation(fields: [userId], references: [id])
-
-  @@map("audit_trails")
+enum users_theme {
+  DEFAULT
+  LIGHT
+  DARK
 }
