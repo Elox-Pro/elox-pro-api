@@ -35,8 +35,6 @@ model User {
   tfaType        TfaType        @default(NONE) @map("tfa_type")
   lastLoginAt    DateTime?      @map("last_login_at")
   companyId      Int?           @map("company_id")
-  lang           users_lang     @default(DEFAULT)
-  theme          users_theme    @default(DEFAULT)
   firstName      String?        @map("first_name")
   lastName       String?        @map("last_name")
   KYC            KYC?
@@ -459,16 +457,4 @@ enum AuditTrailAction {
   READ
   UPDATE
   DELETE
-}
-
-enum users_lang {
-  DEFAULT
-  EN
-  ES
-}
-
-enum users_theme {
-  DEFAULT
-  LIGHT
-  DARK
 }
