@@ -13,6 +13,7 @@ import { BullAppModule } from './bull-app/bull-app.module';
 import { TfaModule } from './tfa/tfa.module';
 import { CommonModule } from './common/common.module';
 import { AvatarModule } from './avatar/avatar.module';
+import { CompanyModule } from './company/company.module';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { AvatarModule } from './avatar/avatar.module';
     RecoverPasswordModule,
     TfaModule,
     UserModule,
-    AvatarModule
+    AvatarModule,
+    CompanyModule,
   ]
 })
 export class AppModule { }

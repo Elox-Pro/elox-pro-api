@@ -9,6 +9,7 @@ import { FindManyAvatarsResponsetDto } from "../dto/find-many-avatars/find-many-
  * @author Yonatan A Quintero R
  * @date 2024-04-15
  */
+@Roles(Role.SYSTEM_ADMIN)
 @Controller('avatars')
 export class AvatarController {
     constructor(

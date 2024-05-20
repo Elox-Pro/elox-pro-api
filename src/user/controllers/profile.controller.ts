@@ -34,6 +34,7 @@ import { UpdateTfaResponseDto } from "../dtos/update-tfa/update-tfa.response.dto
  * @author Yonatan A Quintero R
  * @date 2024-04-03
  */
+@Roles(Role.SYSTEM_ADMIN)
 @Controller('users/profile')
 export class ProfileController {
 
