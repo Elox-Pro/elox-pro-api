@@ -9,7 +9,11 @@ import { Role } from "@prisma/client";
 export class FindManyCompaniesUC implements IUseCase<FindManyCompaniesRequestDto, FindManyCompaniesResponseDto> {
 
     constructor(private readonly prisma: PrismaService) { }
-    async execute(): Promise<FindManyCompaniesResponseDto> {
+    async execute(request: FindManyCompaniesRequestDto): Promise<FindManyCompaniesResponseDto> {
+
+        const { page, limit } = request;
+        const skip = (page - 1) * limit;
+        
         const companies = await this.prisma.company.findMany({
             include: {
                 users: {
@@ -20,8 +24,14 @@ export class FindManyCompaniesUC implements IUseCase<FindManyCompaniesRequestDto
                         role: Role.COMPANY_OWNER
                     }
                 }
-            }
+            },
+            skip,
+            take: limit,
+            orderBy: { createdAt: 'desc' },
         });
-        return new FindManyCompaniesResponseDto(companies);
+
+        const total = await this.prisma.company.count();
+
+        return new FindManyCompaniesResponseDto(companies, total);
     }
 }

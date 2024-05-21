@@ -1,7 +1,6 @@
 import { HttpStatus, INestApplication } from "@nestjs/common"
 import { bootstrapTest } from "../test.main";
 import { AuthenticationModule } from "@app/authentication/authentication.module";
-import { AvatarModule } from "@app/avatar/avatar.module";
 import { getTestUser } from "../test-helpers/get-test-user.test-helper";
 import { CreateRequestFN, createGet } from "../test-helpers/create-request.test-helper";
 import { CompanyModule } from "@app/company/company.module";
@@ -32,7 +31,10 @@ describe("List Companies Endpoint", () => {
 
     describe("GET: companies/", () => {
         it("should return HTTP status OK", async () => {
-            const res = await get();
+            const res = await get({
+                page: 1,
+                limit: 10
+            });
             expect(res.status).toBe(HttpStatus.OK);
             expect(res.body).toBeDefined();
         });

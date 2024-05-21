@@ -86,14 +86,14 @@ export function createPatch({ app, url, meta, credentials }: Args): CreateReques
  * ```
  */
 export function createGet({ app, url, meta, credentials }: Args): CreateRequestFN {
-    return async (data: any): Promise<request.Response> => {
+    return async (query: any): Promise<request.Response> => {
         const authCookies = await getAuthCookies(app, credentials);
         const cookies = mergeCookies(authCookies, meta?.["cookie"]);
         return await request(app.getHttpServer())
             .get(url)
             .set("accept-language", meta?.["accept-language"] || RequestLang.EN)
             .set("Cookie", cookies)
-            .send(data);
+            .query(query);
     }
 };
 
