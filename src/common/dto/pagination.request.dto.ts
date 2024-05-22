@@ -1,4 +1,4 @@
-import { IsNumber } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class PaginationRequestDto {
     @IsNumber()
@@ -6,4 +6,8 @@ export class PaginationRequestDto {
 
     @IsNumber()
     readonly limit: number;
+
+    @IsString()
+    @IsOptional()
+    readonly searchTerm: string;
 }

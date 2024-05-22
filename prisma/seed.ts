@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { BCryptStategy } from '../src/common/strategies/hashing/bcrypt.strategy';
 import { FilePathService } from './service/file-path-service';
 import * as dotenv from 'dotenv';
@@ -27,6 +27,7 @@ async function main() {
         await seedCountries();
         await seedUsers();
         await seedAvatars();
+        await seedCompanies();
     } catch (error) {
         console.error('Error during seeding:', error);
     } finally {
@@ -99,6 +100,48 @@ async function seedAvatars() {
     }
 }
 
+/**
+ * Seed companies into the database.
+ */
+async function seedCompanies() {
+    try {
+        const jsonData: any[] = await filePathService.readJsonFile("companies", true);
+
+        const data: Prisma.CompanyCreateInput[] = await Promise.all(
+            jsonData.map(async (company: any) => {
+                return {
+                    name: company.name,
+                    imageUrl: company.imageUrl,
+                    users: {
+                        create: await Promise.all(company.users.map(async (user: any) => ({
+                            username: user.username,
+                            email: user.email,
+                            password: await bcryptService.hash(user.password),
+                            role: user.role,
+                            emailVerified: user.emailVerified,
+                            firstName: user.firstName,
+                            lastName: user.lastName,
+                            avatarUrl: user.avatarUrl,
+                        }))),
+                    },
+                };
+            }));
+
+        await Promise.all(data.map(async (company) => {
+            await prisma.company.create({
+                data: {
+                    name: company.name,
+                    imageUrl: company.imageUrl,
+                    users: company.users,
+                },
+            });
+        }));
+
+        console.log('✔ Companies seeded successfully.');
+    } catch (error) {
+        console.error('Error seeding companies:', error);
+    }
+}
 
 // Execute the main seeding process
 main();

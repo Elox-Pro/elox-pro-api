@@ -11,10 +11,13 @@ export class FindManyCompaniesUC implements IUseCase<FindManyCompaniesRequestDto
     constructor(private readonly prisma: PrismaService) { }
     async execute(request: FindManyCompaniesRequestDto): Promise<FindManyCompaniesResponseDto> {
 
-        const { page, limit } = request;
+        const { page, limit, searchTerm } = request;
         const skip = (page - 1) * limit;
-        
+
         const companies = await this.prisma.company.findMany({
+            where: {
+                ...(searchTerm ? { name: { contains: searchTerm } } : {}),
+            },
             include: {
                 users: {
                     select: {
@@ -30,7 +33,11 @@ export class FindManyCompaniesUC implements IUseCase<FindManyCompaniesRequestDto
             orderBy: { createdAt: 'desc' },
         });
 
-        const total = await this.prisma.company.count();
+        const total = await this.prisma.company.count({
+            where: {
+                ...(searchTerm ? { name: { contains: searchTerm } } : {}),
+            }
+        });
 
         return new FindManyCompaniesResponseDto(companies, total);
     }
