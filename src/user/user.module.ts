@@ -1,7 +1,6 @@
 import { Module } from "@nestjs/common";
 import { FindUserByUsernameUC } from "./usecases/find-user-by-username.uc";
 import { UpdateUserUC } from "./usecases/update-user.uc";
-import { UserTranslator } from "./translators/user.translator";
 import { UpdateAvatarUC } from "./usecases/update-avatar.uc";
 import { UpdateNameUC } from "./usecases/update-name.uc";
 import { UpdateGenderUC } from "./usecases/update-gender.uc";
@@ -13,14 +12,13 @@ import { ProfileController } from "./controllers/profile.controller";
 import { TfaModule } from "@app/tfa/tfa.module";
 
 @Module({
-    imports:[
+    imports: [
         TfaModule,
     ],
     controllers: [ProfileController],
     providers: [
         FindUserByUsernameUC,
         UpdateUserUC,
-        UserTranslator,
         UpdateAvatarUC,
         UpdateNameUC,
         UpdateGenderUC,

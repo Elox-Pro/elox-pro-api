@@ -3,7 +3,7 @@ import { FindUserByUsernameRequestDto } from "../dtos/find-user-by-username/find
 import { FindUserByUserNameResponseDto } from "../dtos/find-user-by-username/find-user-by-username.response.dto";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "@app/prisma/prisma.service";
-import { UserTranslator } from "../translators/user.translator";
+import { UserTranslator } from "../../common/translator/user.translator";
 
 /**
  * Use case for finding a user by username.
@@ -30,15 +30,15 @@ export class FindUserByUsernameUC implements IUseCase<FindUserByUsernameRequestD
         const username = data.getUsername();
         const lang = data.getLang();
 
-        const user = await this.prisma.user.findUnique({
+        const userAux = await this.prisma.user.findUnique({
             where: { username }
         });
 
-        if (!user) {
+        if (!userAux) {
             throw new BadRequestException('error.user-not-found');
         }
-        const userTranslations = await this.userTranslator.translate(user, lang);
+        const user = await this.userTranslator.translate(userAux, lang);
 
-        return new FindUserByUserNameResponseDto(user, userTranslations);
+        return new FindUserByUserNameResponseDto(user);
     }
 }

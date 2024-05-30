@@ -1,10 +1,9 @@
-import { User } from "@prisma/client";
+import { UserType } from "@app/user/types/user.type";
 
 export class FindUserByUserNameResponseDto {
 
     constructor(
-        readonly user: User,
-        readonly userTranslations: Record<string, string>,
+        readonly user: UserType,
     ) {
         this.user.password = null;
     }

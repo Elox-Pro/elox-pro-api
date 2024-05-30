@@ -7,6 +7,8 @@ import { FindManyCompaniesRequestDto } from "../dtos/find-many-companies/find-ma
 import { FindCompanyByIdUC } from "../usecases/find-company-by-id.uc";
 import { FindCompanyByIdRequestDto } from "../dtos/find-company-by-id/find-company-by-id.request.dto";
 import { FindCompanyByIdResponseDto } from "../dtos/find-company-by-id/find-company-by-id.response.dto";
+import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
+import { UserRequest } from "@app/authorization/decorators/user.request.decorator";
 
 /**
  * Controller for managing companies.
@@ -29,7 +31,11 @@ export class CompanyController {
 
     @Get("/:id")
     @HttpCode(HttpStatus.OK)
-    company(@Param() request: FindCompanyByIdRequestDto): Promise<FindCompanyByIdResponseDto> {
+    company(
+        @UserRequest() activeUser: ActiveUserDto,
+        @Param() request: FindCompanyByIdRequestDto
+    ): Promise<FindCompanyByIdResponseDto> {
+        request.setActiveUser(activeUser);
         return this.findCompanyByIdUC.execute(request);
     }
 }

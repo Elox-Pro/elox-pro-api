@@ -1,3 +1,3 @@
-export interface Translator<T> {
-    translate(model: T, lang: string): Promise<Record<string, string>>;
+export interface Translator<T, K> {
+    translate(model: T, lang: string): Promise<K>;
 }

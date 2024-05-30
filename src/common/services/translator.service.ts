@@ -21,6 +21,8 @@ export class TranslatorService {
      */
     public async getValue(key: string, lang: string): Promise<string> {
 
+        if (!key || !lang) return null;
+
         // Construct the full key by concatenating MODEL_KEY with the provided key
         const fullKey = MODEL_KEY + key;
 
