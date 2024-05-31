@@ -16,5 +16,7 @@
     "user-already-has-email": "El usuario ya tiene un correo electrónico",
     "email-not-found": "Correo electrónico no encontrado",
     "ip-request-not-found": "Ip solicitud no encontrada",
-    "user-already-has-phone": "El usuario ya tiene un teléfono"
+    "user-already-has-phone": "El usuario ya tiene un teléfono",
+    "company-already-exists": "La compañía ya existe",
+    "user-not-company-owner": "El usuario no tiene role propietario de la compañía"
 }

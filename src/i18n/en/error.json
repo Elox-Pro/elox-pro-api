@@ -16,5 +16,7 @@
     "user-already-has-email": "User already has email",
     "email-not-found": "Email not found",
     "ip-request-not-found": "IP request not found",
-    "user-already-has-phone": "User already has phone"
+    "user-already-has-phone": "User already has phone",
+    "company-already-exists": "Company already exists",
+    "user-not-company-owner": "User is not company owner role"
 }

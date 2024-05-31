@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, HttpStatus, Param, Query, Req } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, Req } from "@nestjs/common";
 import { Roles } from "@app/authorization/decorators/roles.decorator";
 import { Role } from "@prisma/client";
 import { FindManyCompaniesUC } from "../usecases/find-many-companies.uc";
@@ -9,6 +9,9 @@ import { FindCompanyByIdRequestDto } from "../dtos/find-company-by-id/find-compa
 import { FindCompanyByIdResponseDto } from "../dtos/find-company-by-id/find-company-by-id.response.dto";
 import { ActiveUserDto } from "@app/authorization/dto/active-user.dto";
 import { UserRequest } from "@app/authorization/decorators/user.request.decorator";
+import { CreateCompanyUC } from "../usecases/create-company.uc";
+import { CreateCompanyRequestDto } from "../dtos/create-company/create-company.request.dto";
+import { CreateCompanyResponseDto } from "../dtos/create-company/create-company.response.dto";
 
 /**
  * Controller for managing companies.
@@ -20,22 +23,31 @@ import { UserRequest } from "@app/authorization/decorators/user.request.decorato
 export class CompanyController {
     constructor(
         private readonly findManyCompaniesUC: FindManyCompaniesUC,
-        private readonly findCompanyByIdUC: FindCompanyByIdUC
+        private readonly findCompanyByIdUC: FindCompanyByIdUC,
+        private readonly createCompanyUC: CreateCompanyUC,
     ) { }
 
     @Get("/")
     @HttpCode(HttpStatus.OK)
-    companies(@Query() request: FindManyCompaniesRequestDto): Promise<FindManyCompaniesResponseDto> {
+    findManyCompanies(@Query() request: FindManyCompaniesRequestDto): Promise<FindManyCompaniesResponseDto> {
         return this.findManyCompaniesUC.execute(request);
     }
 
-    @Get("/:id")
+    @Get("/find/:id")
     @HttpCode(HttpStatus.OK)
-    company(
+    findCompanyById(
         @UserRequest() activeUser: ActiveUserDto,
         @Param() request: FindCompanyByIdRequestDto
     ): Promise<FindCompanyByIdResponseDto> {
         request.setActiveUser(activeUser);
         return this.findCompanyByIdUC.execute(request);
+    }
+
+    @Post("/create")
+    @HttpCode(HttpStatus.CREATED)
+    createCompany(
+        @Body() request: CreateCompanyRequestDto,
+    ): Promise<CreateCompanyResponseDto> {
+        return this.createCompanyUC.execute(request);
     }
 }
