@@ -40,7 +40,6 @@ export class SetCompanyNameUC implements IUseCase<SetCompanyNameRequestDto, SetC
             throw new BadRequestException('error.company-already-exists');
         }
         await this.createCompany(name);
-
     }
 
     private async update(id: number, name: string) {

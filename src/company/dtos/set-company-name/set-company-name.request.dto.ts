@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from "class-validator/types/decorator/decorators";
+import { IsNumber, IsString } from "class-validator"
 
 export class SetCompanyNameRequestDto {
     @IsString()

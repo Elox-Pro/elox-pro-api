@@ -12,6 +12,9 @@ import { UserRequest } from "@app/authorization/decorators/user.request.decorato
 import { CreateCompanyUC } from "../usecases/create-company.uc";
 import { CreateCompanyRequestDto } from "../dtos/create-company/create-company.request.dto";
 import { CreateCompanyResponseDto } from "../dtos/create-company/create-company.response.dto";
+import { SetCompanyNameUC } from "../usecases/set-company-name.uc";
+import { SetCompanyNameRequestDto } from "../dtos/set-company-name/set-company-name.request.dto";
+import { SetCompanyNameResponseDto } from "../dtos/set-company-name/set-company-name.response.dto";
 
 /**
  * Controller for managing companies.
@@ -25,6 +28,7 @@ export class CompanyController {
         private readonly findManyCompaniesUC: FindManyCompaniesUC,
         private readonly findCompanyByIdUC: FindCompanyByIdUC,
         private readonly createCompanyUC: CreateCompanyUC,
+        private readonly setCompnayNameUC: SetCompanyNameUC,
     ) { }
 
     @Get("/")
@@ -49,5 +53,13 @@ export class CompanyController {
         @Body() request: CreateCompanyRequestDto,
     ): Promise<CreateCompanyResponseDto> {
         return this.createCompanyUC.execute(request);
+    }
+
+    @Post("/set-name")
+    @HttpCode(HttpStatus.OK)
+    setName(
+        @Body() request: SetCompanyNameRequestDto,
+    ): Promise<SetCompanyNameResponseDto> {
+        return this.setCompnayNameUC.execute(request);
     }
 }
