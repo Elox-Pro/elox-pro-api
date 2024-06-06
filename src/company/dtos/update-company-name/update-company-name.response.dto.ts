@@ -1,6 +1,6 @@
 import { Company } from "@prisma/client";
 
-export class CreateCompanyResponseDto {
+export class UpdateCompanyNameResponseDto {
     constructor(readonly company: Company) {
     }
 }

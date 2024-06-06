@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, Req } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, Req } from "@nestjs/common";
 import { Roles } from "@app/authorization/decorators/roles.decorator";
 import { Role } from "@prisma/client";
 import { FindManyCompaniesUC } from "../usecases/find-many-companies.uc";
@@ -12,9 +12,9 @@ import { UserRequest } from "@app/authorization/decorators/user.request.decorato
 import { CreateCompanyUC } from "../usecases/create-company.uc";
 import { CreateCompanyRequestDto } from "../dtos/create-company/create-company.request.dto";
 import { CreateCompanyResponseDto } from "../dtos/create-company/create-company.response.dto";
-import { SetCompanyNameUC } from "../usecases/set-company-name.uc";
-import { SetCompanyNameRequestDto } from "../dtos/set-company-name/set-company-name.request.dto";
-import { SetCompanyNameResponseDto } from "../dtos/set-company-name/set-company-name.response.dto";
+import { UpdateCompanyNameUC } from "../usecases/update-company-name.uc";
+import { UpdateCompanyNameRequestDto } from "../dtos/update-company-name/update-company-name.request.dto";
+import { UpdateCompanyNameResponseDto } from "../dtos/update-company-name/update-company-name.response.dto";
 
 /**
  * Controller for managing companies.
@@ -28,7 +28,7 @@ export class CompanyController {
         private readonly findManyCompaniesUC: FindManyCompaniesUC,
         private readonly findCompanyByIdUC: FindCompanyByIdUC,
         private readonly createCompanyUC: CreateCompanyUC,
-        private readonly setCompnayNameUC: SetCompanyNameUC,
+        private readonly setCompnayNameUC: UpdateCompanyNameUC,
     ) { }
 
     @Get("/")
@@ -55,11 +55,11 @@ export class CompanyController {
         return this.createCompanyUC.execute(request);
     }
 
-    @Post("/set-name")
+    @Patch("/update/name")
     @HttpCode(HttpStatus.OK)
     setName(
-        @Body() request: SetCompanyNameRequestDto,
-    ): Promise<SetCompanyNameResponseDto> {
+        @Body() request: UpdateCompanyNameRequestDto,
+    ): Promise<UpdateCompanyNameResponseDto> {
         return this.setCompnayNameUC.execute(request);
     }
 }
