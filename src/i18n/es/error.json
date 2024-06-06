@@ -18,5 +18,7 @@
     "ip-request-not-found": "Ip solicitud no encontrada",
     "user-already-has-phone": "El usuario ya tiene un teléfono",
     "company-already-exists": "La compañía ya existe",
-    "user-not-company-owner": "El usuario no tiene role propietario de la compañía"
+    "user-not-company-owner": "El usuario no tiene role propietario de la compañía",
+    "company-not-found": "Compañía no encontrada",
+    "company-name-is-equal": "El nombre de la compañía es igual"
 }

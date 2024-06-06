@@ -18,5 +18,7 @@
     "ip-request-not-found": "IP request not found",
     "user-already-has-phone": "User already has phone",
     "company-already-exists": "Company already exists",
-    "user-not-company-owner": "User is not company owner role"
+    "user-not-company-owner": "User is not company owner role",
+    "company-not-found": "Company not found",
+    "company-name-is-equal": "Company name is equal"
 }

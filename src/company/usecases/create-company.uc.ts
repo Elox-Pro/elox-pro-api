@@ -6,6 +6,7 @@ import { PrismaService } from "@app/prisma/prisma.service";
 import { Company, Role, User } from "@prisma/client";
 import { escapeForUrl } from "@app/common/helpers/escape-for-url.helper";
 
+// TODO: Remove this class and the test and endpoint
 @Injectable()
 export class CreateCompanyUC implements IUseCase<CreateCompanyRequestDto, CreateCompanyResponseDto> {
 
