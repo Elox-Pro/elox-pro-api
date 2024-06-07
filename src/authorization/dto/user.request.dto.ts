@@ -1,8 +1,9 @@
 import { Role } from "@prisma/client";
 import { ActiveUserDto } from "./active-user.dto";
 import { RequestLang } from "@app/common/enums/request-lang.enum";
+import { IUserRequestDto } from "./user.request.dto.interface";
 
-export class UserRequestDto {
+export class UserRequestDto implements IUserRequestDto {
 
     private activeUser: ActiveUserDto;
 

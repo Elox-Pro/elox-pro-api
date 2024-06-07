@@ -9,5 +9,6 @@
     "EN": "English",
     "ES": "Spanish",
     "LIGHT": "Light",
-    "DARK": "Dark"
+    "DARK": "Dark",
+    "NONE": "None"
 }
