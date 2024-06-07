@@ -1,6 +1,4 @@
-import { Company } from "@prisma/client";
+import { SuccessResponseDto } from "@app/common/dto/success.response.dto";
 
-export class UpdateCompanyNameResponseDto {
-    constructor(readonly company: Company) {
-    }
+export class UpdateCompanyNameResponseDto extends SuccessResponseDto {
 }

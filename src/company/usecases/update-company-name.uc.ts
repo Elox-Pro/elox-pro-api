@@ -36,8 +36,9 @@ export class UpdateCompanyNameUC implements IUseCase<UpdateCompanyNameRequestDto
             throw new BadRequestException('error.company-already-exists');
         }
 
-        return new UpdateCompanyNameResponseDto(await this.update(id, name));
+        await this.update(id, name)
 
+        return new UpdateCompanyNameResponseDto(true);
     }
 
     private async existsCompanyByName(name: string): Promise<boolean> {
