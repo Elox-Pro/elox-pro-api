@@ -15,6 +15,12 @@ import { CreateCompanyResponseDto } from "../dtos/create-company/create-company.
 import { UpdateCompanyNameUC } from "../usecases/update-company-name.uc";
 import { UpdateCompanyNameRequestDto } from "../dtos/update-company-name/update-company-name.request.dto";
 import { UpdateCompanyNameResponseDto } from "../dtos/update-company-name/update-company-name.response.dto";
+import { AddUserToCompanyUC } from "../usecases/add-user-to-company.uc";
+import { AddUserToCompanyRequestDto } from "../dtos/add-user-to-company/add-user-to-company.request.dto";
+import { AddUserToCompanyResponseDto } from "../dtos/add-user-to-company/add-user-to-company.response.dto";
+import { RemoveUserFromCompanyUC } from "../usecases/remove-user-from-company.uc";
+import { RemoveUserFromCompanyRequestDto } from "../dtos/remove-user-from-company/remove-user-from-company.request.dto";
+import { RemoveUserFromCompanyResponseDto } from "../dtos/remove-user-from-company/remove-user-from-company.response.dto";
 
 /**
  * Controller for managing companies.
@@ -29,6 +35,8 @@ export class CompanyController {
         private readonly findCompanyByIdUC: FindCompanyByIdUC,
         private readonly createCompanyUC: CreateCompanyUC,
         private readonly setCompnayNameUC: UpdateCompanyNameUC,
+        private readonly addUserToCompanyUC: AddUserToCompanyUC,
+        private readonly removeUserFromCompanyUC: RemoveUserFromCompanyUC
     ) { }
 
     @Get("/")
@@ -61,5 +69,21 @@ export class CompanyController {
         @Body() request: UpdateCompanyNameRequestDto,
     ): Promise<UpdateCompanyNameResponseDto> {
         return this.setCompnayNameUC.execute(request);
+    }
+
+    @Patch("/add/user")
+    @HttpCode(HttpStatus.OK)
+    addUser(
+        @Body() request: AddUserToCompanyRequestDto,
+    ): Promise<AddUserToCompanyResponseDto> {
+        return this.addUserToCompanyUC.execute(request);
+    }
+
+    @Patch("/remove/user")
+    @HttpCode(HttpStatus.OK)
+    removeUser(
+        @Body() request: RemoveUserFromCompanyRequestDto,
+    ): Promise<RemoveUserFromCompanyResponseDto> {
+        return this.removeUserFromCompanyUC.execute(request);
     }
 }

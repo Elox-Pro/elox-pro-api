@@ -20,5 +20,9 @@
     "company-already-exists": "Company already exists",
     "user-not-company-owner": "User is not company owner role",
     "company-not-found": "Company not found",
-    "company-name-is-equal": "Company name is equal"
+    "company-name-is-equal": "Company name is equal",
+    "user-already-in-company": "User already in company",
+    "role-not-allowed": "Role not allowed",
+    "company-does-not-have-owner": "Company does not have owner role",
+    "user-does-not-belong-to-company": "User does not belong to company"
 }

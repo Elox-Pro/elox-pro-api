@@ -12,6 +12,16 @@
                 "firstName": "Tim",
                 "lastName": "Cook",
                 "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=tim-cook"
+            },
+            {
+                "username": "apple-admin",
+                "email": "admin@apple.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Apple",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=apple-admin"
             }
         ]
     },
@@ -28,6 +38,16 @@
                 "firstName": "Amin",
                 "lastName": "Nasser",
                 "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=amin-nasser"
+            },
+            {
+                "username": "aramco-admin",
+                "email": "admin@aramco.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Aramco",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=aramco-admin"
             }
         ]
     },
@@ -44,6 +64,16 @@
                 "firstName": "Satya",
                 "lastName": "Nadella",
                 "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=satya-nadella"
+            },
+            {
+                "username": "microsoft-admin",
+                "email": "admin@microsoft.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Microsoft",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=microsoft-admin"
             }
         ]
     },
@@ -60,6 +90,16 @@
                 "firstName": "Sundar",
                 "lastName": "Pichai",
                 "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=sundar-pichai"
+            },
+            {
+                "username": "alphabet-admin",
+                "email": "admin@alphabet.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Alphabet",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=alphabet-admin"
             }
         ]
     },
@@ -76,6 +116,16 @@
                 "firstName": "Andy",
                 "lastName": "Jassy",
                 "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=andy-jassy"
+            },
+            {
+                "username": "amazon-admin",
+                "email": "admin@amazon.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Amazon",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=amazon-admin"
             }
         ]
     },
@@ -92,6 +142,16 @@
                 "firstName": "Elon",
                 "lastName": "Musk",
                 "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=elon-musk"
+            },
+            {
+                "username": "tesla-admin",
+                "email": "admin@tesla.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Tesla",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=tesla-admin"
             }
         ]
     },
@@ -108,6 +168,16 @@
                 "firstName": "Mark",
                 "lastName": "Zuckerberg",
                 "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=mark-zuckerberg"
+            },
+            {
+                "username": "meta-admin",
+                "email": "admin@meta.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Meta",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=meta-admin"
             }
         ]
     },
@@ -124,6 +194,16 @@
                 "firstName": "Warren",
                 "lastName": "Buffett",
                 "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=warren-buffett"
+            },
+            {
+                "username": "berkshire-admin",
+                "email": "admin@berkshirehathaway.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Berkshire",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=berkshire-admin"
             }
         ]
     },
@@ -140,22 +220,16 @@
                 "firstName": "Andrew",
                 "lastName": "Witty",
                 "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=andrew-witty"
-            }
-        ]
-    },
-    {
-        "name": "Johnson & Johnson",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Johnson+&+Johnson",
-        "users": [
+            },
             {
-                "username": "joaquin-duato",
-                "email": "joaquin.duato@jnj.com",
-                "password": "123",
-                "role": "COMPANY_OWNER",
+                "username": "unitedhealth-admin",
+                "email": "admin@unitedhealthgroup.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
                 "emailVerified": true,
-                "firstName": "Joaquin",
-                "lastName": "Duato",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=joaquin-duato"
+                "firstName": "UnitedHealth",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=unitedhealth-admin"
             }
         ]
     },
@@ -172,140 +246,178 @@
                 "firstName": "Darren",
                 "lastName": "Woods",
                 "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=darren-woods"
+            },
+            {
+                "username": "exxonmobil-admin",
+                "email": "admin@exxonmobil.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "ExxonMobil",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=exxonmobil-admin"
             }
         ]
     },
     {
         "name": "JPMorgan Chase & Co.",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=JPMorgan+Chase+&+Co.",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=JPMorgan+Chase+&+Co",
         "users": [
             {
                 "username": "jamie-dimon",
-                "email": "jamie.dimon@jpmorganchase.com",
+                "email": "jamie.dimon@jpmorgan.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
                 "firstName": "Jamie",
                 "lastName": "Dimon",
                 "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=jamie-dimon"
+            },
+            {
+                "username": "jpmorgan-admin",
+                "email": "admin@jpmorgan.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "JPMorgan",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=jpmorgan-admin"
             }
         ]
     },
     {
-        "name": "Walmart Inc.",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Walmart+Inc.",
+        "name": "Johnson & Johnson",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Johnson+&+Johnson",
         "users": [
             {
-                "username": "doug-mcmillon",
-                "email": "doug.mcmillon@walmart.com",
+                "username": "alex-gorsky",
+                "email": "alex.gorsky@jnj.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
-                "firstName": "Doug",
-                "lastName": "McMillon",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=doug-mcmillon"
+                "firstName": "Alex",
+                "lastName": "Gorsky",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=alex-gorsky"
+            },
+            {
+                "username": "jnj-admin",
+                "email": "admin@jnj.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "JNJ",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=jnj-admin"
+            }
+        ]
+    },
+    {
+        "name": "Meta Platforms Colombia, Inc.",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Meta+Platforms+Inc+Col",
+        "users": [
+            {
+                "username": "mark-zuckerberg-col",
+                "email": "mark.zuckerberg.col@meta.com",
+                "password": "123",
+                "role": "COMPANY_OWNER",
+                "emailVerified": true,
+                "firstName": "Mark",
+                "lastName": "Zuckerberg",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=mark-zuckerberg-col"
+            },
+            {
+                "username": "meta-admin-col",
+                "email": "admin.col@meta.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Meta",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=meta-admin-col"
             }
         ]
     },
     {
         "name": "Visa Inc.",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Visa+Inc.",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Visa+Inc",
         "users": [
             {
-                "username": "al-kelly",
-                "email": "al.kelly@visa.com",
+                "username": "alfred-kelly",
+                "email": "alfred.kelly@visa.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
-                "firstName": "Al",
+                "firstName": "Alfred",
                 "lastName": "Kelly",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=al-kelly"
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=alfred-kelly"
+            },
+            {
+                "username": "visa-admin",
+                "email": "admin@visa.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Visa",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=visa-admin"
             }
         ]
     },
     {
-        "name": "Mastercard Incorporated",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Mastercard+Incorporated",
+        "name": "Samsung Electronics",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Samsung+Electronics",
         "users": [
             {
-                "username": "michael-miebach",
-                "email": "michael.miebach@mastercard.com",
+                "username": "kim-ki-nam",
+                "email": "kim.ki-nam@samsung.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
-                "firstName": "Michael",
-                "lastName": "Miebach",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=michael-miebach"
+                "firstName": "Ki-Nam",
+                "lastName": "Kim",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=kim-ki-nam"
+            },
+            {
+                "username": "samsung-admin",
+                "email": "admin@samsung.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Samsung",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=samsung-admin"
             }
         ]
     },
     {
-        "name": "The Home Depot, Inc.",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=The+Home+Depot%2C+Inc.",
+        "name": "Toyota Motor Corporation",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Toyota+Motor+Corporation",
         "users": [
             {
-                "username": "edward-decker",
-                "email": "edward.decker@homedepot.com",
+                "username": "akio-toyoda",
+                "email": "akio.toyoda@toyota.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
-                "firstName": "Edward",
-                "lastName": "Decker",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=edward-decker"
-            }
-        ]
-    },
-    {
-        "name": "The Procter & Gamble Company",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=The+Procter+&+Gamble+Company",
-        "users": [
+                "firstName": "Akio",
+                "lastName": "Toyoda",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=akio-toyoda"
+            },
             {
-                "username": "jon-moeller",
-                "email": "jon.moeller@pg.com",
-                "password": "123",
-                "role": "COMPANY_OWNER",
+                "username": "toyota-admin",
+                "email": "admin@toyota.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
                 "emailVerified": true,
-                "firstName": "Jon",
-                "lastName": "Moeller",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=jon-moeller"
-            }
-        ]
-    },
-    {
-        "name": "NVIDIA Corporation",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=NVIDIA+Corporation",
-        "users": [
-            {
-                "username": "jensen-huang",
-                "email": "jensen.huang@nvidia.com",
-                "password": "123",
-                "role": "COMPANY_OWNER",
-                "emailVerified": true,
-                "firstName": "Jensen",
-                "lastName": "Huang",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=jensen-huang"
-            }
-        ]
-    },
-    {
-        "name": "Chevron Corporation",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Chevron+Corporation",
-        "users": [
-            {
-                "username": "michael-wirth",
-                "email": "michael.wirth@chevron.com",
-                "password": "123",
-                "role": "COMPANY_OWNER",
-                "emailVerified": true,
-                "firstName": "Michael",
-                "lastName": "Wirth",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=michael-wirth"
+                "firstName": "Toyota",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=toyota-admin"
             }
         ]
     },
     {
         "name": "Pfizer Inc.",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Pfizer+Inc.",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Pfizer+Inc",
         "users": [
             {
                 "username": "albert-bourla",
@@ -316,6 +428,120 @@
                 "firstName": "Albert",
                 "lastName": "Bourla",
                 "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=albert-bourla"
+            },
+            {
+                "username": "pfizer-admin",
+                "email": "admin@pfizer.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Pfizer",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=pfizer-admin"
+            }
+        ]
+    },
+    {
+        "name": "Nestlé S.A.",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Nestlé+S.A",
+        "users": [
+            {
+                "username": "mark-schneider",
+                "email": "mark.schneider@nestle.com",
+                "password": "123",
+                "role": "COMPANY_OWNER",
+                "emailVerified": true,
+                "firstName": "Mark",
+                "lastName": "Schneider",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=mark-schneider"
+            },
+            {
+                "username": "nestle-admin",
+                "email": "admin@nestle.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Nestlé",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=nestle-admin"
+            }
+        ]
+    },
+    {
+        "name": "Procter & Gamble Co.",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Procter+&+Gamble+Co",
+        "users": [
+            {
+                "username": "david-taylor",
+                "email": "david.taylor@pg.com",
+                "password": "123",
+                "role": "COMPANY_OWNER",
+                "emailVerified": true,
+                "firstName": "David",
+                "lastName": "Taylor",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=david-taylor"
+            },
+            {
+                "username": "pg-admin",
+                "email": "admin@pg.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "P&G",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=pg-admin"
+            }
+        ]
+    },
+    {
+        "name": "General Electric",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=General+Electric",
+        "users": [
+            {
+                "username": "h-larry-culp",
+                "email": "larry.culp@ge.com",
+                "password": "123",
+                "role": "COMPANY_OWNER",
+                "emailVerified": true,
+                "firstName": "H. Lawrence",
+                "lastName": "Culp",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=larry-culp"
+            },
+            {
+                "username": "ge-admin",
+                "email": "admin@ge.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "GE",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=ge-admin"
+            }
+        ]
+    },
+    {
+        "name": "Intel Corporation",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Intel+Corporation",
+        "users": [
+            {
+                "username": "pat-gelsinger",
+                "email": "pat.gelsinger@intel.com",
+                "password": "123",
+                "role": "COMPANY_OWNER",
+                "emailVerified": true,
+                "firstName": "Pat",
+                "lastName": "Gelsinger",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=pat-gelsinger"
+            },
+            {
+                "username": "intel-admin",
+                "email": "admin@intel.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Intel",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=intel-admin"
             }
         ]
     },
@@ -332,108 +558,48 @@
                 "firstName": "James",
                 "lastName": "Quincey",
                 "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=james-quincey"
+            },
+            {
+                "username": "coca-cola-admin",
+                "email": "admin@coca-cola.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Coca-Cola",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=coca-cola-admin"
             }
         ]
     },
     {
-        "name": "AbbVie Inc.",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=AbbVie+Inc.",
+        "name": "Nike, Inc.",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Nike+Inc",
         "users": [
             {
-                "username": "rick-gonzalez",
-                "email": "rick.gonzalez@abbvie.com",
+                "username": "john-donahoe",
+                "email": "john.donahoe@nike.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
-                "firstName": "Rick",
-                "lastName": "Gonzalez",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=rick-gonzalez"
-            }
-        ]
-    },
-    {
-        "name": "Eli Lilly and Company",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Eli+Lilly+and+Company",
-        "users": [
+                "firstName": "John",
+                "lastName": "Donahoe",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=john-donahoe"
+            },
             {
-                "username": "david-ricks",
-                "email": "david.ricks@lilly.com",
-                "password": "123",
-                "role": "COMPANY_OWNER",
+                "username": "nike-admin",
+                "email": "admin@nike.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
                 "emailVerified": true,
-                "firstName": "David",
-                "lastName": "Ricks",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=david-ricks"
-            }
-        ]
-    },
-    {
-        "name": "Merck & Co., Inc.",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Merck+&+Co.%2C+Inc.",
-        "users": [
-            {
-                "username": "robert-davis",
-                "email": "robert.davis@merck.com",
-                "password": "123",
-                "role": "COMPANY_OWNER",
-                "emailVerified": true,
-                "firstName": "Robert",
-                "lastName": "Davis",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=robert-davis"
-            }
-        ]
-    },
-    {
-        "name": "Taiwan Semiconductor Manufacturing Company Limited",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Taiwan+Semiconductor+Manufacturing+Company+Limited",
-        "users": [
-            {
-                "username": "c-c-wei",
-                "email": "c.c.wei@tsmc.com",
-                "password": "123",
-                "role": "COMPANY_OWNER",
-                "emailVerified": true,
-                "firstName": "C.C.",
-                "lastName": "Wei",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=c-c-wei"
-            }
-        ]
-    },
-    {
-        "name": "Verizon Communications Inc.",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Verizon+Communications+Inc.",
-        "users": [
-            {
-                "username": "hans-vestberg",
-                "email": "hans.vestberg@verizon.com",
-                "password": "123",
-                "role": "COMPANY_OWNER",
-                "emailVerified": true,
-                "firstName": "Hans",
-                "lastName": "Vestberg",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=hans-vestberg"
-            }
-        ]
-    },
-    {
-        "name": "Costco Wholesale Corporation",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Costco+Wholesale+Corporation",
-        "users": [
-            {
-                "username": "walter-jelinek",
-                "email": "walter.jelinek@costco.com",
-                "password": "123",
-                "role": "COMPANY_OWNER",
-                "emailVerified": true,
-                "firstName": "Walter",
-                "lastName": "Jelinek",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=walter-jelinek"
+                "firstName": "Nike",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=nike-admin"
             }
         ]
     },
     {
         "name": "PepsiCo, Inc.",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=PepsiCo%2C+Inc.",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=PepsiCo+Inc",
         "users": [
             {
                 "username": "ramon-laguarta",
@@ -444,60 +610,100 @@
                 "firstName": "Ramon",
                 "lastName": "Laguarta",
                 "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=ramon-laguarta"
+            },
+            {
+                "username": "pepsico-admin",
+                "email": "admin@pepsico.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "PepsiCo",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=pepsico-admin"
             }
         ]
     },
     {
-        "name": "Adobe Inc.",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Adobe+Inc.",
+        "name": "IBM Corporation",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=IBM+Corporation",
         "users": [
             {
-                "username": "shantanu-narayen",
-                "email": "shantanu.narayen@adobe.com",
+                "username": "arvind-krishna",
+                "email": "arvind.krishna@ibm.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
-                "firstName": "Shantanu",
-                "lastName": "Narayen",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=shantanu-narayen"
+                "firstName": "Arvind",
+                "lastName": "Krishna",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=arvind-krishna"
+            },
+            {
+                "username": "ibm-admin",
+                "email": "admin@ibm.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "IBM",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=ibm-admin"
             }
         ]
     },
     {
-        "name": "Intel Corporation",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Intel+Corporation",
+        "name": "McDonald's Corporation",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=McDonald's+Corporation",
         "users": [
             {
-                "username": "patrick-gelsinger",
-                "email": "patrick.gelsinger@intel.com",
+                "username": "chris-kempczinski",
+                "email": "chris.kempczinski@mcdonalds.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
-                "firstName": "Patrick",
-                "lastName": "Gelsinger",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=patrick-gelsinger"
+                "firstName": "Chris",
+                "lastName": "Kempczinski",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=chris-kempczinski"
+            },
+            {
+                "username": "mcdonalds-admin",
+                "email": "admin@mcdonalds.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "McDonald's",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=mcdonalds-admin"
             }
         ]
     },
     {
-        "name": "Broadcom Inc.",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Broadcom+Inc.",
+        "name": "Tesla Colombia, Inc.",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Tesla+Colombia+Inc",
         "users": [
             {
-                "username": "hock-tan",
-                "email": "hock.tan@broadcom.com",
+                "username": "elon-musk-col",
+                "email": "elon.musk.col@tesla.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
-                "firstName": "Hock",
-                "lastName": "Tan",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=hock-tan"
+                "firstName": "Elon",
+                "lastName": "Musk",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=elon-musk"
+            },
+            {
+                "username": "tesla-admin-col",
+                "email": "admin.col@tesla.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Tesla",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=tesla-admin-col"
             }
         ]
     },
     {
         "name": "Cisco Systems, Inc.",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Cisco+Systems%2C+Inc.",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Cisco+Systems+Inc",
         "users": [
             {
                 "username": "chuck-robbins",
@@ -508,134 +714,328 @@
                 "firstName": "Chuck",
                 "lastName": "Robbins",
                 "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=chuck-robbins"
+            },
+            {
+                "username": "cisco-admin",
+                "email": "admin@cisco.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Cisco",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=cisco-admin"
             }
         ]
     },
     {
-        "name": "Thermo Fisher Scientific Inc.",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Thermo+Fisher+Scientific+Inc.",
+        "name": "Chevron Corporation",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Chevron+Corporation",
         "users": [
             {
-                "username": "marc-casper",
-                "email": "marc.casper@thermofisher.com",
+                "username": "michael-wirth",
+                "email": "michael.wirth@chevron.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
-                "firstName": "Marc",
-                "lastName": "Casper",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=marc-casper"
+                "firstName": "Michael",
+                "lastName": "Wirth",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=michael-wirth"
+            },
+            {
+                "username": "chevron-admin",
+                "email": "admin@chevron.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Chevron",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=chevron-admin"
             }
         ]
     },
     {
-        "name": "Amgen Inc.",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Amgen+Inc.",
+        "name": "Oracle Corporation",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Oracle+Corporation",
         "users": [
             {
-                "username": "robert-bradway",
-                "email": "robert.bradway@amgen.com",
+                "username": "safra-catz",
+                "email": "safra.catz@oracle.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
-                "firstName": "Robert",
-                "lastName": "Bradway",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=robert-bradway"
+                "firstName": "Safra",
+                "lastName": "Catz",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=safra-catz"
+            },
+            {
+                "username": "oracle-admin",
+                "email": "admin@oracle.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Oracle",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=oracle-admin"
             }
         ]
     },
     {
-        "name": "Qualcomm Incorporated",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Qualcomm+Incorporated",
+        "name": "Pfizer Colombia Inc.",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Pfizer+Colombia+Inc",
         "users": [
             {
-                "username": "cristiano-amon",
-                "email": "cristiano.amon@qualcomm.com",
+                "username": "albert-bourla-col",
+                "email": "albert.bourla-col@pfizer.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
-                "firstName": "Cristiano",
-                "lastName": "Amon",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=cristiano-amon"
+                "firstName": "Albert",
+                "lastName": "Bourla",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=albert-bourla-col"
+            },
+            {
+                "username": "pfizer-admin-col",
+                "email": "admin-col@pfizer.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Pfizer",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=pfizer-admin-col"
             }
         ]
     },
     {
-        "name": "Accenture plc",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Accenture+plc",
+        "name": "Goldman Sachs Group, Inc.",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Goldman+Sachs+Group+Inc",
         "users": [
             {
-                "username": "julie-sweet",
-                "email": "julie.sweet@accenture.com",
+                "username": "david-solomon",
+                "email": "david.solomon@goldmansachs.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
-                "firstName": "Julie",
-                "lastName": "Sweet",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=julie-sweet"
+                "firstName": "David",
+                "lastName": "Solomon",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=david-solomon"
+            },
+            {
+                "username": "goldmansachs-admin",
+                "email": "admin@goldmansachs.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Goldman Sachs",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=goldmansachs-admin"
             }
         ]
     },
     {
-        "name": "Lockheed Martin Corporation",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Lockheed+Martin+Corporation",
+        "name": "American Express Company",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=American+Express+Company",
         "users": [
             {
-                "username": "james-taiclet",
-                "email": "james.taiclet@lockheedmartin.com",
+                "username": "stephen-squeri",
+                "email": "stephen.squeri@americanexpress.com",
+                "password": "123",
+                "role": "COMPANY_OWNER",
+                "emailVerified": true,
+                "firstName": "Stephen",
+                "lastName": "Squeri",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=stephen-squeri"
+            },
+            {
+                "username": "americanexpress-admin",
+                "email": "admin@americanexpress.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "American Express",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=americanexpress-admin"
+            }
+        ]
+    },
+    {
+        "name": "Wells Fargo & Company",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Wells+Fargo+&+Company",
+        "users": [
+            {
+                "username": "charles-scharf",
+                "email": "charles.scharf@wellsfargo.com",
+                "password": "123",
+                "role": "COMPANY_OWNER",
+                "emailVerified": true,
+                "firstName": "Charles",
+                "lastName": "Scharf",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=charles-scharf"
+            },
+            {
+                "username": "wellsfargo-admin",
+                "email": "admin@wellsfargo.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Wells Fargo",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=wellsfargo-admin"
+            }
+        ]
+    },
+    {
+        "name": "Morgan Stanley",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Morgan+Stanley",
+        "users": [
+            {
+                "username": "james-gorman",
+                "email": "james.gorman@morganstanley.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
                 "firstName": "James",
-                "lastName": "Taiclet",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=james-taiclet"
+                "lastName": "Gorman",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=james-gorman"
+            },
+            {
+                "username": "morganstanley-admin",
+                "email": "admin@morganstanley.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Morgan Stanley",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=morganstanley-admin"
             }
         ]
     },
     {
-        "name": "Danaher Corporation",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Danaher+Corporation",
+        "name": "UBS Group AG",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=UBS+Group+AG",
         "users": [
             {
-                "username": "rainer-blair",
-                "email": "rainer.blair@danaher.com",
+                "username": "ralph-hamers",
+                "email": "ralph.hamers@ubs.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
-                "firstName": "Rainer",
-                "lastName": "Blair",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=rainer-blair"
+                "firstName": "Ralph",
+                "lastName": "Hamers",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=ralph-hamers"
+            },
+            {
+                "username": "ubs-admin",
+                "email": "admin@ubs.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "UBS",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=ubs-admin"
             }
         ]
     },
     {
-        "name": "Union Pacific Corporation",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Union+Pacific+Corporation",
+        "name": "HSBC Holdings plc",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=HSBC+Holdings+plc",
         "users": [
             {
-                "username": "lance-fritz",
-                "email": "lance.fritz@up.com",
+                "username": "noel-quinn",
+                "email": "noel.quinn@hsbc.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
-                "firstName": "Lance",
-                "lastName": "Fritz",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=lance-fritz"
+                "firstName": "Noel",
+                "lastName": "Quinn",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=noel-quinn"
+            },
+            {
+                "username": "hsbc-admin",
+                "email": "admin@hsbc.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "HSBC",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=hsbc-admin"
             }
         ]
     },
     {
-        "name": "Honeywell International Inc.",
-        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Honeywell+International+Inc.",
+        "name": "BP plc",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=BP+plc",
         "users": [
             {
-                "username": "darius-adamczyk",
-                "email": "darius.adamczyk@honeywell.com",
+                "username": "bernard-looney",
+                "email": "bernard.looney@bp.com",
                 "password": "123",
                 "role": "COMPANY_OWNER",
                 "emailVerified": true,
-                "firstName": "Darius",
-                "lastName": "Adamczyk",
-                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=darius-adamczyk"
+                "firstName": "Bernard",
+                "lastName": "Looney",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=bernard-looney"
+            },
+            {
+                "username": "bp-admin",
+                "email": "admin@bp.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "BP",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=bp-admin"
+            }
+        ]
+    },
+    {
+        "name": "JPMorgan Chase & Colombia.",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=JPMorgan+Chase+&+Colombia",
+        "users": [
+            {
+                "username": "jamie-dimon-col",
+                "email": "jamie.dimon.col@jpmorganchase.com",
+                "password": "123",
+                "role": "COMPANY_OWNER",
+                "emailVerified": true,
+                "firstName": "Jamie",
+                "lastName": "Dimon",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=jamie-dimon-col"
+            },
+            {
+                "username": "jpmorganchase-admin-col",
+                "email": "admin.col@jpmorganchase.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "JPMorgan Chase",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=jpmorganchase-admin-col"
+            }
+        ]
+    },
+    {
+        "name": "Caterpillar Inc.",
+        "imageUrl": "https://api.dicebear.com/8.x/identicon/svg?seed=Caterpillar+Inc",
+        "users": [
+            {
+                "username": "jim-umpleby",
+                "email": "jim.umpleby@caterpillar.com",
+                "password": "123",
+                "role": "COMPANY_OWNER",
+                "emailVerified": true,
+                "firstName": "Jim",
+                "lastName": "Umpleby",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=jim-umpleby"
+            },
+            {
+                "username": "caterpillar-admin",
+                "email": "admin@caterpillar.com",
+                "password": "admin123",
+                "role": "COMPANY_ADMIN",
+                "emailVerified": true,
+                "firstName": "Caterpillar",
+                "lastName": "Admin",
+                "avatarUrl": "https://api.dicebear.com/8.x/initials/svg?seed=caterpillar-admin"
             }
         ]
     }

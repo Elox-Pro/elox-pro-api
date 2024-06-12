@@ -20,5 +20,9 @@
     "company-already-exists": "La compañía ya existe",
     "user-not-company-owner": "El usuario no tiene role propietario de la compañía",
     "company-not-found": "Compañía no encontrada",
-    "company-name-is-equal": "El nombre de la compañía es igual"
+    "company-name-is-equal": "El nombre de la compañía es igual",
+    "user-already-in-company": "El usuario ya está en la compañía",
+    "role-not-allowed": "Rol no permitido",
+    "company-does-not-have-owner": "La compañía no tiene rol propietario",
+    "user-does-not-belong-to-company": "Usuario no pertenece a la compañía"
 }

@@ -35,6 +35,9 @@ export class FindManyUsersUC implements IUseCase<FindManyUsersRequestDto, FindMa
                 role: {
                     in: [Role.COMPANY_OWNER, Role.COMPANY_ADMIN]
                 },
+                companyId: {
+                    not: skipUsersFromCompanyId
+                },
                 ...(searchTerm ? { username: { contains: searchTerm } } : {}),
             }
         });
