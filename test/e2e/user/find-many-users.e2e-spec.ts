@@ -2,7 +2,7 @@ import { HttpStatus, INestApplication } from "@nestjs/common"
 import { bootstrapTest } from "../test.main";
 import { AuthenticationModule } from "@app/authentication/authentication.module";
 import { getTestUser } from "../test-helpers/get-test-user.test-helper";
-import { CreateRequestFN, createGet } from "../test-helpers/create-request.test-helper";
+import { CreateRequestFN, createPost } from "../test-helpers/create-request.test-helper";
 import * as request from "supertest";
 import { UserModule } from "@app/user/user.module";
 import { FindManyUsersResponseDto } from "@app/user/dtos/find-many-users/find-many-users.response.dto";
@@ -12,14 +12,14 @@ describe("List Users Endpoint", () => {
     const user = getTestUser();
 
     let app: INestApplication;
-    let get: CreateRequestFN;
+    let post: CreateRequestFN;
 
     beforeAll(async () => {
         app = await bootstrapTest([
             AuthenticationModule,
             UserModule
         ]);
-        get = createGet({
+        post = createPost({
             app, url, credentials: {
                 username: user.username,
                 password: user.password
@@ -35,7 +35,7 @@ describe("List Users Endpoint", () => {
         let res: request.Response;
         let body: FindManyUsersResponseDto;
         it("should return HTTP status OK", async () => {
-            res = await get({
+            res = await post({
                 page: 1,
                 limit: 10
             });
@@ -52,7 +52,7 @@ describe("List Users Endpoint", () => {
         let res: request.Response;
         let body: FindManyUsersResponseDto;
         it("should return HTTP status OK", async () => {
-            res = await get({
+            res = await post({
                 page: 1,
                 limit: 10,
                 searchTerm: "tim-cook"
@@ -66,5 +66,4 @@ describe("List Users Endpoint", () => {
             expect(body.users.length).toEqual(1);
         });
     });
-
 })

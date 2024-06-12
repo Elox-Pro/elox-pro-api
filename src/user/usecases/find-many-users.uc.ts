@@ -17,29 +17,42 @@ export class FindManyUsersUC implements IUseCase<FindManyUsersRequestDto, FindMa
 
     async execute(request: FindManyUsersRequestDto): Promise<FindManyUsersResponseDto> {
 
-        const { page, limit, searchTerm } = request;
+        const { page, limit, searchTerm, skipUsersFromCompanyId } = request;
         const lang = request.getLang();
         const skip = (page - 1) * limit;
 
-        const users = await this.find(searchTerm, skip, limit, lang);
-        const total = await this.count(searchTerm);
+        const users = await this.find(
+            searchTerm, skip, limit, skipUsersFromCompanyId, lang
+        );
+        const total = await this.count(searchTerm, skipUsersFromCompanyId);
 
         return new FindManyUsersResponseDto(users, total);
     }
 
-    private async count(searchTerm: string) {
-        return await this.prisma.company.count({
+    private async count(searchTerm: string, skipUsersFromCompanyId: number) {
+        return await this.prisma.user.count({
             where: {
-                ...(searchTerm ? { name: { contains: searchTerm } } : {}),
+                role: {
+                    in: [Role.COMPANY_OWNER, Role.COMPANY_ADMIN]
+                },
+                ...(searchTerm ? { username: { contains: searchTerm } } : {}),
             }
         });
     }
 
-    private async find(searchTerm: string, skip: number, limit: number, lang: RequestLang) {
+    private async find(searchTerm: string,
+        skip: number,
+        limit: number,
+        skipUsersFromCompanyId: number,
+        lang: RequestLang,
+    ) {
         const data = await this.prisma.user.findMany({
             where: {
                 role: {
                     in: [Role.COMPANY_OWNER, Role.COMPANY_ADMIN]
+                },
+                companyId: {
+                    not: skipUsersFromCompanyId
                 },
                 ...(searchTerm ? { username: { contains: searchTerm } } : {}),
             },

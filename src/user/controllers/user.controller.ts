@@ -1,5 +1,5 @@
 import { Roles } from "@app/authorization/decorators/roles.decorator";
-import { Controller, Get, HttpCode, Query } from "@nestjs/common/decorators";
+import { Body, Controller, Get, HttpCode, Post, Query } from "@nestjs/common/decorators";
 import { Role } from "@prisma/client";
 import { FindManyUsersUC } from "../usecases/find-many-users.uc";
 import { HttpStatus } from "@nestjs/common";
@@ -15,11 +15,11 @@ export class UserController {
         private readonly findManyUsersUC: FindManyUsersUC,
     ) { }
 
-    @Get("/")
+    @Post("/")
     @HttpCode(HttpStatus.OK)
     findManyUsers(
         @UserRequest() activeUser: ActiveUserDto,
-        @Query() request: FindManyUsersRequestDto
+        @Body() request: FindManyUsersRequestDto
     ): Promise<FindManyUsersResponseDto> {
         request.setActiveUser(activeUser);
         return this.findManyUsersUC.execute(request);

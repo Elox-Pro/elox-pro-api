@@ -9,7 +9,7 @@ import { IsOptional } from "class-validator";
 export class UserPaginationRequestDto extends PaginationRequestDto implements IUserRequestDto {
 
     @IsOptional()
-    private userRequest: UserRequestDto;
+    private userRequest: IUserRequestDto;
 
     constructor() {
         super();
