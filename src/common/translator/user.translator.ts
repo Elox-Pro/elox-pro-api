@@ -21,9 +21,7 @@ export class UserTranslator implements Translator<User, UserType> {
             ...entity,
             roleText: await this.t.getValue(entity.role, lang),
             genderText: await this.t.getValue(entity.gender, lang),
-            tfaTypeText: await this.t.getValue(entity.tfaType, lang),
-            langText: await this.t.getValue(entity.lang, lang),
-            themeText: await this.t.getValue(entity.theme, lang),
+            tfaTypeText: await this.t.getValue(entity.tfaType, lang)
         }
     }
 
