@@ -35,7 +35,7 @@ describe("Get Company info by Id Endpoint", () => {
         it("should return HTTP status OK", async () => {
 
             company = await prisma.company.findFirst();
-            const url = `/companies/${company.id}`;
+            const url = `/companies/find/${company.id}`;
 
             const get = createGet({
                 app, url, credentials: {

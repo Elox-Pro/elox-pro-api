@@ -62,8 +62,10 @@ export class AddUserToCompanyUC implements IUseCase<AddUserToCompanyRequestDto, 
         return await this.prisma.user.findFirst({
             where: {
                 role: Role.COMPANY_OWNER,
-                company: {
-                    id: companyId
+                companies: {
+                    some: {
+                        id: companyId
+                    }
                 }
             }
         });

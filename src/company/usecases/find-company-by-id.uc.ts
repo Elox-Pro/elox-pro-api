@@ -26,7 +26,11 @@ export class FindCompanyByIdUC implements IUseCase<FindCompanyByIdRequestDto, Fi
 
         const countUsers = await this.prisma.user.count({
             where: {
-                companyId: id,
+                companies: {
+                    some: {
+                        id: id
+                    }
+                },
                 role: {
                     in: [Role.COMPANY_OWNER, Role.COMPANY_ADMIN]
                 }
@@ -35,7 +39,11 @@ export class FindCompanyByIdUC implements IUseCase<FindCompanyByIdRequestDto, Fi
 
         const usersAux = await this.prisma.user.findMany({
             where: {
-                companyId: id,
+                companies: {
+                    some: {
+                        id: id
+                    }
+                },
                 role: {
                     in: [Role.COMPANY_OWNER, Role.COMPANY_ADMIN]
                 }
@@ -49,14 +57,22 @@ export class FindCompanyByIdUC implements IUseCase<FindCompanyByIdRequestDto, Fi
 
         const countCustomers = await this.prisma.user.count({
             where: {
-                companyId: id,
+                companies: {
+                    some: {
+                        id: id
+                    }
+                },
                 role: Role.COMPANY_CUSTOMER
             }
         });
 
         const customersAux = await this.prisma.user.findMany({
             where: {
-                companyId: id,
+                companies: {
+                    some: {
+                        id: id
+                    }
+                },
                 role: Role.COMPANY_CUSTOMER
             },
             take: limit,

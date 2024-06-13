@@ -98,6 +98,24 @@ export function createGet({ app, url, meta, credentials }: Args): CreateRequestF
 };
 
 /**
+ * Creates a function to send DELETE requests to a specified URL.
+ *
+ * @param {Args} args - The arguments for creating the DELETE request.
+ * @returns {(data?: any) => Promise<request.Response>} - A function that sends a DELETE request.
+ */
+export function createDelete({ app, url, meta, credentials }: Args): CreateRequestFN {
+    return async (data: any): Promise<request.Response> => {
+        const authCookies = await getAuthCookies(app, credentials);
+        const cookies = mergeCookies(authCookies, meta?.["cookie"]);
+        return await request(app.getHttpServer())
+            .delete(url)
+            .set("accept-language", meta?.["accept-language"] || RequestLang.EN)
+            .set("Cookie", cookies)
+            .send(data);
+    };
+}
+
+/**
  * Function to retrieve cookies for authentication.
  *
  * @remarks

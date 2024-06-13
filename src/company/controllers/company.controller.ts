@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, Req } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, Req } from "@nestjs/common";
 import { Roles } from "@app/authorization/decorators/roles.decorator";
 import { Role } from "@prisma/client";
 import { FindManyCompaniesUC } from "../usecases/find-many-companies.uc";
@@ -79,7 +79,7 @@ export class CompanyController {
         return this.addUserToCompanyUC.execute(request);
     }
 
-    @Patch("/remove/user")
+    @Delete("/remove/user")
     @HttpCode(HttpStatus.OK)
     removeUser(
         @Body() request: RemoveUserFromCompanyRequestDto,

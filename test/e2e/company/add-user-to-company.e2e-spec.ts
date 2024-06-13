@@ -131,7 +131,11 @@ async function findUserByUsername(prisma: PrismaService, username: string): Prom
 async function findFirstCompanyOwner(prisma: PrismaService, companyId: number): Promise<User> {
     return await prisma.user.findFirst({
         where: {
-            companyId,
+            companies: {
+                some: {
+                    id: companyId
+                }
+            },
             role: Role.COMPANY_OWNER
         }
     });

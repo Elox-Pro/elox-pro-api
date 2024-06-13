@@ -2,7 +2,7 @@ import { HttpStatus, INestApplication } from "@nestjs/common"
 import { bootstrapTest } from "../test.main";
 import { AuthenticationModule } from "@app/authentication/authentication.module";
 import { getTestUser } from "../test-helpers/get-test-user.test-helper";
-import { CreateRequestFN, createPatch } from "../test-helpers/create-request.test-helper";
+import { CreateRequestFN, createDelete } from "../test-helpers/create-request.test-helper";
 import { CompanyModule } from "@app/company/company.module";
 import { PrismaService } from "@app/prisma/prisma.service";
 import { Company, Role, User } from "@prisma/client";
@@ -12,7 +12,7 @@ describe("Remove user from company endpoint", () => {
     const user = getTestUser();
 
     let app: INestApplication;
-    let patch: CreateRequestFN;
+    let deleteReq: CreateRequestFN;
     let prisma: PrismaService;
 
     beforeAll(async () => {
@@ -20,7 +20,7 @@ describe("Remove user from company endpoint", () => {
             AuthenticationModule,
             CompanyModule
         ]);
-        patch = createPatch({
+        deleteReq = createDelete({
             app, url, credentials: {
                 username: user.username,
                 password: user.password
@@ -35,7 +35,7 @@ describe("Remove user from company endpoint", () => {
 
     describe("Company does not exists", () => {
         it("should return HTTP status Bad Request", async () => {
-            const res = await patch({
+            const res = await deleteReq({
                 userId: Date.now(),
                 companyId: Date.now()
             });
@@ -45,7 +45,7 @@ describe("Remove user from company endpoint", () => {
     describe("User does not exists", () => {
         it("should return HTTP status Bad Request", async () => {
             const company = await findCompany(prisma);
-            const res = await patch({
+            const res = await deleteReq({
                 userId: Date.now(),
                 companyId: company.id
             });
@@ -55,7 +55,7 @@ describe("Remove user from company endpoint", () => {
     describe("User does not belong to company", () => {
         it("should return HTTP status Bad Request", async () => {
             const company = await findCompany(prisma);
-            const res = await patch({
+            const res = await deleteReq({
                 userId: user.id,
                 companyId: company.id
             });
@@ -66,7 +66,7 @@ describe("Remove user from company endpoint", () => {
         it("should return HTTP status OK", async () => {
             const company = await findCompany(prisma);
             const ownerUser = await createOwnerToCompany(prisma, company.id);
-            const res = await patch({
+            const res = await deleteReq({
                 userId: ownerUser.id,
                 companyId: company.id
             });

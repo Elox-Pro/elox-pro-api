@@ -14,29 +14,31 @@ model Company {
   name         String         @unique
   imageUrl     String?        @map("image_url")
   loanSettings LoanSettings[]
-  users        User[]
+  users        User[]         @relation("user_companies")
 
   @@map("companies")
 }
 
 model User {
-  id             Int            @id @default(autoincrement())
-  updatedAt      DateTime       @updatedAt @map("updated_at")
-  createdAt      DateTime       @default(now()) @map("created_at")
-  role           Role           @default(COMPANY_CUSTOMER)
-  username       String         @unique
-  email          String         @unique
-  password       String
-  phone          String?        @unique
-  gender         Gender?
-  avatarUrl      String?        @map("avatar_url")
-  emailVerified  Boolean        @default(false) @map("email_verified")
-  phoneVerified  Boolean        @default(false) @map("phone_verified")
-  tfaType        TfaType        @default(NONE) @map("tfa_type")
-  lastLoginAt    DateTime?      @map("last_login_at")
-  companyId      Int?           @map("company_id")
-  firstName      String?        @map("first_name")
-  lastName       String?        @map("last_name")
+  id            Int       @id @default(autoincrement())
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  role          Role      @default(COMPANY_CUSTOMER)
+  username      String    @unique
+  email         String    @unique
+  password      String
+  phone         String?   @unique
+  gender        Gender?
+  avatarUrl     String?   @map("avatar_url")
+  emailVerified Boolean   @default(false) @map("email_verified")
+  phoneVerified Boolean   @default(false) @map("phone_verified")
+  tfaType       TfaType   @default(NONE) @map("tfa_type")
+  lastLoginAt   DateTime? @map("last_login_at")
+
+  firstName String? @map("first_name")
+  lastName  String? @map("last_name")
+
+  companies      Company[]      @relation("user_companies")
   KYC            KYC?
   addresses      Address[]
   auditTrails    AuditTrail[]
@@ -45,10 +47,8 @@ model User {
   bankAccounts   BankAccount[]
   contacts       UserContact?
   customerRank   UserRank?
-  company        Company?       @relation(fields: [companyId], references: [id])
   documents      UserDocument[]
 
-  @@index([companyId], map: "users_company_id_fkey")
   @@map("users")
 }
 

@@ -1,8 +1,6 @@
 import { IUseCase } from "@app/common/usecase/usecase.interface";
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "@app/prisma/prisma.service";
-import { AddUserToCompanyRequestDto } from "../dtos/add-user-to-company/add-user-to-company.request.dto";
-import { AddUserToCompanyResponseDto } from "../dtos/add-user-to-company/add-user-to-company.response.dto";
 import { Company, Role, User } from "@prisma/client";
 import { RemoveUserFromCompanyRequestDto } from "../dtos/remove-user-from-company/remove-user-from-company.request.dto";
 import { RemoveUserFromCompanyResponseDto } from "../dtos/remove-user-from-company/remove-user-from-company.response.dto";
