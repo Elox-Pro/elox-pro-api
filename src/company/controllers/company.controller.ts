@@ -21,6 +21,9 @@ import { AddUserToCompanyResponseDto } from "../dtos/add-user-to-company/add-use
 import { RemoveUserFromCompanyUC } from "../usecases/remove-user-from-company.uc";
 import { RemoveUserFromCompanyRequestDto } from "../dtos/remove-user-from-company/remove-user-from-company.request.dto";
 import { RemoveUserFromCompanyResponseDto } from "../dtos/remove-user-from-company/remove-user-from-company.response.dto";
+import { DeleteCompanyUC } from "../usecases/delete-company.uc";
+import { DeleteCompanyRequestDto } from "../dtos/delete-company/delete-company.request.dto";
+import { DeleteCompanyResponseDto } from "../dtos/delete-company/delete-company.response.dto";
 
 /**
  * Controller for managing companies.
@@ -36,7 +39,8 @@ export class CompanyController {
         private readonly createCompanyUC: CreateCompanyUC,
         private readonly setCompnayNameUC: UpdateCompanyNameUC,
         private readonly addUserToCompanyUC: AddUserToCompanyUC,
-        private readonly removeUserFromCompanyUC: RemoveUserFromCompanyUC
+        private readonly removeUserFromCompanyUC: RemoveUserFromCompanyUC,
+        private readonly deleteCompanyUC: DeleteCompanyUC
     ) { }
 
     @Get("/")
@@ -85,5 +89,13 @@ export class CompanyController {
         @Body() request: RemoveUserFromCompanyRequestDto,
     ): Promise<RemoveUserFromCompanyResponseDto> {
         return this.removeUserFromCompanyUC.execute(request);
+    }
+
+    @Delete("/delete/company")
+    @HttpCode(HttpStatus.OK)
+    deleteCompany(
+        @Body() request: DeleteCompanyRequestDto,
+    ): Promise<DeleteCompanyResponseDto> {
+        return this.deleteCompanyUC.execute(request);
     }
 }

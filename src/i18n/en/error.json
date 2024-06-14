@@ -24,5 +24,6 @@
     "user-already-in-company": "User already in company",
     "role-not-allowed": "Role not allowed",
     "company-does-not-have-owner": "Company does not have owner role",
-    "user-does-not-belong-to-company": "User does not belong to company"
+    "user-does-not-belong-to-company": "User does not belong to company",
+    "company-has-users":"Company has users"
 }

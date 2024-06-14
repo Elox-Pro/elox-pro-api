@@ -101,7 +101,6 @@ async function addUserToCompany(prisma: PrismaService, companyId: number, userId
 }
 
 async function createUserWithRole(prisma: PrismaService, role: Role): Promise<User> {
-    // Create a new user with the specified role
     return await prisma.user.create({
         data: {
             username: String(Date.now()),
