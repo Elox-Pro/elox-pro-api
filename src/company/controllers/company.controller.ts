@@ -43,9 +43,9 @@ export class CompanyController {
         private readonly deleteCompanyUC: DeleteCompanyUC
     ) { }
 
-    @Get("/")
+    @Post("/")
     @HttpCode(HttpStatus.OK)
-    findManyCompanies(@Query() request: FindManyCompaniesRequestDto): Promise<FindManyCompaniesResponseDto> {
+    findManyCompanies(@Body() request: FindManyCompaniesRequestDto): Promise<FindManyCompaniesResponseDto> {
         return this.findManyCompaniesUC.execute(request);
     }
 

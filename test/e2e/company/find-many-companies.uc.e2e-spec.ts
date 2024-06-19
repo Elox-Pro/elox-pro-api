@@ -2,7 +2,7 @@ import { HttpStatus, INestApplication } from "@nestjs/common"
 import { bootstrapTest } from "../test.main";
 import { AuthenticationModule } from "@app/authentication/authentication.module";
 import { getTestUser } from "../test-helpers/get-test-user.test-helper";
-import { CreateRequestFN, createGet } from "../test-helpers/create-request.test-helper";
+import { CreateRequestFN, createPost } from "../test-helpers/create-request.test-helper";
 import { CompanyModule } from "@app/company/company.module";
 import * as request from "supertest";
 import { FindManyCompaniesResponseDto } from "@app/company/dtos/find-many-companies/find-many-companies.response.dto";
@@ -12,14 +12,14 @@ describe("List Companies Endpoint", () => {
     const user = getTestUser();
 
     let app: INestApplication;
-    let get: CreateRequestFN;
+    let post: CreateRequestFN;
 
     beforeAll(async () => {
         app = await bootstrapTest([
             AuthenticationModule,
             CompanyModule
         ]);
-        get = createGet({
+        post = createPost({
             app, url, credentials: {
                 username: user.username,
                 password: user.password
@@ -36,7 +36,7 @@ describe("List Companies Endpoint", () => {
             let res: request.Response;
             let body: FindManyCompaniesResponseDto;
             it("should return HTTP status OK", async () => {
-                res = await get({
+                res = await post({
                     page: 1,
                     limit: 10
                 });
@@ -53,7 +53,7 @@ describe("List Companies Endpoint", () => {
             let res: request.Response;
             let body: FindManyCompaniesResponseDto;
             it("should return HTTP status OK", async () => {
-                res = await get({
+                res = await post({
                     page: 1,
                     limit: 10,
                     searchTerm: "Apple"
