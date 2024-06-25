@@ -24,6 +24,9 @@ import { RemoveUserFromCompanyResponseDto } from "../dtos/remove-user-from-compa
 import { DeleteCompanyUC } from "../usecases/delete-company.uc";
 import { DeleteCompanyRequestDto } from "../dtos/delete-company/delete-company.request.dto";
 import { DeleteCompanyResponseDto } from "../dtos/delete-company/delete-company.response.dto";
+import { FindManyUsersUC } from "../usecases/find-many-users.uc";
+import { FindManyUsersRequestDto } from "../dtos/find-many-users/find-many-users.request.dto";
+import { FindManyUsersResponseDto } from "../dtos/find-many-users/find-many-users.response.dto";
 
 /**
  * Controller for managing companies.
@@ -38,9 +41,10 @@ export class CompanyController {
         private readonly findCompanyByIdUC: FindCompanyByIdUC,
         private readonly createCompanyUC: CreateCompanyUC,
         private readonly setCompnayNameUC: UpdateCompanyNameUC,
+        private readonly findManyUsersUC: FindManyUsersUC,
         private readonly addUserToCompanyUC: AddUserToCompanyUC,
         private readonly removeUserFromCompanyUC: RemoveUserFromCompanyUC,
-        private readonly deleteCompanyUC: DeleteCompanyUC
+        private readonly deleteCompanyUC: DeleteCompanyUC,
     ) { }
 
     @Post("/")
@@ -73,6 +77,16 @@ export class CompanyController {
         @Body() request: UpdateCompanyNameRequestDto,
     ): Promise<UpdateCompanyNameResponseDto> {
         return this.setCompnayNameUC.execute(request);
+    }
+
+    @Post("/find-many/users")
+    @HttpCode(HttpStatus.OK)
+    findManyUsers(
+        @UserRequest() activeUser: ActiveUserDto,
+        @Body() request: FindManyUsersRequestDto
+    ): Promise<FindManyUsersResponseDto> {
+        request.setActiveUser(activeUser);
+        return this.findManyUsersUC.execute(request);
     }
 
     @Patch("/add/user")

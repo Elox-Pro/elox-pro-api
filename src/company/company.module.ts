@@ -7,6 +7,7 @@ import { UpdateCompanyNameUC } from "./usecases/update-company-name.uc";
 import { AddUserToCompanyUC } from "./usecases/add-user-to-company.uc";
 import { RemoveUserFromCompanyUC } from "./usecases/remove-user-from-company.uc";
 import { DeleteCompanyUC } from "./usecases/delete-company.uc";
+import { FindManyUsersUC } from "./usecases/find-many-users.uc";
 
 @Module({
     controllers: [CompanyController],
@@ -17,7 +18,8 @@ import { DeleteCompanyUC } from "./usecases/delete-company.uc";
         UpdateCompanyNameUC,
         AddUserToCompanyUC,
         RemoveUserFromCompanyUC,
-        DeleteCompanyUC
+        DeleteCompanyUC,
+        FindManyUsersUC
     ]
 })
 export class CompanyModule { }

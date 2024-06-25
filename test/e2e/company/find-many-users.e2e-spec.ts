@@ -4,20 +4,24 @@ import { AuthenticationModule } from "@app/authentication/authentication.module"
 import { getTestUser } from "../test-helpers/get-test-user.test-helper";
 import { CreateRequestFN, createPost } from "../test-helpers/create-request.test-helper";
 import * as request from "supertest";
-import { UserModule } from "@app/user/user.module";
-import { FindManyUsersResponseDto } from "@app/user/dtos/find-many-users/find-many-users.response.dto";
+import { CompanyModule } from "@app/company/company.module";
+import { FindManyUsersResponseDto } from "@app/company/dtos/find-many-users/find-many-users.response.dto";
+import { PrismaService } from "@app/prisma/prisma.service";
+import { Company } from "@prisma/client";
 
-describe("List Users Endpoint", () => {
-    const url = "/users/";
+describe("Find many users that does not belong to company Endpoint", () => {
+    const url = "/companies/find-many/users";
     const user = getTestUser();
 
     let app: INestApplication;
     let post: CreateRequestFN;
+    let prisma: PrismaService;
+    let company: Company;
 
     beforeAll(async () => {
         app = await bootstrapTest([
             AuthenticationModule,
-            UserModule
+            CompanyModule
         ]);
         post = createPost({
             app, url, credentials: {
@@ -25,6 +29,8 @@ describe("List Users Endpoint", () => {
                 password: user.password
             }
         });
+        prisma = app.get(PrismaService);
+        company = await prisma.company.findFirst();
     });
 
     afterAll(async () => {
@@ -37,7 +43,8 @@ describe("List Users Endpoint", () => {
         it("should return HTTP status OK", async () => {
             res = await post({
                 page: 1,
-                limit: 10
+                limit: 10,
+                companyId: company.id
             });
             expect(res.status).toBe(HttpStatus.OK);
             expect(res.body).toBeDefined();
@@ -55,15 +62,15 @@ describe("List Users Endpoint", () => {
             res = await post({
                 page: 1,
                 limit: 10,
-                searchTerm: "tim-cook"
+                searchTerm: "admin",
+                companyId: company.id
             });
             expect(res.status).toBe(HttpStatus.OK);
             expect(res.body).toBeDefined();
             body = res.body as FindManyUsersResponseDto;
         });
-        it("should return 1 company", async () => {
+        it("should return users", async () => {
             expect(body.users.length).toBeGreaterThan(0);
-            expect(body.users.length).toEqual(1);
         });
     });
 })

@@ -10,7 +10,6 @@ import { UpdatePasswordUC } from "./usecases/update-password.uc";
 import { UpdateTfaUC } from "./usecases/update-tfa.uc";
 import { ProfileController } from "./controllers/profile.controller";
 import { TfaModule } from "@app/tfa/tfa.module";
-import { FindManyUsersUC } from "./usecases/find-many-users.uc";
 import { UserController } from "./controllers/user.controller";
 
 @Module({
@@ -27,8 +26,7 @@ import { UserController } from "./controllers/user.controller";
         UpdateEmailUC,
         UpdatePhoneUC,
         UpdatePasswordUC,
-        UpdateTfaUC,
-        FindManyUsersUC,
+        UpdateTfaUC
     ]
 })
 export class UserModule { }
